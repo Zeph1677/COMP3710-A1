@@ -20,6 +20,14 @@ def _make_pair(root: Path, patient: str, shape: tuple[int, int, int] = (8, 10, 1
     _write_volume(root / "semantic_labels_only" / patient / "scan.nii.gz", label)
 
 
+def _make_hipmri_named_pair(root: Path, case_id: str, shape: tuple[int, int, int] = (8, 10, 12)) -> None:
+    image = np.linspace(0, 1, np.prod(shape), dtype=np.float32).reshape(shape)
+    label = np.zeros(shape, dtype=np.uint8)
+    label[2:5, 3:7, 4:8] = 1
+    _write_volume(root / "semantic_MRs" / f"{case_id}_LFOV.nii.gz", image)
+    _write_volume(root / "semantic_labels_only" / f"{case_id}_SEMANTIC.nii.gz", label)
+
+
 def test_discovers_recursive_nifti_pairs_with_patient_ids(tmp_path: Path):
     for patient in ("patient_01", "patient_02", "patient_03"):
         _make_pair(tmp_path, patient)
@@ -51,3 +59,26 @@ def test_patient_split_is_deterministic_and_has_zero_overlap(tmp_path: Path):
     assert all(groups)
     assert not (groups[0] & groups[1] or groups[0] & groups[2] or groups[1] & groups[2])
     assert sorted(set.union(*groups)) == [f"patient_{number:02d}" for number in range(9)]
+
+
+def test_discovers_lfov_and_semantic_files_by_case_key_and_retains_patient_group(tmp_path: Path):
+    _make_hipmri_named_pair(tmp_path, "B006_Week0")
+    _make_hipmri_named_pair(tmp_path, "B006_Week1")
+    _make_hipmri_named_pair(tmp_path, "B037_Week0")
+    _make_hipmri_named_pair(tmp_path, "B038_Week0")
+
+    pairs = discover_volume_pairs(tmp_path)
+    manifest = build_patient_split_manifest(pairs, seed=42)
+
+    assert [(pair.case_id, pair.patient_id) for pair in pairs] == [
+        ("B006_Week0", "B006"),
+        ("B006_Week1", "B006"),
+        ("B037_Week0", "B037"),
+        ("B038_Week0", "B038"),
+    ]
+    patient_partition = {
+        partition
+        for partition in ("train", "validation", "test")
+        if "B006" in manifest[partition]
+    }
+    assert patient_partition in ({"train"}, {"validation"}, {"test"})

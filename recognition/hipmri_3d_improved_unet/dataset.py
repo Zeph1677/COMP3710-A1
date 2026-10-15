@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import random
+import re
 
 import nibabel as nib
 import numpy as np
@@ -16,6 +17,7 @@ from torch.utils.data import Dataset
 class VolumePair:
     """A validated image-mask pair stored as paths relative to the HipMRI root."""
 
+    case_id: str
     patient_id: str
     image_path: Path
     mask_path: Path
@@ -32,6 +34,37 @@ def _nifti_paths(directory: Path) -> dict[Path, Path]:
     return {path.relative_to(directory): path for path in paths}
 
 
+def _without_nifti_suffix(path: Path) -> Path:
+    name = path.name
+    if name.endswith(".nii.gz"):
+        return path.with_name(name[:-7])
+    if name.endswith(".nii"):
+        return path.with_name(name[:-4])
+    raise ValueError(f"not a NIfTI path: {path}")
+
+
+def _case_key(relative_path: Path, expected_suffix: str) -> str:
+    """Return a role-independent case key for conventional or HipMRI file names."""
+
+    stem_path = _without_nifti_suffix(relative_path)
+    match = re.fullmatch(r"(?P<case>.+)_(?P<role>LFOV|SEMANTIC)", stem_path.name)
+    if match:
+        if match.group("role") != expected_suffix:
+            raise ValueError(f"expected _{expected_suffix} file name, found {relative_path}")
+        stem_path = stem_path.with_name(match.group("case"))
+    return stem_path.as_posix()
+
+
+def _path_map_by_case_key(paths: dict[Path, Path], expected_suffix: str) -> dict[str, Path]:
+    mapped: dict[str, Path] = {}
+    for relative_path, absolute_path in paths.items():
+        key = _case_key(relative_path, expected_suffix)
+        if key in mapped:
+            raise ValueError(f"duplicate case key {key!r} below {absolute_path.parent}")
+        mapped[key] = absolute_path
+    return mapped
+
+
 def _three_dimensional(data: np.ndarray, path: Path) -> np.ndarray:
     if data.ndim == 4 and data.shape[-1] == 1:
         data = data[..., 0]
@@ -40,8 +73,14 @@ def _three_dimensional(data: np.ndarray, path: Path) -> np.ndarray:
     return data
 
 
-def _patient_id(relative_path: Path) -> str:
-    return relative_path.parts[0] if len(relative_path.parts) > 1 else relative_path.name.split(".")[0]
+def _patient_id(case_id: str, source_path: Path) -> str:
+    """Use the HipMRI subject prefix when present, otherwise preserve nested layout IDs."""
+
+    case_name = Path(case_id).name
+    match = re.fullmatch(r"(?P<patient>B\d+)_Week\d+", case_name)
+    if match:
+        return match.group("patient")
+    return source_path.parts[0] if len(source_path.parts) > 1 else case_name
 
 
 def discover_volume_pairs(data_root: Path | str) -> list[VolumePair]:
@@ -50,54 +89,53 @@ def discover_volume_pairs(data_root: Path | str) -> list[VolumePair]:
     root = Path(data_root).resolve()
     image_root = root / "semantic_MRs"
     mask_root = root / "semantic_labels_only"
-    images, masks = _nifti_paths(image_root), _nifti_paths(mask_root)
+    images = _path_map_by_case_key(_nifti_paths(image_root), "LFOV")
+    masks = _path_map_by_case_key(_nifti_paths(mask_root), "SEMANTIC")
     missing_masks = sorted(set(images) - set(masks))
     missing_images = sorted(set(masks) - set(images))
     if missing_masks or missing_images:
         fragments: list[str] = []
         if missing_masks:
-            fragments.append("missing mask for " + ", ".join(str(path) for path in missing_masks[:5]))
+                fragments.append("missing mask for " + ", ".join(missing_masks[:5]))
         if missing_images:
-            fragments.append("missing image for " + ", ".join(str(path) for path in missing_images[:5]))
+                fragments.append("missing image for " + ", ".join(missing_images[:5]))
         raise ValueError("; ".join(fragments))
     if not images:
         raise ValueError(f"no NIfTI pairs found below {root}")
 
     pairs: list[VolumePair] = []
-    for relative_path in sorted(images):
-        image_nii, mask_nii = nib.load(images[relative_path]), nib.load(masks[relative_path])
-        image = _three_dimensional(image_nii.get_fdata(caching="unchanged"), images[relative_path])
-        mask = _three_dimensional(mask_nii.get_fdata(caching="unchanged"), masks[relative_path])
+    for case_id in sorted(images):
+        image_path, mask_path = images[case_id], masks[case_id]
+        image_nii, mask_nii = nib.load(image_path), nib.load(mask_path)
+        image = _three_dimensional(image_nii.get_fdata(caching="unchanged"), image_path)
+        mask = _three_dimensional(mask_nii.get_fdata(caching="unchanged"), mask_path)
         if image.shape != mask.shape:
-            raise ValueError(f"shape mismatch for {relative_path}: image {image.shape}, mask {mask.shape}")
+            raise ValueError(f"shape mismatch for {case_id}: image {image.shape}, mask {mask.shape}")
         if not np.isfinite(image).all():
-            raise ValueError(f"non-finite intensity values in {images[relative_path]}")
+            raise ValueError(f"non-finite intensity values in {image_path}")
         if not np.allclose(mask, np.rint(mask)):
-            raise ValueError(f"non-integral labels in {masks[relative_path]}")
+            raise ValueError(f"non-integral labels in {mask_path}")
         if not np.allclose(image_nii.affine, mask_nii.affine, atol=1e-4):
-            raise ValueError(f"affine mismatch for {relative_path}")
+            raise ValueError(f"affine mismatch for {case_id}")
         pairs.append(
             VolumePair(
-                patient_id=_patient_id(relative_path),
-                image_path=images[relative_path].relative_to(root),
-                mask_path=masks[relative_path].relative_to(root),
+                case_id=case_id,
+                patient_id=_patient_id(case_id, image_path.relative_to(image_root)),
+                image_path=image_path.relative_to(root),
+                mask_path=mask_path.relative_to(root),
                 shape=tuple(int(value) for value in image.shape),
                 spacing=tuple(float(value) for value in image_nii.header.get_zooms()[:3]),
                 orientation=tuple(str(value) for value in nib.aff2axcodes(image_nii.affine)),
                 labels=tuple(int(value) for value in np.unique(mask)),
             )
         )
-    if len({pair.patient_id for pair in pairs}) != len(pairs):
-        raise ValueError("each HipMRI patient must map to exactly one matched 3D image-mask pair")
     return pairs
 
 
 def build_patient_split_manifest(pairs: list[VolumePair], seed: int = 42) -> dict[str, list[str] | int]:
     """Create a deterministic 70/15/15 patient split with all groups non-empty."""
 
-    patients = sorted(pair.patient_id for pair in pairs)
-    if len(set(patients)) != len(patients):
-        raise ValueError("cannot split duplicate patient IDs")
+    patients = sorted({pair.patient_id for pair in pairs})
     if len(patients) < 3:
         raise ValueError("at least three patients are required for train, validation and test partitions")
     random.Random(seed).shuffle(patients)
