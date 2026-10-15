@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import pytest
 
-from dataset import build_patient_split_manifest, discover_volume_pairs
+from dataset import HipMRI3DDataset, build_patient_split_manifest, discover_volume_pairs
 
 
 def _write_volume(path: Path, array: np.ndarray, affine: np.ndarray | None = None) -> None:
@@ -82,3 +82,20 @@ def test_discovers_lfov_and_semantic_files_by_case_key_and_retains_patient_group
         if "B006" in manifest[partition]
     }
     assert patient_partition in ({"train"}, {"validation"}, {"test"})
+
+
+def test_dataset_resizes_image_and_mask_to_divisible_3d_training_geometry(tmp_path: Path):
+    _make_hipmri_named_pair(tmp_path, "B006_Week0", shape=(8, 10, 12))
+    pairs = discover_volume_pairs(tmp_path)
+
+    image, mask = HipMRI3DDataset(
+        pairs,
+        tmp_path,
+        patient_ids={"B006"},
+        num_classes=2,
+        target_shape=(8, 8, 8),
+    )[0]
+
+    assert image.shape == (1, 8, 8, 8)
+    assert mask.shape == (8, 8, 8)
+    assert set(mask.unique().tolist()) <= {0, 1}

@@ -10,6 +10,7 @@ import re
 import nibabel as nib
 import numpy as np
 import torch
+from torch.nn import functional as F
 from torch.utils.data import Dataset
 
 
@@ -169,12 +170,22 @@ def validate_patient_split_manifest(manifest: dict[str, object]) -> None:
 class HipMRI3DDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     """Load normalized image and integer mask tensors in `(C, D, H, W)` orientation."""
 
-    def __init__(self, pairs: list[VolumePair], data_root: Path | str, patient_ids: set[str], num_classes: int) -> None:
+    def __init__(
+        self,
+        pairs: list[VolumePair],
+        data_root: Path | str,
+        patient_ids: set[str],
+        num_classes: int,
+        target_shape: tuple[int, int, int] | None = None,
+    ) -> None:
         self.records = [pair for pair in pairs if pair.patient_id in patient_ids]
         self.root = Path(data_root).resolve()
         self.num_classes = num_classes
+        self.target_shape = target_shape
         if not self.records:
             raise ValueError("dataset partition contains no volumes")
+        if target_shape is not None and (len(target_shape) != 3 or any(size <= 0 or size % 8 for size in target_shape)):
+            raise ValueError("target_shape must contain three positive dimensions divisible by 8")
 
     def __len__(self) -> int:
         return len(self.records)
@@ -188,4 +199,8 @@ class HipMRI3DDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         image = image.astype(np.float32)
         image = (image - image.mean()) / (image.std() + 1e-8)
         image_dhw, mask_dhw = np.transpose(image, (2, 1, 0)), np.transpose(mask.astype(np.int64), (2, 1, 0))
-        return torch.from_numpy(image_dhw[None]), torch.from_numpy(mask_dhw)
+        image_tensor, mask_tensor = torch.from_numpy(image_dhw[None]), torch.from_numpy(mask_dhw)
+        if self.target_shape is not None:
+            image_tensor = F.interpolate(image_tensor[None], size=self.target_shape, mode="trilinear", align_corners=False)[0]
+            mask_tensor = F.interpolate(mask_tensor[None, None].float(), size=self.target_shape, mode="nearest")[0, 0].long()
+        return image_tensor, mask_tensor
