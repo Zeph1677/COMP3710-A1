@@ -1,6 +1,9 @@
+import json
+from pathlib import Path
+
 import torch
 
-from train import composite_3d_loss, evaluate_3d_batches, select_validation_checkpoint
+from train import composite_3d_loss, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -23,3 +26,19 @@ def test_evaluator_returns_per_class_metrics_and_resource_fields():
 def test_checkpoint_selection_uses_validation_metric_only():
     history = [{"epoch": 1, "validation_mean_dice": 0.5, "test_mean_dice": 0.9}, {"epoch": 2, "validation_mean_dice": 0.7, "test_mean_dice": 0.1}]
     assert select_validation_checkpoint(history)["epoch"] == 2
+
+
+def test_load_audited_pairs_restores_relative_case_metadata(tmp_path: Path):
+    manifest = {
+        "summary": {"labels": [0, 1]},
+        "cases": [{"case_id": "B006_Week0", "patient_id": "B006", "image_path": "semantic_MRs/B006_Week0_LFOV.nii.gz", "mask_path": "semantic_labels_only/B006_Week0_SEMANTIC.nii.gz", "shape": [8, 8, 8], "spacing": [1.0, 1.0, 1.0], "orientation": ["L", "P", "S"], "labels": [0, 1], "split": "train"}],
+    }
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    pairs, split_ids, num_classes = load_audited_pairs(path)
+
+    assert pairs[0].case_id == "B006_Week0"
+    assert pairs[0].image_path == Path("semantic_MRs/B006_Week0_LFOV.nii.gz")
+    assert split_ids == {"train": {"B006"}, "validation": set(), "test": set()}
+    assert num_classes == 2

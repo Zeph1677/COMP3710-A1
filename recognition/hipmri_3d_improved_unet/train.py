@@ -2,11 +2,38 @@
 
 from __future__ import annotations
 
+import json
 import time
+from pathlib import Path
 from typing import Iterable
 
 import torch
 from torch.nn import functional as F
+
+from dataset import VolumePair
+
+
+def load_audited_pairs(manifest_path: Path | str) -> tuple[list[VolumePair], dict[str, set[str]], int]:
+    """Restore only audited relative metadata and the fixed patient partitions."""
+
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    labels = manifest.get("summary", {}).get("labels")
+    cases = manifest.get("cases")
+    if not isinstance(labels, list) or labels != list(range(len(labels))) or not cases:
+        raise ValueError("manifest must contain contiguous labels and at least one audited case")
+    pairs = [
+        VolumePair(
+            case_id=case["case_id"], patient_id=case["patient_id"], image_path=Path(case["image_path"]), mask_path=Path(case["mask_path"]),
+            shape=tuple(case["shape"]), spacing=tuple(case["spacing"]), orientation=tuple(case["orientation"]), labels=tuple(case["labels"]),
+        )
+        for case in cases
+    ]
+    split_ids = {split: {case["patient_id"] for case in cases if case["split"] == split} for split in ("train", "validation", "test")}
+    if set().union(*split_ids.values()) != {pair.patient_id for pair in pairs}:
+        raise ValueError("manifest has unassigned patients")
+    if split_ids["train"] & split_ids["validation"] or split_ids["train"] & split_ids["test"] or split_ids["validation"] & split_ids["test"]:
+        raise ValueError("manifest patient partitions overlap")
+    return pairs, split_ids, len(labels)
 
 
 def _soft_dice_loss(logits: torch.Tensor, target: torch.Tensor, num_classes: int) -> torch.Tensor:
