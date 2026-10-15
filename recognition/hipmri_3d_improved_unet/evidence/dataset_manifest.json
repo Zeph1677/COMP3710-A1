@@ -1,0 +1,6571 @@
+{
+  "cases": [
+    {
+      "case_id": "B006_Week0",
+      "image_path": "semantic_MRs/B006_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B006_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B006",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B006_Week1",
+      "image_path": "semantic_MRs/B006_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B006_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B006",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B037_Week0",
+      "image_path": "semantic_MRs/B037_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B037_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B037",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "B038_Week0",
+      "image_path": "semantic_MRs/B038_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B038_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B038",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.40625,
+        1.40625,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week0",
+      "image_path": "semantic_MRs/B040_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week1",
+      "image_path": "semantic_MRs/B040_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week2",
+      "image_path": "semantic_MRs/B040_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week3",
+      "image_path": "semantic_MRs/B040_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week4",
+      "image_path": "semantic_MRs/B040_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week5",
+      "image_path": "semantic_MRs/B040_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "B040_Week7",
+      "image_path": "semantic_MRs/B040_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/B040_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "B040",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "C032_Week0",
+      "image_path": "semantic_MRs/C032_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "C032_Week1",
+      "image_path": "semantic_MRs/C032_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "C032_Week2",
+      "image_path": "semantic_MRs/C032_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "C032_Week3",
+      "image_path": "semantic_MRs/C032_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "C032_Week4",
+      "image_path": "semantic_MRs/C032_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "C032_Week5",
+      "image_path": "semantic_MRs/C032_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "C032_Week6",
+      "image_path": "semantic_MRs/C032_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "C032_Week7",
+      "image_path": "semantic_MRs/C032_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/C032_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "C032_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "D031_Week0",
+      "image_path": "semantic_MRs/D031_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week1",
+      "image_path": "semantic_MRs/D031_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week2",
+      "image_path": "semantic_MRs/D031_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week3",
+      "image_path": "semantic_MRs/D031_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week4",
+      "image_path": "semantic_MRs/D031_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week5",
+      "image_path": "semantic_MRs/D031_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "D031_Week6",
+      "image_path": "semantic_MRs/D031_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "D031_Week7",
+      "image_path": "semantic_MRs/D031_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/D031_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "D031_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "G021_Week0",
+      "image_path": "semantic_MRs/G021_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "G021_Week1",
+      "image_path": "semantic_MRs/G021_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "G021_Week2",
+      "image_path": "semantic_MRs/G021_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "G021_Week3",
+      "image_path": "semantic_MRs/G021_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "G021_Week4",
+      "image_path": "semantic_MRs/G021_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "G021_Week5",
+      "image_path": "semantic_MRs/G021_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "G021_Week6",
+      "image_path": "semantic_MRs/G021_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "G021_Week7",
+      "image_path": "semantic_MRs/G021_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/G021_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "G021_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H007_Week0",
+      "image_path": "semantic_MRs/H007_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H007_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H007_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6015625,
+        1.6015625,
+        1.5600051879882812
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "H017_Week0",
+      "image_path": "semantic_MRs/H017_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.5600013732910156
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H017_Week1",
+      "image_path": "semantic_MRs/H017_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H017_Week2",
+      "image_path": "semantic_MRs/H017_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "H017_Week3",
+      "image_path": "semantic_MRs/H017_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H017_Week4",
+      "image_path": "semantic_MRs/H017_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H017_Week5",
+      "image_path": "semantic_MRs/H017_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "H017_Week6",
+      "image_path": "semantic_MRs/H017_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "H017_Week7",
+      "image_path": "semantic_MRs/H017_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/H017_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "H017_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J005_Week0",
+      "image_path": "semantic_MRs/J005_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J005_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J005_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J005_Week1",
+      "image_path": "semantic_MRs/J005_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J005_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J005_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J005_Week2",
+      "image_path": "semantic_MRs/J005_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J005_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J005_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "J005_Week3",
+      "image_path": "semantic_MRs/J005_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J005_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J005_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "J005_Week4",
+      "image_path": "semantic_MRs/J005_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J005_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J005_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week0",
+      "image_path": "semantic_MRs/J026_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week1",
+      "image_path": "semantic_MRs/J026_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week2",
+      "image_path": "semantic_MRs/J026_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week3",
+      "image_path": "semantic_MRs/J026_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week4",
+      "image_path": "semantic_MRs/J026_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week5",
+      "image_path": "semantic_MRs/J026_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week6",
+      "image_path": "semantic_MRs/J026_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "J026_Week7",
+      "image_path": "semantic_MRs/J026_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/J026_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "J026_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "K008_Week0",
+      "image_path": "semantic_MRs/K008_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K008_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K008_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K018_Week0",
+      "image_path": "semantic_MRs/K018_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K018_Week1",
+      "image_path": "semantic_MRs/K018_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K018_Week2",
+      "image_path": "semantic_MRs/K018_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K018_Week3",
+      "image_path": "semantic_MRs/K018_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K018_Week4",
+      "image_path": "semantic_MRs/K018_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K018_Week5",
+      "image_path": "semantic_MRs/K018_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K018_Week6",
+      "image_path": "semantic_MRs/K018_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K018_Week7",
+      "image_path": "semantic_MRs/K018_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K018_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K018_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week0",
+      "image_path": "semantic_MRs/K019_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K019_Week1",
+      "image_path": "semantic_MRs/K019_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week1",
+      "shape": [
+        256,
+        256,
+        144
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week2",
+      "image_path": "semantic_MRs/K019_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week3",
+      "image_path": "semantic_MRs/K019_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "K019_Week4",
+      "image_path": "semantic_MRs/K019_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week5",
+      "image_path": "semantic_MRs/K019_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week6",
+      "image_path": "semantic_MRs/K019_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K019_Week7",
+      "image_path": "semantic_MRs/K019_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K019_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K019_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "K042_Week0",
+      "image_path": "semantic_MRs/K042_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/K042_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "K042_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "L011_Week0",
+      "image_path": "semantic_MRs/L011_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "L011_Week1",
+      "image_path": "semantic_MRs/L011_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "L011_Week2",
+      "image_path": "semantic_MRs/L011_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "L011_Week3",
+      "image_path": "semantic_MRs/L011_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "L011_Week4",
+      "image_path": "semantic_MRs/L011_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "L011_Week5",
+      "image_path": "semantic_MRs/L011_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "L011_Week6",
+      "image_path": "semantic_MRs/L011_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "L011_Week7",
+      "image_path": "semantic_MRs/L011_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/L011_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "L011_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M004_Week0",
+      "image_path": "semantic_MRs/M004_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week1",
+      "image_path": "semantic_MRs/M004_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week2",
+      "image_path": "semantic_MRs/M004_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week3",
+      "image_path": "semantic_MRs/M004_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week4",
+      "image_path": "semantic_MRs/M004_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week5",
+      "image_path": "semantic_MRs/M004_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6015625,
+        1.6015625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week6",
+      "image_path": "semantic_MRs/M004_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M004_Week7",
+      "image_path": "semantic_MRs/M004_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M004_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M004_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M013_Week0",
+      "image_path": "semantic_MRs/M013_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M013_Week1",
+      "image_path": "semantic_MRs/M013_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M013_Week2",
+      "image_path": "semantic_MRs/M013_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M013_Week3",
+      "image_path": "semantic_MRs/M013_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M013_Week4",
+      "image_path": "semantic_MRs/M013_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M013_Week5",
+      "image_path": "semantic_MRs/M013_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M013_Week6",
+      "image_path": "semantic_MRs/M013_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M013_Week7",
+      "image_path": "semantic_MRs/M013_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M013_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M013_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M015_Week0",
+      "image_path": "semantic_MRs/M015_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M015_Week1",
+      "image_path": "semantic_MRs/M015_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M015_Week2",
+      "image_path": "semantic_MRs/M015_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M015_Week3",
+      "image_path": "semantic_MRs/M015_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.796875,
+        1.796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M015_Week4",
+      "image_path": "semantic_MRs/M015_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.5600013732910156
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M015_Week5",
+      "image_path": "semantic_MRs/M015_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "M015_Week6",
+      "image_path": "semantic_MRs/M015_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M015_Week7",
+      "image_path": "semantic_MRs/M015_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M015_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M015_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M020_Week0",
+      "image_path": "semantic_MRs/M020_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M020_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M020_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M020_Week1",
+      "image_path": "semantic_MRs/M020_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M020_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M020_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M020_Week2",
+      "image_path": "semantic_MRs/M020_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M020_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M020_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M020_Week3",
+      "image_path": "semantic_MRs/M020_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M020_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M020_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M023_Week0",
+      "image_path": "semantic_MRs/M023_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M023_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M023_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M030_Week0",
+      "image_path": "semantic_MRs/M030_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M030_Week1",
+      "image_path": "semantic_MRs/M030_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M030_Week2",
+      "image_path": "semantic_MRs/M030_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "M030_Week3",
+      "image_path": "semantic_MRs/M030_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "M030_Week4",
+      "image_path": "semantic_MRs/M030_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M030_Week5",
+      "image_path": "semantic_MRs/M030_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M030_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M030_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "M036_Week0",
+      "image_path": "semantic_MRs/M036_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/M036_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "M036_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week0",
+      "image_path": "semantic_MRs/N010_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week1",
+      "image_path": "semantic_MRs/N010_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week2",
+      "image_path": "semantic_MRs/N010_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "N010_Week3",
+      "image_path": "semantic_MRs/N010_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600013732910156
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week4",
+      "image_path": "semantic_MRs/N010_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week5",
+      "image_path": "semantic_MRs/N010_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5599994659423828
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "N010_Week6",
+      "image_path": "semantic_MRs/N010_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600013732910156
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "N010_Week7",
+      "image_path": "semantic_MRs/N010_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/N010_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "N010_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week0",
+      "image_path": "semantic_MRs/O025_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.559999942779541
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week1",
+      "image_path": "semantic_MRs/O025_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5599994659423828
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week2",
+      "image_path": "semantic_MRs/O025_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week3",
+      "image_path": "semantic_MRs/O025_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week4",
+      "image_path": "semantic_MRs/O025_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week5",
+      "image_path": "semantic_MRs/O025_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5599994659423828
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week6",
+      "image_path": "semantic_MRs/O025_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5599994659423828
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "O025_Week7",
+      "image_path": "semantic_MRs/O025_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/O025_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "O025_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week0",
+      "image_path": "semantic_MRs/R016_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week1",
+      "image_path": "semantic_MRs/R016_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "R016_Week2",
+      "image_path": "semantic_MRs/R016_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week3",
+      "image_path": "semantic_MRs/R016_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week4",
+      "image_path": "semantic_MRs/R016_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week5",
+      "image_path": "semantic_MRs/R016_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week6",
+      "image_path": "semantic_MRs/R016_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R016_Week7",
+      "image_path": "semantic_MRs/R016_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R016_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R016_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R024_Week0",
+      "image_path": "semantic_MRs/R024_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R024_Week1",
+      "image_path": "semantic_MRs/R024_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "R024_Week2",
+      "image_path": "semantic_MRs/R024_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R024_Week3",
+      "image_path": "semantic_MRs/R024_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "R024_Week4",
+      "image_path": "semantic_MRs/R024_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R024_Week5",
+      "image_path": "semantic_MRs/R024_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "R024_Week6",
+      "image_path": "semantic_MRs/R024_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R024_Week7",
+      "image_path": "semantic_MRs/R024_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R024_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R024_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "R039_Week0",
+      "image_path": "semantic_MRs/R039_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week1",
+      "image_path": "semantic_MRs/R039_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week2",
+      "image_path": "semantic_MRs/R039_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week3",
+      "image_path": "semantic_MRs/R039_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week4",
+      "image_path": "semantic_MRs/R039_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week5",
+      "image_path": "semantic_MRs/R039_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "R039_Week6",
+      "image_path": "semantic_MRs/R039_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "R039_Week7",
+      "image_path": "semantic_MRs/R039_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/R039_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "R039_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "S022_Week0",
+      "image_path": "semantic_MRs/S022_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S022_Week1",
+      "image_path": "semantic_MRs/S022_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S022_Week2",
+      "image_path": "semantic_MRs/S022_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "S022_Week3",
+      "image_path": "semantic_MRs/S022_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S022_Week4",
+      "image_path": "semantic_MRs/S022_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "S022_Week5",
+      "image_path": "semantic_MRs/S022_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S022_Week6",
+      "image_path": "semantic_MRs/S022_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S022_Week7",
+      "image_path": "semantic_MRs/S022_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S022_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S022_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S028_Week0",
+      "image_path": "semantic_MRs/S028_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S028_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S028_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week0",
+      "image_path": "semantic_MRs/S033_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.5600128173828125
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week1",
+      "image_path": "semantic_MRs/S033_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week2",
+      "image_path": "semantic_MRs/S033_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "S033_Week3",
+      "image_path": "semantic_MRs/S033_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week4",
+      "image_path": "semantic_MRs/S033_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week5",
+      "image_path": "semantic_MRs/S033_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "S033_Week6",
+      "image_path": "semantic_MRs/S033_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S033_Week7",
+      "image_path": "semantic_MRs/S033_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S033_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S033_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "S035_Week0",
+      "image_path": "semantic_MRs/S035_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/S035_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "S035_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.875,
+        1.875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T009_Week0",
+      "image_path": "semantic_MRs/T009_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T009_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T009_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week0",
+      "image_path": "semantic_MRs/T014_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.71875,
+        1.71875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "T014_Week1",
+      "image_path": "semantic_MRs/T014_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.559999942779541
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week2",
+      "image_path": "semantic_MRs/T014_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "T014_Week3",
+      "image_path": "semantic_MRs/T014_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week4",
+      "image_path": "semantic_MRs/T014_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week5",
+      "image_path": "semantic_MRs/T014_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week6",
+      "image_path": "semantic_MRs/T014_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "T014_Week7",
+      "image_path": "semantic_MRs/T014_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/T014_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "T014_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "V027_Week0",
+      "image_path": "semantic_MRs/V027_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "V027_Week1",
+      "image_path": "semantic_MRs/V027_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "V027_Week2",
+      "image_path": "semantic_MRs/V027_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "V027_Week3",
+      "image_path": "semantic_MRs/V027_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "V027_Week4",
+      "image_path": "semantic_MRs/V027_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "V027_Week5",
+      "image_path": "semantic_MRs/V027_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "V027_Week6",
+      "image_path": "semantic_MRs/V027_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "V027_Week7",
+      "image_path": "semantic_MRs/V027_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/V027_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "V027_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W012_Week0",
+      "image_path": "semantic_MRs/W012_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6015625,
+        1.6015625,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W012_Week1",
+      "image_path": "semantic_MRs/W012_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "W012_Week2",
+      "image_path": "semantic_MRs/W012_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "W012_Week3",
+      "image_path": "semantic_MRs/W012_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W012_Week4",
+      "image_path": "semantic_MRs/W012_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "W012_Week5",
+      "image_path": "semantic_MRs/W012_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600051879882812
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W012_Week6",
+      "image_path": "semantic_MRs/W012_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.5600013732910156
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W012_Week7",
+      "image_path": "semantic_MRs/W012_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W012_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W012_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "W029_Week0",
+      "image_path": "semantic_MRs/W029_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.640625,
+        1.640625,
+        1.55999755859375
+      ],
+      "split": "validation"
+    },
+    {
+      "case_id": "W029_Week1",
+      "image_path": "semantic_MRs/W029_Week1_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week1_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week1",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W029_Week2",
+      "image_path": "semantic_MRs/W029_Week2_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week2_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week2",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.7578125,
+        1.7578125,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W029_Week3",
+      "image_path": "semantic_MRs/W029_Week3_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week3_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week3",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W029_Week4",
+      "image_path": "semantic_MRs/W029_Week4_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week4_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week4",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W029_Week5",
+      "image_path": "semantic_MRs/W029_Week5_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week5_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week5",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "W029_Week6",
+      "image_path": "semantic_MRs/W029_Week6_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week6_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week6",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "W029_Week7",
+      "image_path": "semantic_MRs/W029_Week7_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W029_Week7_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W029_Week7",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.6796875,
+        1.6796875,
+        1.55999755859375
+      ],
+      "split": "train"
+    },
+    {
+      "case_id": "W041_Week0",
+      "image_path": "semantic_MRs/W041_Week0_LFOV.nii.gz",
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mask_path": "semantic_labels_only/W041_Week0_SEMANTIC.nii.gz",
+      "orientation": [
+        "L",
+        "P",
+        "S"
+      ],
+      "patient_id": "W041_Week0",
+      "shape": [
+        256,
+        256,
+        128
+      ],
+      "spacing": [
+        1.5625,
+        1.5625,
+        1.55999755859375
+      ],
+      "split": "train"
+    }
+  ],
+  "schema_version": 1,
+  "seed": 42,
+  "splits": {
+    "seed": 42,
+    "test": [
+      "C032_Week2",
+      "C032_Week3",
+      "C032_Week4",
+      "G021_Week2",
+      "G021_Week3",
+      "G021_Week6",
+      "H007_Week0",
+      "H017_Week6",
+      "K008_Week0",
+      "K018_Week4",
+      "K018_Week5",
+      "K018_Week6",
+      "K019_Week0",
+      "K019_Week3",
+      "L011_Week2",
+      "M030_Week2",
+      "M030_Week3",
+      "R016_Week1",
+      "R024_Week3",
+      "R024_Week7",
+      "R039_Week7",
+      "S022_Week2",
+      "S033_Week2",
+      "S033_Week5",
+      "T014_Week2",
+      "W012_Week1",
+      "W012_Week2",
+      "W012_Week4",
+      "W029_Week5",
+      "W029_Week6"
+    ],
+    "train": [
+      "B006",
+      "B038",
+      "B040",
+      "C032_Week0",
+      "C032_Week1",
+      "C032_Week5",
+      "C032_Week6",
+      "D031_Week0",
+      "D031_Week1",
+      "D031_Week2",
+      "D031_Week3",
+      "D031_Week4",
+      "D031_Week6",
+      "D031_Week7",
+      "G021_Week1",
+      "G021_Week5",
+      "G021_Week7",
+      "H017_Week0",
+      "H017_Week1",
+      "H017_Week3",
+      "H017_Week4",
+      "H017_Week5",
+      "H017_Week7",
+      "J005_Week0",
+      "J005_Week1",
+      "J005_Week4",
+      "J026_Week0",
+      "J026_Week1",
+      "J026_Week2",
+      "J026_Week3",
+      "J026_Week4",
+      "J026_Week5",
+      "J026_Week6",
+      "K018_Week0",
+      "K018_Week1",
+      "K018_Week2",
+      "K018_Week3",
+      "K018_Week7",
+      "K019_Week1",
+      "K019_Week2",
+      "K019_Week4",
+      "K019_Week5",
+      "K019_Week6",
+      "K019_Week7",
+      "L011_Week0",
+      "L011_Week1",
+      "L011_Week4",
+      "L011_Week5",
+      "L011_Week6",
+      "M004_Week0",
+      "M004_Week1",
+      "M004_Week2",
+      "M004_Week3",
+      "M004_Week4",
+      "M004_Week5",
+      "M004_Week6",
+      "M004_Week7",
+      "M013_Week0",
+      "M013_Week1",
+      "M013_Week5",
+      "M013_Week6",
+      "M015_Week1",
+      "M015_Week2",
+      "M015_Week3",
+      "M015_Week6",
+      "M015_Week7",
+      "M020_Week0",
+      "M020_Week1",
+      "M020_Week2",
+      "M020_Week3",
+      "M023_Week0",
+      "M030_Week0",
+      "M030_Week1",
+      "M030_Week4",
+      "M030_Week5",
+      "M036_Week0",
+      "N010_Week0",
+      "N010_Week1",
+      "N010_Week3",
+      "N010_Week4",
+      "N010_Week6",
+      "N010_Week7",
+      "O025_Week0",
+      "O025_Week1",
+      "O025_Week2",
+      "O025_Week3",
+      "O025_Week4",
+      "O025_Week5",
+      "O025_Week6",
+      "O025_Week7",
+      "R016_Week0",
+      "R016_Week2",
+      "R016_Week3",
+      "R016_Week4",
+      "R016_Week5",
+      "R016_Week6",
+      "R016_Week7",
+      "R024_Week0",
+      "R024_Week2",
+      "R024_Week4",
+      "R024_Week6",
+      "R039_Week0",
+      "R039_Week1",
+      "R039_Week2",
+      "R039_Week3",
+      "R039_Week4",
+      "R039_Week5",
+      "S022_Week0",
+      "S022_Week1",
+      "S022_Week3",
+      "S022_Week5",
+      "S022_Week6",
+      "S022_Week7",
+      "S028_Week0",
+      "S033_Week0",
+      "S033_Week1",
+      "S033_Week3",
+      "S033_Week4",
+      "S033_Week6",
+      "S033_Week7",
+      "S035_Week0",
+      "T009_Week0",
+      "T014_Week1",
+      "T014_Week3",
+      "T014_Week4",
+      "T014_Week5",
+      "T014_Week6",
+      "T014_Week7",
+      "V027_Week0",
+      "V027_Week1",
+      "V027_Week3",
+      "V027_Week4",
+      "V027_Week7",
+      "W012_Week0",
+      "W012_Week3",
+      "W012_Week5",
+      "W012_Week6",
+      "W029_Week1",
+      "W029_Week2",
+      "W029_Week3",
+      "W029_Week4",
+      "W029_Week7",
+      "W041_Week0"
+    ],
+    "validation": [
+      "B037",
+      "C032_Week7",
+      "D031_Week5",
+      "G021_Week0",
+      "G021_Week4",
+      "H017_Week2",
+      "J005_Week2",
+      "J005_Week3",
+      "J026_Week7",
+      "K042_Week0",
+      "L011_Week3",
+      "L011_Week7",
+      "M013_Week2",
+      "M013_Week3",
+      "M013_Week4",
+      "M013_Week7",
+      "M015_Week0",
+      "M015_Week4",
+      "M015_Week5",
+      "N010_Week2",
+      "N010_Week5",
+      "R024_Week1",
+      "R024_Week5",
+      "R039_Week6",
+      "S022_Week4",
+      "T014_Week0",
+      "V027_Week2",
+      "V027_Week5",
+      "V027_Week6",
+      "W012_Week7",
+      "W029_Week0"
+    ]
+  },
+  "summary": {
+    "case_count": 211,
+    "labels": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "patient_count": 204,
+    "split_case_counts": {
+      "test": 30,
+      "train": 150,
+      "validation": 31
+    },
+    "split_patient_counts": {
+      "test": 30,
+      "train": 143,
+      "validation": 31
+    }
+  }
+}
