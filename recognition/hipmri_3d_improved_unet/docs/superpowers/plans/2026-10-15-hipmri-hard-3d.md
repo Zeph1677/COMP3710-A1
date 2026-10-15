@@ -66,9 +66,9 @@
 
 ### Task 5: Hard project documentation and feasibility review
 
-**Files:** Create `README.md`, `build_feasibility_review.py`, `evidence/COMP3710_HipMRI_Hard_Feasibility_Review.docx`, `evidence/COMP3710_HipMRI_Hard_Feasibility_Review.pdf`.
+**Files:** Modify `README.md`; create `evidence/COMP3710_HipMRI_Hard_Feasibility_Review.docx` and `evidence/COMP3710_HipMRI_Hard_Feasibility_Review.pdf` only after the HipMRI audit has generated real evidence.
 
 - [ ] Draft source-backed Hard scope without fabricated experiment results.
-- [ ] Build the one-page review from declared project facts and only verified local audit fields.
+- [ ] Produce the one-page review from declared project facts and verified HipMRI audit fields only. Do not reuse OASIS figures, metrics, curves or files.
 - [ ] Render every DOCX page to PNG and inspect page count, clipping, table wrapping and footer placement.
 - [ ] Run `pytest -v`, CLI help, `git diff --check`, and commit documentation.
