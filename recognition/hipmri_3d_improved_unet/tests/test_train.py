@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from train import build_experiment_config, composite_3d_loss, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -86,3 +86,19 @@ def test_experiment_config_rejects_out_of_range_prostate_label(tmp_path: Path):
             prostate_label=3,
             prostate_label_source="HipMRI documentation, Table 2",
         )
+
+
+def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
+    parser = create_argument_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--manifest", "manifest.json", "--data-root", "data"])
+
+    args = parser.parse_args([
+        "--manifest", "manifest.json", "--data-root", "data", "--prostate-label", "2",
+        "--prostate-label-source", "HipMRI documentation, Table 2", "--target-shape", "32", "32", "32",
+    ])
+
+    assert args.model == "baseline"
+    assert args.target_shape == [32, 32, 32]
+    assert args.prostate_label == 2
