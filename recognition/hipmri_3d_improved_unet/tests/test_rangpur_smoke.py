@@ -6,6 +6,7 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
 
     assert "#SBATCH --account=comp3710" in script
     assert "#SBATCH --partition=comp3710" in script
+    assert "#SBATCH --mem=" not in script
     assert 'export PATH="/opt/slurm/bin:$PATH"' in script
     assert "/home/groups/comp3710/HipMRI_Study_open" in script
     assert "--prostate-label 5" in script

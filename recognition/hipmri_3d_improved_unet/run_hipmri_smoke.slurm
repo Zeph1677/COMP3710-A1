@@ -4,13 +4,14 @@
 #SBATCH --partition=comp3710
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=32G
 #SBATCH --time=02:00:00
 #SBATCH --output=slurm-%j.out
 #SBATCH --error=slurm-%j.err
 
 # Submit from this project directory. The Slurm stdout/stderr files at the
 # project root are ignored; the immutable run record is copied into artifacts.
+# The live comp3710 partition advertises only 1 MB/node to Slurm. Any --mem
+# request is rejected before scheduling, so memory is intentionally omitted.
 set -euo pipefail
 export PATH="/opt/slurm/bin:$PATH"
 
