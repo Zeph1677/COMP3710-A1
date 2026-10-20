@@ -175,6 +175,9 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
 
     if args.epochs <= 0 or args.batch_size <= 0 or args.learning_rate <= 0 or args.base_channels <= 0:
         raise ValueError("epochs, batch size, learning rate and base channels must be positive")
+    output = args.output_dir.resolve()
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"refusing to overwrite non-empty output directory: {output}")
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     target_shape = tuple(args.target_shape)
@@ -188,7 +191,6 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
-    output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels})
     _write_json(output / "experiment_config.json", config)

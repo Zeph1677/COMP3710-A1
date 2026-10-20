@@ -1,10 +1,13 @@
 import json
+from argparse import Namespace
 from pathlib import Path
 
+import nibabel as nib
+import numpy as np
 import pytest
 import torch
 
-from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, run_training, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -102,3 +105,41 @@ def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
     assert args.model == "baseline"
     assert args.target_shape == [32, 32, 32]
     assert args.prostate_label == 2
+
+
+def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):
+    root = tmp_path / "data"
+    cases = []
+    for split, patient in (("train", "B006"), ("validation", "C007"), ("test", "D008")):
+        image_path = root / "semantic_MRs" / f"{patient}_Week0_LFOV.nii.gz"
+        mask_path = root / "semantic_labels_only" / f"{patient}_Week0_SEMANTIC.nii.gz"
+        image_path.parent.mkdir(parents=True, exist_ok=True)
+        mask_path.parent.mkdir(parents=True, exist_ok=True)
+        image = np.zeros((16, 16, 16), dtype=np.float32)
+        mask = np.zeros((16, 16, 16), dtype=np.int16)
+        mask[4:12, 4:12, 4:12] = 1
+        nib.save(nib.Nifti1Image(image, np.eye(4)), image_path)
+        nib.save(nib.Nifti1Image(mask, np.eye(4)), mask_path)
+        cases.append({"case_id": f"{patient}_Week0", "patient_id": patient, "image_path": str(image_path.relative_to(root)).replace("\\", "/"), "mask_path": str(mask_path.relative_to(root)).replace("\\", "/"), "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 1], "split": split})
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"summary": {"labels": [0, 1]}, "cases": cases}), encoding="utf-8")
+    output = tmp_path / "run"
+
+    summary = run_training(Namespace(manifest=manifest, data_root=root, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation, Table 2"))
+
+    assert summary["selected_epoch"] == 1.0
+    assert (output / "experiment_config.json").is_file()
+    assert (output / "history.json").is_file()
+    assert (output / "training_summary.json").is_file()
+    checkpoint = torch.load(output / "best.pt", map_location="cpu", weights_only=False)
+    assert checkpoint["epoch"] == 1
+    assert checkpoint["config"]["manifest_sha256"]
+
+
+def test_run_training_rejects_nonempty_output_directory(tmp_path: Path):
+    output = tmp_path / "existing-run"
+    output.mkdir()
+    (output / "experiment_config.json").write_text("old evidence", encoding="utf-8")
+
+    with pytest.raises(FileExistsError, match="non-empty"):
+        run_training(Namespace(manifest=tmp_path / "missing.json", data_root=tmp_path, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation, Table 2"))
