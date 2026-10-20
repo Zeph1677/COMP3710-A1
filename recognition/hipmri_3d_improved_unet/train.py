@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -11,6 +12,43 @@ import torch
 from torch.nn import functional as F
 
 from dataset import VolumePair
+
+
+def build_experiment_config(
+    manifest_path: Path | str,
+    model_name: str,
+    target_shape: tuple[int, int, int],
+    seed: int,
+    prostate_label: int,
+    prostate_label_source: str,
+) -> dict[str, object]:
+    """Create the immutable metadata required before a formal training run."""
+
+    path = Path(manifest_path)
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    labels = manifest.get("summary", {}).get("labels")
+    if model_name not in {"baseline", "improved"}:
+        raise ValueError("model name must be 'baseline' or 'improved'")
+    if not isinstance(labels, list) or not labels:
+        raise ValueError("manifest must define at least one label")
+    if len(target_shape) != 3 or any(size <= 0 or size % 8 for size in target_shape):
+        raise ValueError("target shape must contain three positive dimensions divisible by 8")
+    if isinstance(prostate_label, bool) or prostate_label not in labels:
+        raise ValueError("prostate label is outside manifest labels")
+    source = prostate_label_source.strip()
+    if not source:
+        raise ValueError("prostate label source is required")
+    return {
+        "schema_version": 1,
+        "model": model_name,
+        "seed": seed,
+        "target_shape": list(target_shape),
+        "num_classes": len(labels),
+        "prostate_label": prostate_label,
+        "prostate_label_source": source,
+        "manifest_path": str(path),
+        "manifest_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    }
 
 
 def load_audited_pairs(manifest_path: Path | str) -> tuple[list[VolumePair], dict[str, set[str]], int]:

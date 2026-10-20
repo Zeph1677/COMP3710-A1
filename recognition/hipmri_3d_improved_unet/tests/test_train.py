@@ -1,9 +1,10 @@
 import json
 from pathlib import Path
 
+import pytest
 import torch
 
-from train import composite_3d_loss, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, evaluate_3d_batches, load_audited_pairs, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -42,3 +43,46 @@ def test_load_audited_pairs_restores_relative_case_metadata(tmp_path: Path):
     assert pairs[0].image_path == Path("semantic_MRs/B006_Week0_LFOV.nii.gz")
     assert split_ids == {"train": {"B006"}, "validation": set(), "test": set()}
     assert num_classes == 2
+
+
+def test_experiment_config_requires_cited_prostate_label_and_records_manifest_hash(tmp_path: Path):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"summary": {"labels": [0, 1, 2]}}', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="prostate label source"):
+        build_experiment_config(
+            manifest_path=manifest,
+            model_name="baseline",
+            target_shape=(8, 8, 8),
+            seed=42,
+            prostate_label=1,
+            prostate_label_source="",
+        )
+
+    config = build_experiment_config(
+        manifest_path=manifest,
+        model_name="baseline",
+        target_shape=(8, 8, 8),
+        seed=42,
+        prostate_label=1,
+        prostate_label_source="HipMRI documentation, Table 2",
+    )
+
+    assert config["prostate_label"] == 1
+    assert config["prostate_label_source"] == "HipMRI documentation, Table 2"
+    assert len(config["manifest_sha256"]) == 64
+
+
+def test_experiment_config_rejects_out_of_range_prostate_label(tmp_path: Path):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"summary": {"labels": [0, 1, 2]}}', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="outside manifest labels"):
+        build_experiment_config(
+            manifest_path=manifest,
+            model_name="baseline",
+            target_shape=(8, 8, 8),
+            seed=42,
+            prostate_label=3,
+            prostate_label_source="HipMRI documentation, Table 2",
+        )
