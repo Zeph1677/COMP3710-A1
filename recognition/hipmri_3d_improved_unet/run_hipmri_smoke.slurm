@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=hipmri-baseline-smoke
 #SBATCH --account=comp3710
-#SBATCH --partition=gpu
+#SBATCH --partition=comp3710
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
