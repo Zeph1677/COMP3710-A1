@@ -9,6 +9,28 @@ import numpy as np
 import torch
 
 
+def patient_prostate_dice(prediction: torch.Tensor, target: torch.Tensor, prostate_label: int) -> float:
+    """Compute Dice for one reconstructed patient volume, never pooled across patients."""
+
+    if prediction.shape != target.shape:
+        raise ValueError("prediction and target must have identical shapes")
+    predicted = prediction == prostate_label
+    actual = target == prostate_label
+    actual_count = int(actual.sum())
+    if not actual_count:
+        raise ValueError("patient has no reference prostate voxels")
+    denominator = int(predicted.sum()) + actual_count
+    return 2 * int((predicted & actual).sum()) / denominator if denominator else 0.0
+
+
+def mean_patient_prostate_dice(per_patient_scores: dict[str, float]) -> float:
+    """Return the arithmetic mean of independently reconstructed patient Dice values."""
+
+    if not per_patient_scores:
+        raise ValueError("at least one patient prostate Dice is required")
+    return sum(per_patient_scores.values()) / len(per_patient_scores)
+
+
 def _window_starts(length: int, patch: int, stride: int) -> list[int]:
     if patch <= 0 or stride <= 0:
         raise ValueError("patch dimensions and strides must be positive")
