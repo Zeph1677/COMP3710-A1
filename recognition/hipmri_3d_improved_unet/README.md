@@ -10,7 +10,9 @@ The implementation compares a plain 3D U-Net with a 3D Improved U-Net. The impro
 
 `dataset.py` pairs `semantic_MRs` and `semantic_labels_only` by their relative NIfTI paths. It validates 3D shape, affine agreement, finite intensity values and integral labels. Splits are by patient, not slice or patch, and the exact seed-42 manifest must be reused by both models.
 
-No HipMRI data, checkpoints or final results are committed. The code has been checked only against synthetic NIfTI volumes locally; real performance, the prostate label index, memory use and image orientation must be audited on Rangpur before reporting results.
+No HipMRI data, checkpoints or final results are committed. The code has been checked against synthetic NIfTI volumes locally; real performance, memory use and image orientation must be audited on Rangpur before reporting results.
+
+The semantic-mask mapping is now frozen in [`evidence/SOURCES.md`](evidence/SOURCES.md): the authoritative CSIRO data description (collection v2, DOI `10.25919/45T8-P065`, `Labels:` block) states `5=Prostate`. Formal runs must pass this exact mapping and citation into the checkpoint configuration; it is not inferred from mask statistics.
 
 ### Local Windows data root
 
@@ -31,7 +33,7 @@ The headline result is **prostate Dice**. For each held-out test patient, recons
 
 Report Dice for every non-background semantic label as supplementary class-wise results. Do not report background Dice. A formal run must record its patch size, overlap, logit-merging method and the fact that metrics were computed only after full-volume reconstruction. Failure-case discussion must prioritise the prostate base.
 
-The staff reply does **not** identify which of the observed labels `0`–`5` is prostate. Before a training or final-evaluation run, identify that index from the HipMRI reference paper or authoritative dataset documentation, record the citation and mapping in the immutable experiment configuration, and use the same mapping for both models. Do not infer the index from label frequency, mask size or label numbering.
+The staff reply does **not** identify which of the observed labels `0`–`5` is prostate. The authoritative mapping is separately recorded in [`evidence/SOURCES.md`](evidence/SOURCES.md): `5=Prostate`. Record that citation in the immutable experiment configuration and use the same mapping for both models. Do not infer any label from label frequency, mask size or label numbering.
 
 ## Feasibility review
 

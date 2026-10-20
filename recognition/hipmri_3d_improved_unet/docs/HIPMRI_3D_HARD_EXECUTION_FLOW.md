@@ -13,8 +13,9 @@
 | 项目范围 | HipMRI 3D Improved U-Net，Hard difficulty；比较 plain 3D U-Net 与 residual + deep-supervision Improved U-Net | `README.md`、`modules.py`、课程报告 | 正式比较已完成 |
 | 数据审计 | 211 volumes、38 patients、labels `0–5`，路径为相对路径 | `evidence/dataset_manifest.json` | labels 的医学语义 |
 | 患者隔离 | seed 42；train/validation/test 为 27/6/5 patients、146/46/19 volumes | manifest、`dataset.py`、`audit.py` | 模型没有其他设计问题 |
-| 现有代码 | 数据审计、模型、损失、logit overlap averaging、多平面绘图函数 | Python 源码 | 已有可运行训练或预测程序 |
-| 本地测试 | 2026-10-21：`python -m pytest -q` 为 `14 passed` | 本地输出 | 真实 GPU、checkpoint 或 Dice 已达标 |
+| label mapping | `0=Background, 1=Body, 2=Bones, 3=Bladder, 4=Rectum, 5=Prostate` | `evidence/SOURCES.md`、CSIRO v2 DOI `10.25919/45T8-P065` 的 `Labels:` block | 任意模型性能或临床可用性 |
+| 现有代码 | 数据审计、模型、训练 CLI、validation checkpoint、checkpoint restore、test-only sliding-window inference、JSON metrics、ranking 与多平面 failure panels | Python 源码、测试 | 真实 GPU、正式 checkpoint 或 Dice 已达标 |
+| 本地测试 | 2026-10-21：`python -m pytest -q` 为 `24 passed` | 本地输出 | 真实 GPU、checkpoint 或 Dice 已达标 |
 
 ## 2. 已确认的课程与 staff 约束
 
@@ -36,16 +37,11 @@
 - sliding-window inference 可用，但两个模型共用 split、preprocessing、downsampling 和 evaluation protocol；记录 patch size、overlap 与 logit merging method。
 - failure cases 来自 held-out HipMRI 低表现样本，优先 prostate base。
 
-### 2.3 未确认的 label mapping：硬性停止条件
+### 2.3 已冻结的 label mapping 与仍然适用的停止条件
 
-`semantic_labels_only` 的 `0–5` 尚无可定位的 prostate label mapping。不得以编号、频率、mask 体积或目测推断 prostate index。
+`evidence/sources/csiro-brief-data-description.txt` 是 CSIRO collection v2（DOI `10.25919/45T8-P065`）的本地冻结 supporting file。其 `Labels:` block 明确规定：`0=Background, 1=Body, 2=Bones, 3=Bladder, 4=Rectum, 5=Prostate`。文件 SHA-256 为 `DC3A99204684CED859872D79A75707AF3C0AD31D00F5F3213063CE5E30727EE6`；正式 metadata 使用 `prostate_label=5` 与 `evidence/SOURCES.md` 所列的完整来源文字。
 
-在 HipMRI reference paper 或权威数据说明给出页码、表、图或等价可定位来源前：
-
-- 不得把任一 label 写成 prostate；
-- 不得将任一数值称为 prostate Dice；
-- 不得宣称 `>= 0.70`；
-- prostate-headline 评估必须拒绝缺失 mapping/source 的配置。
+不得以编号、频率、mask 体积或目测替换该来源。checkpoint 缺少 label 或非空 source 时，headline prostate Dice 评估必须拒绝执行；有该 mapping 也不等于已经得到任何真实 Dice。
 
 ## 3. 修正后的执行阶段
 
@@ -58,25 +54,25 @@
 - [ ] 保存至少三位真实患者的 axial/coronal/sagittal 图与标签叠图。`render_case_views()` 可生成面板，但当前没有真实数据产物。
 - [ ] 获取并记录 label-to-structure mapping 的权威来源。
 
-### B. 补齐可执行训练程序
+### B. 训练程序：已具备本地可执行链路，尚缺真实 GPU 证据
 
-`train.py` 当前仅有 manifest 读取、组合损失、批级指标与 validation checkpoint 选择工具，缺少 CLI、DataLoader、optimizer、epoch loop、history、checkpoint、不可变 config 和环境记录。
+`train.py` 已有 CLI、manifest-driven DataLoader、Adam、epoch loop、validation-only checkpoint selection、`experiment_config.json`、`history.json`、`best.pt` 与 `training_summary.json`，并拒绝覆盖非空 artifact directory。checkpoint 内保存模型配置、manifest SHA-256 与 prostate label/source；`load_checkpoint_model()` 可按其声明恢复 baseline 或 improved architecture。
 
 - 训练只使用 train patients；validation 选择 best checkpoint；test 不参与 epoch、patch size、loss 或配置选择。
-- 保存 config、seed、manifest hash、Git SHA、Python/PyTorch/CUDA、GPU、stdout/stderr、history、best checkpoint 与资源记录。
+- 正式 Slurm 运行仍须补充 Git SHA、Python/PyTorch/CUDA、GPU、stdout/stderr、job ID、exit state 与峰值显存；这些环境记录尚未由当前训练 CLI 自动写入。
 - 当前实现是每-volume z-score 和固定 `target_shape`；“仅从 train patients 拟合 normalisation 参数”尚未实现，不得写成现状。
 - 真实 GPU smoke 需覆盖 forward、backward、optimizer step、checkpoint save/load 与小型 inference。
 
-### C. 补齐完整 volume 推理与患者级指标
+### C. 预测与患者级指标：已具备 CLI，尚无真实运行产物
 
-`predict.py` 已实现 overlap-averaged logits：累加每个 patch 的 logits，再以 `prediction_count` 确认每个 voxel 被覆盖。尚缺 checkpoint loading、test orchestration、JSON metrics、case ranking 和真实 failure panels。
+`predict.py` 已从 validation-selected `best.pt` 恢复声明的 architecture，验证 manifest SHA-256，且只读取 manifest 的 test patients。它对每个 volume 做 overlap-averaged sliding-window logits 重建，按患者计算 prostate Dice 的算术均值，写出 `test_metrics.json`、非背景 label Dice/IoU、failure ranking 和每名 test patient 的代表性多平面 panel。合成 NIfTI 端到端测试证明该命令不会访问训练/验证病例。
 
 正式评估应从 validation-selected `best.pt` 开始，对每位 held-out patient 的完整 volume 重建，然后输出：
 
 1. 每位患者的已确认 prostate label Dice；
 2. `mean_patient_prostate_dice` 与 test patient count；
 3. 每个非 background label 的 Dice/IoU；
-4. 参数量、peak VRAM、总训练时间与 per-patient inference time；
+4. 参数量、peak VRAM、总训练时间与 per-patient inference time；当前 predict CLI 尚未写入这些正式资源字段；
 5. 按预先声明的患者级 prostate error 排序的 3–5 个真实 held-out failure panels。
 
 必须新增测试，证明患者 Dice 算术均值不能被 pooled-voxel Dice 替代；baseline 与 improved 使用同一实现。
@@ -108,9 +104,8 @@
 
 仍须向教学团队确认：
 
-1. `0–5` label-to-structure mapping 的可引用位置；
-2. Virtual GPU Lab 是否可用于正式完整训练及需要保存的证据；
-3. Phase 1 GitHub PR 与 Turnitin README PDF 的确切日期和时间。
+1. Virtual GPU Lab 是否可用于正式完整训练及需要保存的证据；
+2. Phase 1 GitHub PR 与 Turnitin README PDF 的确切日期和时间。
 
 **标签映射问题草稿：**
 
