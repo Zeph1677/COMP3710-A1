@@ -64,6 +64,8 @@ def test_patient_split_is_deterministic_and_has_zero_overlap(tmp_path: Path):
 def test_discovers_lfov_and_semantic_files_by_case_key_and_retains_patient_group(tmp_path: Path):
     _make_hipmri_named_pair(tmp_path, "B006_Week0")
     _make_hipmri_named_pair(tmp_path, "B006_Week1")
+    _make_hipmri_named_pair(tmp_path, "C032_Week0")
+    _make_hipmri_named_pair(tmp_path, "C032_Week1")
     _make_hipmri_named_pair(tmp_path, "B037_Week0")
     _make_hipmri_named_pair(tmp_path, "B038_Week0")
 
@@ -75,6 +77,8 @@ def test_discovers_lfov_and_semantic_files_by_case_key_and_retains_patient_group
         ("B006_Week1", "B006"),
         ("B037_Week0", "B037"),
         ("B038_Week0", "B038"),
+        ("C032_Week0", "C032"),
+        ("C032_Week1", "C032"),
     ]
     patient_partition = {
         partition

@@ -78,7 +78,7 @@ def _patient_id(case_id: str, source_path: Path) -> str:
     """Use the HipMRI subject prefix when present, otherwise preserve nested layout IDs."""
 
     case_name = Path(case_id).name
-    match = re.fullmatch(r"(?P<patient>B\d+)_Week\d+", case_name)
+    match = re.fullmatch(r"(?P<patient>[A-Za-z]+\d+)_Week\d+", case_name)
     if match:
         return match.group("patient")
     return source_path.parts[0] if len(source_path.parts) > 1 else case_name
