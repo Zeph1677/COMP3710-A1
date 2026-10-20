@@ -5,7 +5,7 @@ import torch
 import pytest
 
 from modules import BaselineUNet3D
-from predict import load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, sliding_window_logits
+from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, sliding_window_logits
 
 
 class ConstantLogitModel(torch.nn.Module):
@@ -69,3 +69,16 @@ def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
     assert isinstance(restored, BaselineUNet3D)
     assert config["model"] == "baseline"
     assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
+
+
+def test_test_metrics_report_patient_headline_and_nonbackground_classes():
+    metrics = build_test_metrics(
+        {"B006": 0.4, "C007": 0.8},
+        {"0": {"dice": 1.0, "iou": 1.0}, "1": {"dice": 0.6, "iou": 0.5}, "2": {"dice": 0.7, "iou": 0.6}},
+        prostate_label=1,
+    )
+
+    assert metrics["mean_patient_prostate_dice"] == pytest.approx(0.6)
+    assert metrics["test_patient_count"] == 2
+    assert set(metrics["per_class"]) == {"1", "2"}
+    assert metrics["failure_ranking"] == [{"patient_id": "B006", "prostate_dice": 0.4}, {"patient_id": "C007", "prostate_dice": 0.8}]

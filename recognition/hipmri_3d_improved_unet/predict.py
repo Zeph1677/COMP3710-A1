@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -9,6 +12,8 @@ import numpy as np
 import torch
 
 from modules import BaselineUNet3D, ImprovedUNet3D
+from dataset import HipMRI3DDataset
+from train import load_audited_pairs
 
 
 def patient_prostate_dice(prediction: torch.Tensor, target: torch.Tensor, prostate_label: int) -> float:
@@ -33,6 +38,20 @@ def mean_patient_prostate_dice(per_patient_scores: dict[str, float]) -> float:
     return sum(per_patient_scores.values()) / len(per_patient_scores)
 
 
+def build_test_metrics(per_patient_scores: dict[str, float], per_class: dict[str, dict[str, float | None]], prostate_label: int) -> dict[str, object]:
+    """Create the held-out metric contract without leaking background Dice into reports."""
+
+    ranking = [{"patient_id": patient_id, "prostate_dice": score} for patient_id, score in sorted(per_patient_scores.items(), key=lambda item: item[1])]
+    return {
+        "prostate_label": prostate_label,
+        "test_patient_count": len(per_patient_scores),
+        "mean_patient_prostate_dice": mean_patient_prostate_dice(per_patient_scores),
+        "per_patient_prostate_dice": per_patient_scores,
+        "per_class": {label: value for label, value in per_class.items() if label != "0"},
+        "failure_ranking": ranking,
+    }
+
+
 def load_checkpoint_model(checkpoint_path: Path | str, device: torch.device) -> tuple[torch.nn.Module, dict[str, object]]:
     """Restore exactly the architecture declared in a validation-selected checkpoint."""
 
@@ -48,6 +67,61 @@ def load_checkpoint_model(checkpoint_path: Path | str, device: torch.device) -> 
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
     return model, config
+
+
+def create_argument_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Evaluate a validation-selected HipMRI checkpoint on manifest test patients only.")
+    parser.add_argument("--checkpoint", required=True, type=Path)
+    parser.add_argument("--manifest", required=True, type=Path)
+    parser.add_argument("--data-root", required=True, type=Path)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--patch-size", required=True, type=int, nargs=3)
+    parser.add_argument("--stride", required=True, type=int, nargs=3)
+    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    return parser
+
+
+def _class_metrics(prediction: torch.Tensor, target: torch.Tensor, num_classes: int) -> dict[str, dict[str, float | None]]:
+    result: dict[str, dict[str, float | None]] = {}
+    for label in range(num_classes):
+        predicted, actual = prediction == label, target == label
+        intersection, union = int((predicted & actual).sum()), int((predicted | actual).sum())
+        denominator = int(predicted.sum() + actual.sum())
+        result[str(label)] = {"dice": 2 * intersection / denominator if denominator else None, "iou": intersection / union if union else None}
+    return result
+
+
+def run_prediction(args: argparse.Namespace) -> dict[str, object]:
+    output = args.output_dir.resolve()
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"refusing to overwrite non-empty output directory: {output}")
+    device = torch.device(args.device)
+    model, config = load_checkpoint_model(args.checkpoint, device)
+    manifest_hash = hashlib.sha256(args.manifest.read_bytes()).hexdigest()
+    if config.get("manifest_sha256") != manifest_hash:
+        raise ValueError("checkpoint manifest hash does not match supplied manifest")
+    prostate_label = config.get("prostate_label")
+    if not isinstance(prostate_label, int) or not str(config.get("prostate_label_source", "")).strip():
+        raise ValueError("checkpoint lacks a cited prostate label mapping")
+    pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
+    output.mkdir(parents=True, exist_ok=True)
+    patient_scores: dict[str, list[float]] = {}
+    class_parts: dict[str, list[dict[str, float | None]]] = {str(label): [] for label in range(num_classes)}
+    for pair in pairs:
+        if pair.patient_id not in split_ids["test"]:
+            continue
+        image, target = HipMRI3DDataset([pair], args.data_root, {pair.patient_id}, num_classes, tuple(config["target_shape"]))[0]
+        logits = sliding_window_logits(model, image.to(device), tuple(args.patch_size), tuple(args.stride))
+        prediction = logits.argmax(0).cpu()
+        patient_scores.setdefault(pair.patient_id, []).append(patient_prostate_dice(prediction, target, prostate_label))
+        for label, values in _class_metrics(prediction, target, num_classes).items():
+            class_parts[label].append(values)
+    per_patient = {patient: sum(scores) / len(scores) for patient, scores in patient_scores.items()}
+    per_class = {label: {metric: (sum(value[metric] for value in values if value[metric] is not None) / sum(value[metric] is not None for value in values)) if any(value[metric] is not None for value in values) else None for metric in ("dice", "iou")} for label, values in class_parts.items()}
+    metrics = build_test_metrics(per_patient, per_class, prostate_label)
+    metrics.update({"checkpoint": str(args.checkpoint), "manifest_sha256": manifest_hash, "prostate_label_source": config["prostate_label_source"], "patch_size": args.patch_size, "stride": args.stride})
+    (output / "test_metrics.json").write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return metrics
 
 
 def _window_starts(length: int, patch: int, stride: int) -> list[int]:
@@ -132,3 +206,11 @@ def render_case_views(
     output.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output, dpi=180)
     plt.close(figure)
+
+
+def main() -> None:
+    print(json.dumps(run_prediction(create_argument_parser().parse_args()), indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
