@@ -1,112 +1,140 @@
-# HipMRI 3D Improved U-Net: 后续执行流程
+# HipMRI 3D Improved U-Net：执行总表、课程说明与证据边界
 
-## 项目边界
+> **适用范围：** COMP3710 Assignment 1，`recognition/hipmri_3d_improved_unet/`。本文件合并项目执行路线与 Ed Discussion 中对本项目有效的补充信息。
+>
+> **优先级：** 课程 brief、Blackboard、course profile 与教学团队后续公告高于本文件；已保存的 Ed 回复高于旧计划；代码、测试和 manifest 仅证明本地已核验状态。
+>
+> **边界：** 本文件不等于 tutor check-off、Rangpur job、PR、Turnitin 或正式实验结果。OASIS 2D 数据、曲线、checkpoint、图和 Dice 不得写入 HipMRI 3D Hard 的结果、feasibility evidence 或结论。
 
-本目录是 COMP3710 Hard Difficulty 的正式项目：下采样 HipMRI 3D NIfTI volume 上的分割任务。正式比较对象为 plain 3D U-Net 与包含 volumetric residual units、two deep-supervision heads 的 Improved 3D U-Net。
+## 1. 当前经过核验的事实
 
-OASIS 2D Easy 项目已归档于：
+| 项目 | 当前状态 | 依据 | 不可由此推出 |
+|---|---|---|---|
+| 项目范围 | HipMRI 3D Improved U-Net，Hard difficulty；比较 plain 3D U-Net 与 residual + deep-supervision Improved U-Net | `README.md`、`modules.py`、课程报告 | 正式比较已完成 |
+| 数据审计 | 211 volumes、38 patients、labels `0–5`，路径为相对路径 | `evidence/dataset_manifest.json` | labels 的医学语义 |
+| 患者隔离 | seed 42；train/validation/test 为 27/6/5 patients、146/46/19 volumes | manifest、`dataset.py`、`audit.py` | 模型没有其他设计问题 |
+| 现有代码 | 数据审计、模型、损失、logit overlap averaging、多平面绘图函数 | Python 源码 | 已有可运行训练或预测程序 |
+| 本地测试 | 2026-10-21：`python -m pytest -q` 为 `14 passed` | 本地输出 | 真实 GPU、checkpoint 或 Dice 已达标 |
 
-`D:\OneDrive - The University of Queensland\Desktop\Study\COMP3710_PatternRecognition\Ass1\OASIS_2D_Easy_Archived_2026-10-15\oasis_brain_analysis`
+## 2. 已确认的课程与 staff 约束
 
-OASIS 的 Dice、训练曲线、checkpoint、PNG 审计、feasibility 文档及任何 2D 结果均不得写入本项目的 HipMRI 结果表、figures、feasibility evidence 或最终结论。
+### 2.1 课程报告
 
-## 完成定义
+- 只完成一个选定项目；当前正式项目是 `recognition/hipmri_3d_improved_unet/`。
+- 3D Improved U-Net 是 Hard difficulty，需 volumetric residual units 与 deep supervision；课程表给出 test-set Dice `>= 0.70` 目标。
+- 必须提供一页 feasibility review 并完成 practical consultation check-off。check-off 是通过 assessment 的硬性条件，README 必须保留该 review。
+- 必须提供 `modules.py`、`dataset.py`、`train.py`、`predict.py`、测试、README、渐进 commit history、PR 与 Phase 2 review 回复。
+- 不提交数据或模型文件；Turnitin 提交 README 的 PDF 导出；README 必须包含 **Artificial Intelligence Usage Disclosure**。
 
-本项目在满足以下三项前不得称为完成：
+### 2.2 Zhao Wang 的针对性回复（2026-10-21）
 
-1. 正确的 HipMRI Hard 代码和证据位于向课程上游 `topic-recognition` 分支提交的开放 PR；
-2. 同一版本的 README PDF 已在 Turnitin 获得提交确认；
-3. 教学团队的后续 PR review 已通过带验证的 commits 和逐条 GitHub 回复处理。
+- plain 3D U-Net 可作为 baseline。
+- 211 volumes 来自 38 patients；两个模型均按 **patient** 而非 volume、slice 或 patch 切分。
+- headline 是 held-out test patients 的 prostate Dice 算术平均：每位患者先 full-volume reconstruction，再计算 Dice，最后求患者均值。
+- `>= 0.70` 适用于该患者级 prostate Dice mean，不能改为 pooled-voxel Dice、foreground macro Dice 或全类别均值。
+- 报告所有非 background labels 的 Dice；background 不报告。
+- sliding-window inference 可用，但两个模型共用 split、preprocessing、downsampling 和 evaluation protocol；记录 patch size、overlap 与 logit merging method。
+- failure cases 来自 held-out HipMRI 低表现样本，优先 prostate base。
 
-本地代码、合成数据测试、计划文档或 smoke test 都不构成提交确认。
+### 2.3 未确认的 label mapping：硬性停止条件
 
-## 阶段 0：确认课程与资源事实
+`semantic_labels_only` 的 `0–5` 尚无可定位的 prostate label mapping。不得以编号、频率、mask 体积或目测推断 prostate index。
 
-- [ ] 在 Blackboard/2026 course profile 确认截止时间、中期 practical consultation、PR 目标仓库和分支、Turnitin 入口、review 回复期限。
-- [ ] 在 Rangpur 检查 `/home/groups/comp3710/HipMRI_Study_open` 是否可读；记录访问日期和目录结构，不复制原始数据到 Git。
-- [ ] 向 tutor 确认 label semantics、prostate Dice `>= 0.70` 的计算定义、background 是否单列、允许的 downsampling、GPU 预算和 midpoint 证据要求。
-- [ ] 将获得的明确课程信息补入 README 的 project charter；不从旧年份 course profile 推断日期。
+在 HipMRI reference paper 或权威数据说明给出页码、表、图或等价可定位来源前：
 
-**退出条件：** 数据路径、模块难度、目标 metric、提交路径和中期安排均有当前课程来源。
+- 不得把任一 label 写成 prostate；
+- 不得将任一数值称为 prostate Dice；
+- 不得宣称 `>= 0.70`；
+- prostate-headline 评估必须拒绝缺失 mapping/source 的配置。
 
-## 阶段 1：HipMRI 3D 数据审计与固定 split
+## 3. 修正后的执行阶段
 
-- [ ] 使用 NiBabel 递归匹配 `semantic_MRs` 与 `semantic_labels_only` 下的 NIfTI image/mask pairs。
-- [ ] 对每个 pair 验证：patient ID、image-mask shape、affine、orientation、finite intensity、integer labels、空/异常 mask 和重复 relative path。
-- [ ] 生成只读 `dataset_manifest.json`，记录 source-relative path、patient ID、shape、spacing、orientation、labels 和 split。
-- [ ] 以 patient 为单位生成 seed-42 train/validation/test manifest；自动断言三组 patient IDs 没有重叠。
-- [ ] 输出至少三位真实患者的 axial、coronal、sagittal 图像与标签叠图；mask resize 必须使用 nearest-neighbour interpolation。
+### A. 冻结已完成的数据事实
 
-**退出条件：** 真实 audit report、sample panels 和可重复 patient-disjoint manifest 已保存；没有未知标签、坏配对或跨 split patient。
+- [x] 递归发现 image/mask NIfTI pairs。
+- [x] 验证 shape、affine、orientation、finite image values 与 integer masks。
+- [x] 生成 manifest，固定 patient-disjoint seed-42 split。
+- [x] 核验 211 cases / 38 patients，患者分组 27/6/5。
+- [ ] 保存至少三位真实患者的 axial/coronal/sagittal 图与标签叠图。`render_case_views()` 可生成面板，但当前没有真实数据产物。
+- [ ] 获取并记录 label-to-structure mapping 的权威来源。
 
-## 阶段 2：确定 3D 预处理与计算预算
+### B. 补齐可执行训练程序
 
-- [ ] 仅从 train patients 推导 intensity normalisation 参数，并记录实现和统计值。
-- [ ] 明确并固定 downsampled volume geometry、voxel spacing、orientation policy、label interpolation policy、patch size、stride、overlap、foreground sampling rule 和 batch size。
-- [ ] 在 Rangpur GPU 上执行一个小型 3D baseline smoke run，保存命令、GPU 型号、CUDA/PyTorch 版本、VRAM、stdout、stderr、job ID 和 exit state。
-- [ ] 若完整 volume 超出显存，使用 overlap patch inference，并验证 logit accumulation 后每一个 voxel 的 prediction count 大于零。
+`train.py` 当前仅有 manifest 读取、组合损失、批级指标与 validation checkpoint 选择工具，缺少 CLI、DataLoader、optimizer、epoch loop、history、checkpoint、不可变 config 和环境记录。
 
-**退出条件：** 选定的 geometry 和 batch size 在真实 HipMRI volume 上完成 forward、backward、optimizer step、checkpoint save/load 与小型 inference。
+- 训练只使用 train patients；validation 选择 best checkpoint；test 不参与 epoch、patch size、loss 或配置选择。
+- 保存 config、seed、manifest hash、Git SHA、Python/PyTorch/CUDA、GPU、stdout/stderr、history、best checkpoint 与资源记录。
+- 当前实现是每-volume z-score 和固定 `target_shape`；“仅从 train patients 拟合 normalisation 参数”尚未实现，不得写成现状。
+- 真实 GPU smoke 需覆盖 forward、backward、optimizer step、checkpoint save/load 与小型 inference。
 
-## 阶段 3：建立公平的 3D baseline
+### C. 补齐完整 volume 推理与患者级指标
 
-- [ ] Baseline 使用 plain 3D U-Net；输入为 `(N, C, D, H, W)`，输出为 `(N, classes, D, H, W)`。
-- [ ] 测试 forward shape、finite loss、nonzero gradients、optimizer step、checkpoint reload 和 full-volume reconstruction。
-- [ ] 训练只使用 train patients；每个 epoch 在 validation patients 计算主 selection metric。
-- [ ] 只按 validation metric 选择 `best.pt`；禁止用 test results 选 epoch、loss、patch size 或模型配置。
-- [ ] 保存 baseline 的 config、split manifest、history、best checkpoint、test metrics、resource record 和 predictions 到 Git 忽略的实验目录。
+`predict.py` 已实现 overlap-averaged logits：累加每个 patch 的 logits，再以 `prediction_count` 确认每个 voxel 被覆盖。尚缺 checkpoint loading、test orchestration、JSON metrics、case ranking 和真实 failure panels。
 
-**退出条件：** baseline 在固定 manifest 上完成完整训练，并能从 `best.pt` 重建最终 held-out test 结果。
+正式评估应从 validation-selected `best.pt` 开始，对每位 held-out patient 的完整 volume 重建，然后输出：
 
-## 阶段 4：完成 Improved 3D U-Net
+1. 每位患者的已确认 prostate label Dice；
+2. `mean_patient_prostate_dice` 与 test patient count；
+3. 每个非 background label 的 Dice/IoU；
+4. 参数量、peak VRAM、总训练时间与 per-patient inference time；
+5. 按预先声明的患者级 prostate error 排序的 3–5 个真实 held-out failure panels。
 
-- [ ] 以 `Conv3d`、3D normalisation、3D residual shortcut 实现 volumetric residual units；不可复用 2D layers 代替。
-- [ ] 在 decoder 设置两个 deep-supervision heads，并将其 logits 对齐至对应 target geometry。
-- [ ] 记录总损失：`main_loss + lambda_1 * aux_loss_1 + lambda_2 * aux_loss_2`；将 `lambda_1` 和 `lambda_2` 固定在 config。
-- [ ] 测试 auxiliary output shapes、weighted loss、backpropagation、inference 仅返回 final-resolution logits 和 checkpoint reload。
-- [ ] baseline 与 improved 使用同一 manifest、相同预处理、同一 metric 实现、同一 validation selection rule 和同一 test protocol。
+必须新增测试，证明患者 Dice 算术均值不能被 pooled-voxel Dice 替代；baseline 与 improved 使用同一实现。
 
-**退出条件：** Improved 3D U-Net 的每一项 Hard 要求由源代码、测试和真实 GPU smoke evidence 共同支持。
+### D. 公平比较与 GPU 证据
 
-## 阶段 5：正式实验与结果保存
+- 两模型共享 manifest、preprocessing、target geometry、patch/stride/overlap、metrics、validation-only selection rule 与 test protocol。
+- Rangpur 或经 staff 批准的替代环境保存 GPU model、CUDA/PyTorch versions、command、job/session ID、exit state、stdout、stderr 和 peak VRAM。
+- 先完成 baseline GPU smoke，再运行完整 baseline/improved。
+- 实验产物放 Git 忽略目录；不提交 data、weights、checkpoints 或大临时文件。
 
-- [ ] 对 baseline 和 improved 分别运行完整训练；每个实验保存不可变 config、seed、hardware、job ID、stdout、stderr、history、best checkpoint 和 test metrics。
-- [ ] 在最终 `best.pt` 上执行一次 held-out test；不要在读取 test metric 后继续调参并重复报告最佳 test 值。
-- [ ] 对每一类别及 case-level distribution 报告 Dice 和 IoU；同时报告 macro/foreground metric，并将 background 单独列示。
-- [ ] 报告 parameter count、peak VRAM、total training time、per-patient inference time、patch/full-volume inference setting。
-- [ ] 判断 `>= 0.70` 时注明计算定义、患者数量、类别和是否排除 background。
+### E. Feasibility、提交与 code review
 
-**退出条件：** 两模型的数值来自可定位的 config、manifest、checkpoint、log 和机器可读 metric 文件。
+- feasibility review 使用 HipMRI audit、患者隔离、模型设计、实际 smoke evidence、风险、预算与 fallback；不能使用 OASIS 结果。
+- tutor 在 scheduled practical consultation 记录 check-off；本地文件不等于 check-off。
+- 从干净 shell 运行 README 的 install、test、train、prediction；确认 data、credentials、weights 与产物不进 Git。
+- 导出 README PDF 并检查图、表、引用、标题和 AI disclosure。
+- Phase 1：从个人 fork 的 `topic-recognition` 向课程上游同名分支发 PR；保存 URL 与状态。
+- Phase 2：复核每条 review comment，做聚焦 commit、运行验证，并在 review thread 引用 commit SHA 回复。
 
-## 阶段 6：失败案例与工程建议
+## 4. Ed Discussion：保留的来源与待问问题
 
-- [ ] 按预先声明的 case-level error statistic 对 held-out patients 排序，选择 3–5 个真实 failure cases；不只展示最好样本。
-- [ ] 每个案例输出 axial、coronal、sagittal MRI、ground truth、baseline、improved、false-positive/false-negative overlay 和 per-class metrics。
-- [ ] 对每例说明失败部位、错误类型、improved 相比 baseline 的变化和人工复核是否可接受。
-- [ ] 结论仅可在证据允许的范围内选择：推荐 improved 作为人工审阅草图；推荐 baseline；或列出明确的后续改进目标。不得主张 autonomous clinical deployment。
+| 主题 | 已知要求 | 项目处理 |
+|---|---|---|
+| 仅完成一个项目 | 只做一个选定模型 | HipMRI 3D Hard 是唯一正式项目 |
+| failure cases | 为 dataset 低表现样本，解释小目标、边界、anatomy、质量或标签问题 | held-out test patients，优先 prostate base |
+| check-off | 可参加其他 practical，建议及早完成 | 带一页 review 与真实 audit/smoke evidence |
+| Virtual GPU Lab | 有 quota，空闲 session 会结束 | 需 staff 确认后才作为 Rangpur 替代，并备份证据 |
 
-**退出条件：** README 中的图、数字、病例解释都可追溯到 held-out HipMRI evidence。
+仍须向教学团队确认：
 
-## 阶段 7：中期与提交
+1. `0–5` label-to-structure mapping 的可引用位置；
+2. Virtual GPU Lab 是否可用于正式完整训练及需要保存的证据；
+3. Phase 1 GitHub PR 与 Turnitin README PDF 的确切日期和时间。
 
-- [ ] 基于真实 HipMRI audit 和 smoke evidence 重写一页 feasibility review；不得使用 OASIS 数值或图。
-- [ ] 在 scheduled practical consultation 出示该 review，并记录 tutor 已确认的日期、反馈和 scope decision。
-- [ ] 从干净 shell 执行 README 写明的 install、test、train 与 prediction 命令；检查没有数据、checkpoint、credentials 或大临时文件进入 Git。
-- [ ] 导出最终 README PDF，逐页检查 figure legibility、table overflow、heading order、references 和 AI usage disclosure。
-- [ ] 创建从个人 fork `topic-recognition` 到课程上游 `topic-recognition` 的 PR，保存 URL 和状态记录。
-- [ ] 提交匹配 README 的 PDF 至 Turnitin，保存 receipt、submission ID 和 timestamp。
+**标签映射问题草稿：**
 
-## 阶段 8：教学团队代码审查
+```text
+Hi teaching team,
 
-- [ ] 阅读每条 PR review comment；先复现问题或确认文档请求的范围。
-- [ ] 对每个 coherent fix 创建聚焦 commit，并运行相关测试。
-- [ ] 逐条回复 GitHub review thread，引用 commit SHA，说明修复和验证方式。
-- [ ] 在课程规定窗口结束前保存 review discussion 的最终状态。
+I am implementing Project 2.2 at Hard difficulty: a downsampled HipMRI 3D Improved U-Net with volumetric residual units and deep supervision, compared against a plain 3D U-Net using a patient-disjoint split.
 
-## 不可突破的证据规则
+Could you please point me to the exact page, table, figure, or authoritative dataset documentation that maps the course-provided HipMRI semantic labels `0–5` to anatomical structures, specifically the prostate label? I will record that source and mapping in the immutable experiment configuration and report.
 
-- OASIS 2D 数据、结果和图不能证明 HipMRI 3D Hard 项目。
-- 合成 NIfTI 测试证明代码路径，不证明真实 HipMRI performance。
-- GPU smoke run 证明训练链路，不证明 Dice 达标。
-- validation 用于 checkpoint selection；held-out test 只用于最终一次正式评估。
-- 本地文件、push 或草拟 PR 不等于 Turnitin 提交确认。
+Thank you.
+```
+
+在现有 due-date 帖子下追问 GitHub PR 与 Turnitin README PDF 的确切 Phase 1 date/time；不从旧年份 course profile 推断。
+
+## 5. 不可突破的证据规则
+
+- 合成 NIfTI 测试、计划文档和本地 smoke 不证明 HipMRI 3D 最终性能。
+- validation 用于 checkpoint selection；held-out test 只做最终正式评估，不能在读取后继续调参。
+- GPU smoke 证明链路，不证明 Dice 达标或 improved 更好。
+- push、草拟 PR 或本地 PDF 不等于上游 PR 与 Turnitin 提交确认。
+
+## 6. 原始材料保留说明
+
+- `COMP3710_Module2_2_3D_Improved_UNet_完整执行指南_中文.md` 保持完整，作为从零到 Phase 2 的详细指南；本总表不替代其操作细节。
+- `ED_DISCUSSION_2026-10-18_PROJECT_GUIDANCE.md` 保留原始链接、针对性答复与问题草稿；本总表只汇总其可执行约束。
+- `COMP3710_Report_2026_draft_v2.3.pdf` 的文件名为 v2.3，但 PDF 首页内部标题写为 Version 2.2。记录该资料不一致，并以后续课程公告或 Blackboard 为准。
