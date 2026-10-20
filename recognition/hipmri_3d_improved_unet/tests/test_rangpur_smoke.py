@@ -16,4 +16,6 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert "nvidia-smi" in script
     assert "python train.py" in script
     assert "python predict.py" in script
+    assert 'MODEL_NAME="${HIPMRI_MODEL:-baseline}"' in script
+    assert "HIPMRI_MODEL must be baseline or improved" in script
     assert "set -euo pipefail" in script
