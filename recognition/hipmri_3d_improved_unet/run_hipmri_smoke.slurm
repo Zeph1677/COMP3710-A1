@@ -20,7 +20,9 @@ DATA_ROOT="${HIPMRI_DATA_ROOT:-/home/groups/comp3710/HipMRI_Study_open}"
 JOB_ID="${SLURM_JOB_ID:?this script must run under Slurm}"
 RUN_DIR="$PROJECT_DIR/artifacts/rangpur_smoke_${JOB_ID}"
 PROSTATE_SOURCE="CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate."
-EXPECTED_SOURCE_SHA256="DC3A99204684CED859872D79A75707AF3C0AD31D00F5F3213063CE5E30727EE6"
+# Git may normalize CRLF to LF on Linux. This checksum validates the same text
+# after LF normalization; SOURCES.md retains the raw downloaded-file checksum.
+EXPECTED_SOURCE_NORMALIZED_SHA256="89C5EF8336573B6C359D0828E2FFCF6819149490FEE20071F7436ED411DD89AF"
 
 cd "$PROJECT_DIR"
 if [[ -n "$(git status --porcelain)" ]]; then
@@ -31,8 +33,8 @@ if [[ ! -d "$DATA_ROOT/semantic_MRs" || ! -d "$DATA_ROOT/semantic_labels_only" ]
     echo "HipMRI data root is incomplete: $DATA_ROOT" >&2
     exit 2
 fi
-if [[ "$(sha256sum evidence/sources/csiro-brief-data-description.txt | awk '{print toupper($1)}')" != "$EXPECTED_SOURCE_SHA256" ]]; then
-    echo "The frozen CSIRO label-mapping evidence does not match its recorded SHA-256." >&2
+if [[ "$(tr -d '\r' < evidence/sources/csiro-brief-data-description.txt | sha256sum | awk '{print toupper($1)}')" != "$EXPECTED_SOURCE_NORMALIZED_SHA256" ]]; then
+    echo "The frozen CSIRO label-mapping evidence does not match its normalized SHA-256." >&2
     exit 2
 fi
 
