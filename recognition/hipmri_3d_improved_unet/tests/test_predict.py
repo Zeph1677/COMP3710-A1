@@ -4,7 +4,8 @@ import torch
 
 import pytest
 
-from predict import mean_patient_prostate_dice, patient_prostate_dice, render_case_views, sliding_window_logits
+from modules import BaselineUNet3D
+from predict import load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, sliding_window_logits
 
 
 class ConstantLogitModel(torch.nn.Module):
@@ -56,3 +57,15 @@ def test_patient_prostate_dice_is_computed_per_patient_before_mean():
 def test_patient_prostate_dice_rejects_patient_without_reference_label():
     with pytest.raises(ValueError, match="no reference prostate voxels"):
         patient_prostate_dice(torch.zeros(2, 2, 2), torch.zeros(2, 2, 2), prostate_label=1)
+
+
+def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
+    original = BaselineUNet3D(num_classes=2, base_channels=2)
+    checkpoint_path = tmp_path / "best.pt"
+    torch.save({"model_state_dict": original.state_dict(), "config": {"model": "baseline", "num_classes": 2, "base_channels": 2}}, checkpoint_path)
+
+    restored, config = load_checkpoint_model(checkpoint_path, torch.device("cpu"))
+
+    assert isinstance(restored, BaselineUNet3D)
+    assert config["model"] == "baseline"
+    assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))

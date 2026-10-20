@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+from modules import BaselineUNet3D, ImprovedUNet3D
+
 
 def patient_prostate_dice(prediction: torch.Tensor, target: torch.Tensor, prostate_label: int) -> float:
     """Compute Dice for one reconstructed patient volume, never pooled across patients."""
@@ -29,6 +31,23 @@ def mean_patient_prostate_dice(per_patient_scores: dict[str, float]) -> float:
     if not per_patient_scores:
         raise ValueError("at least one patient prostate Dice is required")
     return sum(per_patient_scores.values()) / len(per_patient_scores)
+
+
+def load_checkpoint_model(checkpoint_path: Path | str, device: torch.device) -> tuple[torch.nn.Module, dict[str, object]]:
+    """Restore exactly the architecture declared in a validation-selected checkpoint."""
+
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    config = checkpoint.get("config")
+    if not isinstance(config, dict):
+        raise ValueError("checkpoint is missing experiment config")
+    model_name, num_classes, base_channels = config.get("model"), config.get("num_classes"), config.get("base_channels")
+    if model_name not in {"baseline", "improved"} or not isinstance(num_classes, int) or not isinstance(base_channels, int):
+        raise ValueError("checkpoint config does not declare a supported model")
+    model_type = BaselineUNet3D if model_name == "baseline" else ImprovedUNet3D
+    model = model_type(num_classes=num_classes, base_channels=base_channels).to(device)
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.eval()
+    return model, config
 
 
 def _window_starts(length: int, patch: int, stride: int) -> list[int]:
