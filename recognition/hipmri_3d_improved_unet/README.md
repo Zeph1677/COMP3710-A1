@@ -12,6 +12,17 @@ The implementation compares a plain 3D U-Net with a 3D Improved U-Net. The impro
 
 No HipMRI data, checkpoints or final results are committed. The code has been checked only against synthetic NIfTI volumes locally; real performance, the prostate label index, memory use and image orientation must be audited on Rangpur before reporting results.
 
+### Local Windows data root
+
+For local audit and development, the ignored raw 3D dataset is stored at `E:\vscode\PatternAnalysis-2026\data\HipMRI_Study_open`. Its direct children must be `semantic_MRs` and `semantic_labels_only`; do not rename individual NIfTI files or commit this directory. From this project directory, run:
+
+```powershell
+$dataRoot = Resolve-Path "..\..\data\HipMRI_Study_open"
+python audit.py $dataRoot --output evidence\dataset_manifest.json --seed 42
+```
+
+`audit.py` receives the data root as an argument rather than embedding a local path in Python. On Rangpur, pass `/home/groups/comp3710/HipMRI_Study_open` to the same command. This preserves one code path across local audit and formal GPU training.
+
 ## Confirmed evaluation protocol (staff reply, 2026-10-21)
 
 The plain 3D U-Net is the baseline. Both models must use the same patient-level split, preprocessing, downsampling and evaluation protocol. The 211 volumes come from only 38 patients according to the staff reply, so neither volumes, slices nor patches may be split independently across train, validation and test.
