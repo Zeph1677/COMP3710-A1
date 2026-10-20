@@ -12,6 +12,7 @@
 # Submit from this project directory. The Slurm stdout/stderr files at the
 # project root are ignored; the immutable run record is copied into artifacts.
 set -euo pipefail
+export PATH="/opt/slurm/bin:$PATH"
 
 PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project directory}"
 DATA_ROOT="${HIPMRI_DATA_ROOT:-/home/groups/comp3710/HipMRI_Study_open}"
