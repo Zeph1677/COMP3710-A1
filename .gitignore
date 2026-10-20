@@ -8,6 +8,8 @@ checkpoints/
 *.pt
 *.pth
 *.ckpt
+slurm-*.out
+slurm-*.err
 
 tmp/
 .vscode/
