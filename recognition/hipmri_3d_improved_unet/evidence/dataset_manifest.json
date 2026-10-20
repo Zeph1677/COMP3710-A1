@@ -88,7 +88,7 @@
         1.5625,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "B038_Week0",
@@ -347,7 +347,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week0",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -377,7 +377,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week1",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -407,7 +407,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week2",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -418,7 +418,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "C032_Week3",
@@ -437,7 +437,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week3",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -448,7 +448,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "C032_Week4",
@@ -467,7 +467,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week4",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -478,7 +478,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "C032_Week5",
@@ -497,7 +497,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week5",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -527,7 +527,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week6",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -557,7 +557,7 @@
         "P",
         "S"
       ],
-      "patient_id": "C032_Week7",
+      "patient_id": "C032",
       "shape": [
         256,
         256,
@@ -568,7 +568,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "D031_Week0",
@@ -587,7 +587,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week0",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -617,7 +617,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week1",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -647,7 +647,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week2",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -677,7 +677,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week3",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -707,7 +707,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week4",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -737,7 +737,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week5",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -748,7 +748,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "D031_Week6",
@@ -767,7 +767,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week6",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -797,7 +797,7 @@
         "P",
         "S"
       ],
-      "patient_id": "D031_Week7",
+      "patient_id": "D031",
       "shape": [
         256,
         256,
@@ -827,7 +827,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week0",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -857,7 +857,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week1",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -868,7 +868,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "G021_Week2",
@@ -887,7 +887,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week2",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -898,7 +898,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "G021_Week3",
@@ -917,7 +917,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week3",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -928,7 +928,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "G021_Week4",
@@ -947,7 +947,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week4",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -977,7 +977,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week5",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -988,7 +988,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "G021_Week6",
@@ -1007,7 +1007,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week6",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -1018,7 +1018,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "G021_Week7",
@@ -1037,7 +1037,7 @@
         "P",
         "S"
       ],
-      "patient_id": "G021_Week7",
+      "patient_id": "G021",
       "shape": [
         256,
         256,
@@ -1048,7 +1048,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H007_Week0",
@@ -1067,7 +1067,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H007_Week0",
+      "patient_id": "H007",
       "shape": [
         256,
         256,
@@ -1097,7 +1097,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week0",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1108,7 +1108,7 @@
         1.5625,
         1.5600013732910156
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week1",
@@ -1127,7 +1127,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week1",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1138,7 +1138,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week2",
@@ -1157,7 +1157,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week2",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1187,7 +1187,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week3",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1198,7 +1198,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week4",
@@ -1217,7 +1217,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week4",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1228,7 +1228,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week5",
@@ -1247,7 +1247,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week5",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1258,7 +1258,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week6",
@@ -1277,7 +1277,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week6",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1288,7 +1288,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "H017_Week7",
@@ -1307,7 +1307,7 @@
         "P",
         "S"
       ],
-      "patient_id": "H017_Week7",
+      "patient_id": "H017",
       "shape": [
         256,
         256,
@@ -1318,7 +1318,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "J005_Week0",
@@ -1337,7 +1337,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J005_Week0",
+      "patient_id": "J005",
       "shape": [
         256,
         256,
@@ -1367,7 +1367,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J005_Week1",
+      "patient_id": "J005",
       "shape": [
         256,
         256,
@@ -1397,7 +1397,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J005_Week2",
+      "patient_id": "J005",
       "shape": [
         256,
         256,
@@ -1408,7 +1408,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "J005_Week3",
@@ -1427,7 +1427,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J005_Week3",
+      "patient_id": "J005",
       "shape": [
         256,
         256,
@@ -1438,7 +1438,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "J005_Week4",
@@ -1457,7 +1457,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J005_Week4",
+      "patient_id": "J005",
       "shape": [
         256,
         256,
@@ -1487,7 +1487,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week0",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1517,7 +1517,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week1",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1547,7 +1547,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week2",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1577,7 +1577,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week3",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1607,7 +1607,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week4",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1637,7 +1637,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week5",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1667,7 +1667,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week6",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1697,7 +1697,7 @@
         "P",
         "S"
       ],
-      "patient_id": "J026_Week7",
+      "patient_id": "J026",
       "shape": [
         256,
         256,
@@ -1708,7 +1708,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "K008_Week0",
@@ -1727,7 +1727,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K008_Week0",
+      "patient_id": "K008",
       "shape": [
         256,
         256,
@@ -1738,7 +1738,7 @@
         1.7578125,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K018_Week0",
@@ -1757,7 +1757,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week0",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1787,7 +1787,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week1",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1817,7 +1817,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week2",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1847,7 +1847,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week3",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1877,7 +1877,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week4",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1888,7 +1888,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K018_Week5",
@@ -1907,7 +1907,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week5",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1918,7 +1918,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K018_Week6",
@@ -1937,7 +1937,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week6",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1948,7 +1948,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K018_Week7",
@@ -1967,7 +1967,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K018_Week7",
+      "patient_id": "K018",
       "shape": [
         256,
         256,
@@ -1997,7 +1997,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week0",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2008,7 +2008,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K019_Week1",
@@ -2027,7 +2027,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week1",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2057,7 +2057,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week2",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2087,7 +2087,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week3",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2098,7 +2098,7 @@
         1.71875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "K019_Week4",
@@ -2117,7 +2117,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week4",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2147,7 +2147,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week5",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2177,7 +2177,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week6",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2207,7 +2207,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K019_Week7",
+      "patient_id": "K019",
       "shape": [
         256,
         256,
@@ -2237,7 +2237,7 @@
         "P",
         "S"
       ],
-      "patient_id": "K042_Week0",
+      "patient_id": "K042",
       "shape": [
         256,
         256,
@@ -2248,7 +2248,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "L011_Week0",
@@ -2267,7 +2267,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week0",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2278,7 +2278,7 @@
         1.5625,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "L011_Week1",
@@ -2297,7 +2297,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week1",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2308,7 +2308,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "L011_Week2",
@@ -2327,7 +2327,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week2",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2357,7 +2357,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week3",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2368,7 +2368,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "L011_Week4",
@@ -2387,7 +2387,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week4",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2398,7 +2398,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "L011_Week5",
@@ -2417,7 +2417,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week5",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2428,7 +2428,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "L011_Week6",
@@ -2447,7 +2447,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week6",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2458,7 +2458,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "L011_Week7",
@@ -2477,7 +2477,7 @@
         "P",
         "S"
       ],
-      "patient_id": "L011_Week7",
+      "patient_id": "L011",
       "shape": [
         256,
         256,
@@ -2488,7 +2488,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "M004_Week0",
@@ -2507,7 +2507,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week0",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2537,7 +2537,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week1",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2567,7 +2567,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week2",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2597,7 +2597,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week3",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2627,7 +2627,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week4",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2657,7 +2657,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week5",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2687,7 +2687,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week6",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2717,7 +2717,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M004_Week7",
+      "patient_id": "M004",
       "shape": [
         256,
         256,
@@ -2747,7 +2747,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week0",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2758,7 +2758,7 @@
         1.5625,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "M013_Week1",
@@ -2777,7 +2777,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week1",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2788,7 +2788,7 @@
         1.5625,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "M013_Week2",
@@ -2807,7 +2807,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week2",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2818,7 +2818,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "M013_Week3",
@@ -2837,7 +2837,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week3",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2848,7 +2848,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "M013_Week4",
@@ -2867,7 +2867,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week4",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2878,7 +2878,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "M013_Week5",
@@ -2897,7 +2897,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week5",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2908,7 +2908,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "M013_Week6",
@@ -2927,7 +2927,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week6",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2938,7 +2938,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "test"
     },
     {
       "case_id": "M013_Week7",
@@ -2957,7 +2957,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M013_Week7",
+      "patient_id": "M013",
       "shape": [
         256,
         256,
@@ -2968,7 +2968,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "test"
     },
     {
       "case_id": "M015_Week0",
@@ -2987,7 +2987,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week0",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -2998,7 +2998,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "M015_Week1",
@@ -3017,7 +3017,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week1",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3047,7 +3047,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week2",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3077,7 +3077,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week3",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3107,7 +3107,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week4",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3118,7 +3118,7 @@
         1.7578125,
         1.5600013732910156
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "M015_Week5",
@@ -3137,7 +3137,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week5",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3148,7 +3148,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "M015_Week6",
@@ -3167,7 +3167,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week6",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3197,7 +3197,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M015_Week7",
+      "patient_id": "M015",
       "shape": [
         256,
         256,
@@ -3227,7 +3227,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M020_Week0",
+      "patient_id": "M020",
       "shape": [
         256,
         256,
@@ -3257,7 +3257,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M020_Week1",
+      "patient_id": "M020",
       "shape": [
         256,
         256,
@@ -3287,7 +3287,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M020_Week2",
+      "patient_id": "M020",
       "shape": [
         256,
         256,
@@ -3317,7 +3317,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M020_Week3",
+      "patient_id": "M020",
       "shape": [
         256,
         256,
@@ -3347,7 +3347,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M023_Week0",
+      "patient_id": "M023",
       "shape": [
         256,
         256,
@@ -3377,7 +3377,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week0",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3388,7 +3388,7 @@
         1.5625,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "M030_Week1",
@@ -3407,7 +3407,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week1",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3418,7 +3418,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "M030_Week2",
@@ -3437,7 +3437,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week2",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3448,7 +3448,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "M030_Week3",
@@ -3467,7 +3467,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week3",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3478,7 +3478,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "M030_Week4",
@@ -3497,7 +3497,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week4",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3508,7 +3508,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "M030_Week5",
@@ -3527,7 +3527,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M030_Week5",
+      "patient_id": "M030",
       "shape": [
         256,
         256,
@@ -3538,7 +3538,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "M036_Week0",
@@ -3557,7 +3557,7 @@
         "P",
         "S"
       ],
-      "patient_id": "M036_Week0",
+      "patient_id": "M036",
       "shape": [
         256,
         256,
@@ -3587,7 +3587,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week0",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3598,7 +3598,7 @@
         1.5625,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "N010_Week1",
@@ -3617,7 +3617,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week1",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3628,7 +3628,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "N010_Week2",
@@ -3647,7 +3647,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week2",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3677,7 +3677,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week3",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3688,7 +3688,7 @@
         1.6796875,
         1.5600013732910156
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "N010_Week4",
@@ -3707,7 +3707,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week4",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3718,7 +3718,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "N010_Week5",
@@ -3737,7 +3737,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week5",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3767,7 +3767,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week6",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3778,7 +3778,7 @@
         1.6796875,
         1.5600013732910156
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "N010_Week7",
@@ -3797,7 +3797,7 @@
         "P",
         "S"
       ],
-      "patient_id": "N010_Week7",
+      "patient_id": "N010",
       "shape": [
         256,
         256,
@@ -3808,7 +3808,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "O025_Week0",
@@ -3827,7 +3827,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week0",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -3857,7 +3857,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week1",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -3887,7 +3887,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week2",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -3917,7 +3917,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week3",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -3947,7 +3947,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week4",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -3977,7 +3977,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week5",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -4007,7 +4007,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week6",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -4037,7 +4037,7 @@
         "P",
         "S"
       ],
-      "patient_id": "O025_Week7",
+      "patient_id": "O025",
       "shape": [
         256,
         256,
@@ -4067,7 +4067,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week0",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4097,7 +4097,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week1",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4108,7 +4108,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "R016_Week2",
@@ -4127,7 +4127,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week2",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4157,7 +4157,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week3",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4187,7 +4187,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week4",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4217,7 +4217,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week5",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4247,7 +4247,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week6",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4277,7 +4277,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R016_Week7",
+      "patient_id": "R016",
       "shape": [
         256,
         256,
@@ -4307,7 +4307,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week0",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4337,7 +4337,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week1",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4348,7 +4348,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "R024_Week2",
@@ -4367,7 +4367,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week2",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4397,7 +4397,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week3",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4408,7 +4408,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "R024_Week4",
@@ -4427,7 +4427,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week4",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4457,7 +4457,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week5",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4468,7 +4468,7 @@
         1.7578125,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "R024_Week6",
@@ -4487,7 +4487,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week6",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4517,7 +4517,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R024_Week7",
+      "patient_id": "R024",
       "shape": [
         256,
         256,
@@ -4528,7 +4528,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "R039_Week0",
@@ -4547,7 +4547,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week0",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4577,7 +4577,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week1",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4607,7 +4607,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week2",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4637,7 +4637,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week3",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4667,7 +4667,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week4",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4697,7 +4697,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week5",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4727,7 +4727,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week6",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4738,7 +4738,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "R039_Week7",
@@ -4757,7 +4757,7 @@
         "P",
         "S"
       ],
-      "patient_id": "R039_Week7",
+      "patient_id": "R039",
       "shape": [
         256,
         256,
@@ -4768,7 +4768,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "S022_Week0",
@@ -4787,7 +4787,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week0",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4798,7 +4798,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week1",
@@ -4817,7 +4817,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week1",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4828,7 +4828,7 @@
         1.640625,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week2",
@@ -4847,7 +4847,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week2",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4858,7 +4858,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week3",
@@ -4877,7 +4877,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week3",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4888,7 +4888,7 @@
         1.6796875,
         1.5600128173828125
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week4",
@@ -4907,7 +4907,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week4",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4937,7 +4937,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week5",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4948,7 +4948,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week6",
@@ -4967,7 +4967,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week6",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -4978,7 +4978,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S022_Week7",
@@ -4997,7 +4997,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S022_Week7",
+      "patient_id": "S022",
       "shape": [
         256,
         256,
@@ -5008,7 +5008,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "S028_Week0",
@@ -5027,7 +5027,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S028_Week0",
+      "patient_id": "S028",
       "shape": [
         256,
         256,
@@ -5057,7 +5057,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week0",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5087,7 +5087,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week1",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5117,7 +5117,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week2",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5128,7 +5128,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "S033_Week3",
@@ -5147,7 +5147,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week3",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5177,7 +5177,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week4",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5207,7 +5207,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week5",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5218,7 +5218,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "S033_Week6",
@@ -5237,7 +5237,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week6",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5267,7 +5267,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S033_Week7",
+      "patient_id": "S033",
       "shape": [
         256,
         256,
@@ -5297,7 +5297,7 @@
         "P",
         "S"
       ],
-      "patient_id": "S035_Week0",
+      "patient_id": "S035",
       "shape": [
         256,
         256,
@@ -5327,7 +5327,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T009_Week0",
+      "patient_id": "T009",
       "shape": [
         256,
         256,
@@ -5357,7 +5357,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week0",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5368,7 +5368,7 @@
         1.71875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "T014_Week1",
@@ -5387,7 +5387,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week1",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5417,7 +5417,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week2",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5428,7 +5428,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "T014_Week3",
@@ -5447,7 +5447,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week3",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5477,7 +5477,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week4",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5507,7 +5507,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week5",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5537,7 +5537,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week6",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5567,7 +5567,7 @@
         "P",
         "S"
       ],
-      "patient_id": "T014_Week7",
+      "patient_id": "T014",
       "shape": [
         256,
         256,
@@ -5597,7 +5597,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week0",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5627,7 +5627,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week1",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5657,7 +5657,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week2",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5668,7 +5668,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "V027_Week3",
@@ -5687,7 +5687,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week3",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5717,7 +5717,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week4",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5747,7 +5747,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week5",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5758,7 +5758,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "V027_Week6",
@@ -5777,7 +5777,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week6",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5788,7 +5788,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "V027_Week7",
@@ -5807,7 +5807,7 @@
         "P",
         "S"
       ],
-      "patient_id": "V027_Week7",
+      "patient_id": "V027",
       "shape": [
         256,
         256,
@@ -5837,7 +5837,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week0",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5848,7 +5848,7 @@
         1.6015625,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week1",
@@ -5867,7 +5867,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week1",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5878,7 +5878,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week2",
@@ -5897,7 +5897,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week2",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5908,7 +5908,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week3",
@@ -5927,7 +5927,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week3",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5938,7 +5938,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week4",
@@ -5957,7 +5957,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week4",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5968,7 +5968,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week5",
@@ -5987,7 +5987,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week5",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -5998,7 +5998,7 @@
         1.6796875,
         1.5600051879882812
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week6",
@@ -6017,7 +6017,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week6",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -6028,7 +6028,7 @@
         1.6796875,
         1.5600013732910156
       ],
-      "split": "train"
+      "split": "validation"
     },
     {
       "case_id": "W012_Week7",
@@ -6047,7 +6047,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W012_Week7",
+      "patient_id": "W012",
       "shape": [
         256,
         256,
@@ -6077,7 +6077,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week0",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6088,7 +6088,7 @@
         1.640625,
         1.55999755859375
       ],
-      "split": "validation"
+      "split": "train"
     },
     {
       "case_id": "W029_Week1",
@@ -6107,7 +6107,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week1",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6137,7 +6137,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week2",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6167,7 +6167,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week3",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6197,7 +6197,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week4",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6227,7 +6227,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week5",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6238,7 +6238,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "W029_Week6",
@@ -6257,7 +6257,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week6",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6268,7 +6268,7 @@
         1.6796875,
         1.55999755859375
       ],
-      "split": "test"
+      "split": "train"
     },
     {
       "case_id": "W029_Week7",
@@ -6287,7 +6287,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W029_Week7",
+      "patient_id": "W029",
       "shape": [
         256,
         256,
@@ -6317,7 +6317,7 @@
         "P",
         "S"
       ],
-      "patient_id": "W041_Week0",
+      "patient_id": "W041",
       "shape": [
         256,
         256,
@@ -6336,214 +6336,48 @@
   "splits": {
     "seed": 42,
     "test": [
-      "C032_Week2",
-      "C032_Week3",
-      "C032_Week4",
-      "G021_Week2",
-      "G021_Week3",
-      "G021_Week6",
-      "H007_Week0",
-      "H017_Week6",
-      "K008_Week0",
-      "K018_Week4",
-      "K018_Week5",
-      "K018_Week6",
-      "K019_Week0",
-      "K019_Week3",
-      "L011_Week2",
-      "M030_Week2",
-      "M030_Week3",
-      "R016_Week1",
-      "R024_Week3",
-      "R024_Week7",
-      "R039_Week7",
-      "S022_Week2",
-      "S033_Week2",
-      "S033_Week5",
-      "T014_Week2",
-      "W012_Week1",
-      "W012_Week2",
-      "W012_Week4",
-      "W029_Week5",
-      "W029_Week6"
+      "B037",
+      "H007",
+      "K042",
+      "L011",
+      "M013"
     ],
     "train": [
       "B006",
       "B038",
       "B040",
-      "C032_Week0",
-      "C032_Week1",
-      "C032_Week5",
-      "C032_Week6",
-      "D031_Week0",
-      "D031_Week1",
-      "D031_Week2",
-      "D031_Week3",
-      "D031_Week4",
-      "D031_Week6",
-      "D031_Week7",
-      "G021_Week1",
-      "G021_Week5",
-      "G021_Week7",
-      "H017_Week0",
-      "H017_Week1",
-      "H017_Week3",
-      "H017_Week4",
-      "H017_Week5",
-      "H017_Week7",
-      "J005_Week0",
-      "J005_Week1",
-      "J005_Week4",
-      "J026_Week0",
-      "J026_Week1",
-      "J026_Week2",
-      "J026_Week3",
-      "J026_Week4",
-      "J026_Week5",
-      "J026_Week6",
-      "K018_Week0",
-      "K018_Week1",
-      "K018_Week2",
-      "K018_Week3",
-      "K018_Week7",
-      "K019_Week1",
-      "K019_Week2",
-      "K019_Week4",
-      "K019_Week5",
-      "K019_Week6",
-      "K019_Week7",
-      "L011_Week0",
-      "L011_Week1",
-      "L011_Week4",
-      "L011_Week5",
-      "L011_Week6",
-      "M004_Week0",
-      "M004_Week1",
-      "M004_Week2",
-      "M004_Week3",
-      "M004_Week4",
-      "M004_Week5",
-      "M004_Week6",
-      "M004_Week7",
-      "M013_Week0",
-      "M013_Week1",
-      "M013_Week5",
-      "M013_Week6",
-      "M015_Week1",
-      "M015_Week2",
-      "M015_Week3",
-      "M015_Week6",
-      "M015_Week7",
-      "M020_Week0",
-      "M020_Week1",
-      "M020_Week2",
-      "M020_Week3",
-      "M023_Week0",
-      "M030_Week0",
-      "M030_Week1",
-      "M030_Week4",
-      "M030_Week5",
-      "M036_Week0",
-      "N010_Week0",
-      "N010_Week1",
-      "N010_Week3",
-      "N010_Week4",
-      "N010_Week6",
-      "N010_Week7",
-      "O025_Week0",
-      "O025_Week1",
-      "O025_Week2",
-      "O025_Week3",
-      "O025_Week4",
-      "O025_Week5",
-      "O025_Week6",
-      "O025_Week7",
-      "R016_Week0",
-      "R016_Week2",
-      "R016_Week3",
-      "R016_Week4",
-      "R016_Week5",
-      "R016_Week6",
-      "R016_Week7",
-      "R024_Week0",
-      "R024_Week2",
-      "R024_Week4",
-      "R024_Week6",
-      "R039_Week0",
-      "R039_Week1",
-      "R039_Week2",
-      "R039_Week3",
-      "R039_Week4",
-      "R039_Week5",
-      "S022_Week0",
-      "S022_Week1",
-      "S022_Week3",
-      "S022_Week5",
-      "S022_Week6",
-      "S022_Week7",
-      "S028_Week0",
-      "S033_Week0",
-      "S033_Week1",
-      "S033_Week3",
-      "S033_Week4",
-      "S033_Week6",
-      "S033_Week7",
-      "S035_Week0",
-      "T009_Week0",
-      "T014_Week1",
-      "T014_Week3",
-      "T014_Week4",
-      "T014_Week5",
-      "T014_Week6",
-      "T014_Week7",
-      "V027_Week0",
-      "V027_Week1",
-      "V027_Week3",
-      "V027_Week4",
-      "V027_Week7",
-      "W012_Week0",
-      "W012_Week3",
-      "W012_Week5",
-      "W012_Week6",
-      "W029_Week1",
-      "W029_Week2",
-      "W029_Week3",
-      "W029_Week4",
-      "W029_Week7",
-      "W041_Week0"
+      "C032",
+      "D031",
+      "J005",
+      "J026",
+      "K008",
+      "K018",
+      "K019",
+      "M004",
+      "M015",
+      "M020",
+      "M023",
+      "M036",
+      "O025",
+      "R016",
+      "R024",
+      "R039",
+      "S028",
+      "S033",
+      "S035",
+      "T009",
+      "T014",
+      "V027",
+      "W029",
+      "W041"
     ],
     "validation": [
-      "B037",
-      "C032_Week7",
-      "D031_Week5",
-      "G021_Week0",
-      "G021_Week4",
-      "H017_Week2",
-      "J005_Week2",
-      "J005_Week3",
-      "J026_Week7",
-      "K042_Week0",
-      "L011_Week3",
-      "L011_Week7",
-      "M013_Week2",
-      "M013_Week3",
-      "M013_Week4",
-      "M013_Week7",
-      "M015_Week0",
-      "M015_Week4",
-      "M015_Week5",
-      "N010_Week2",
-      "N010_Week5",
-      "R024_Week1",
-      "R024_Week5",
-      "R039_Week6",
-      "S022_Week4",
-      "T014_Week0",
-      "V027_Week2",
-      "V027_Week5",
-      "V027_Week6",
-      "W012_Week7",
-      "W029_Week0"
+      "G021",
+      "H017",
+      "M030",
+      "N010",
+      "S022",
+      "W012"
     ]
   },
   "summary": {
@@ -6556,16 +6390,16 @@
       4,
       5
     ],
-    "patient_count": 204,
+    "patient_count": 38,
     "split_case_counts": {
-      "test": 30,
-      "train": 150,
-      "validation": 31
+      "test": 19,
+      "train": 146,
+      "validation": 46
     },
     "split_patient_counts": {
-      "test": 30,
-      "train": 143,
-      "validation": 31
+      "test": 5,
+      "train": 27,
+      "validation": 6
     }
   }
 }
