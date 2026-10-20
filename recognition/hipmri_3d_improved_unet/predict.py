@@ -106,6 +106,7 @@ def run_prediction(args: argparse.Namespace) -> dict[str, object]:
     pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
     output.mkdir(parents=True, exist_ok=True)
     patient_scores: dict[str, list[float]] = {}
+    representative_cases: dict[str, tuple[float, torch.Tensor, torch.Tensor, torch.Tensor]] = {}
     class_parts: dict[str, list[dict[str, float | None]]] = {str(label): [] for label in range(num_classes)}
     for pair in pairs:
         if pair.patient_id not in split_ids["test"]:
@@ -113,13 +114,25 @@ def run_prediction(args: argparse.Namespace) -> dict[str, object]:
         image, target = HipMRI3DDataset([pair], args.data_root, {pair.patient_id}, num_classes, tuple(config["target_shape"]))[0]
         logits = sliding_window_logits(model, image.to(device), tuple(args.patch_size), tuple(args.stride))
         prediction = logits.argmax(0).cpu()
-        patient_scores.setdefault(pair.patient_id, []).append(patient_prostate_dice(prediction, target, prostate_label))
+        case_score = patient_prostate_dice(prediction, target, prostate_label)
+        patient_scores.setdefault(pair.patient_id, []).append(case_score)
+        representative = representative_cases.get(pair.patient_id)
+        if representative is None or case_score < representative[0]:
+            representative_cases[pair.patient_id] = (case_score, image[0].cpu(), target.cpu(), prediction)
         for label, values in _class_metrics(prediction, target, num_classes).items():
             class_parts[label].append(values)
     per_patient = {patient: sum(scores) / len(scores) for patient, scores in patient_scores.items()}
     per_class = {label: {metric: (sum(value[metric] for value in values if value[metric] is not None) / sum(value[metric] is not None for value in values)) if any(value[metric] is not None for value in values) else None for metric in ("dice", "iou")} for label, values in class_parts.items()}
     metrics = build_test_metrics(per_patient, per_class, prostate_label)
-    metrics.update({"checkpoint": str(args.checkpoint), "manifest_sha256": manifest_hash, "prostate_label_source": config["prostate_label_source"], "patch_size": args.patch_size, "stride": args.stride})
+    panel_dir = output / "failure_panels"
+    panel_files = []
+    for failure in metrics["failure_ranking"]:
+        patient_id = failure["patient_id"]
+        _, image, target, prediction = representative_cases[patient_id]
+        panel_path = panel_dir / f"{patient_id}.png"
+        render_case_views(image, target, prediction, panel_path, title=f"{patient_id}: patient prostate Dice={failure['prostate_dice']:.4f}")
+        panel_files.append(str(panel_path.relative_to(output)))
+    metrics.update({"checkpoint": str(args.checkpoint), "manifest_sha256": manifest_hash, "prostate_label_source": config["prostate_label_source"], "patch_size": list(args.patch_size), "stride": list(args.stride), "failure_panels": panel_files})
     (output / "test_metrics.json").write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return metrics
 

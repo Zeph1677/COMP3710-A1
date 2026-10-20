@@ -1,11 +1,16 @@
+import hashlib
+import json
+from argparse import Namespace
 from pathlib import Path
 
+import nibabel as nib
+import numpy as np
 import torch
 
 import pytest
 
 from modules import BaselineUNet3D
-from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, sliding_window_logits
+from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, run_prediction, sliding_window_logits
 
 
 class ConstantLogitModel(torch.nn.Module):
@@ -82,3 +87,38 @@ def test_test_metrics_report_patient_headline_and_nonbackground_classes():
     assert metrics["test_patient_count"] == 2
     assert set(metrics["per_class"]) == {"1", "2"}
     assert metrics["failure_ranking"] == [{"patient_id": "B006", "prostate_dice": 0.4}, {"patient_id": "C007", "prostate_dice": 0.8}]
+
+
+def test_run_prediction_writes_test_only_metrics_and_ranked_failure_panel(tmp_path: Path):
+    root = tmp_path / "data"
+    test_image = root / "semantic_MRs" / "B003_Week0_LFOV.nii.gz"
+    test_mask = root / "semantic_labels_only" / "B003_Week0_SEMANTIC.nii.gz"
+    test_image.parent.mkdir(parents=True)
+    test_mask.parent.mkdir(parents=True)
+    image = np.arange(16**3, dtype=np.float32).reshape(16, 16, 16)
+    mask = np.zeros((16, 16, 16), dtype=np.uint8)
+    mask[4:12, 4:12, 4:12] = 5
+    nib.save(nib.Nifti1Image(image, np.eye(4)), test_image)
+    nib.save(nib.Nifti1Image(mask, np.eye(4)), test_mask)
+    cases = [
+        {"case_id": "B001_Week0", "patient_id": "B001", "image_path": "unused-image.nii.gz", "mask_path": "unused-mask.nii.gz", "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 5], "split": "train"},
+        {"case_id": "B002_Week0", "patient_id": "B002", "image_path": "unused-image.nii.gz", "mask_path": "unused-mask.nii.gz", "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 5], "split": "validation"},
+        {"case_id": "B003_Week0", "patient_id": "B003", "image_path": "semantic_MRs/B003_Week0_LFOV.nii.gz", "mask_path": "semantic_labels_only/B003_Week0_SEMANTIC.nii.gz", "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 5], "split": "test"},
+    ]
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"summary": {"labels": [0, 1, 2, 3, 4, 5]}, "cases": cases}), encoding="utf-8")
+    checkpoint = tmp_path / "best.pt"
+    model = BaselineUNet3D(num_classes=6, base_channels=2)
+    torch.save({"model_state_dict": model.state_dict(), "config": {"model": "baseline", "num_classes": 6, "base_channels": 2, "target_shape": [16, 16, 16], "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(), "prostate_label": 5, "prostate_label_source": "CSIRO, DOI: 10.25919/45T8-P065, Labels block: 5=Prostate."}}, checkpoint)
+
+    output = tmp_path / "prediction"
+    metrics = run_prediction(Namespace(checkpoint=checkpoint, manifest=manifest, data_root=root, output_dir=output, patch_size=(16, 16, 16), stride=(16, 16, 16), device="cpu"))
+
+    saved = json.loads((output / "test_metrics.json").read_text(encoding="utf-8"))
+    assert saved["mean_patient_prostate_dice"] == metrics["mean_patient_prostate_dice"]
+    assert saved["test_patient_count"] == 1
+    assert set(saved["per_patient_prostate_dice"]) == {"B003"}
+    assert saved["failure_ranking"][0]["patient_id"] == "B003"
+    assert saved["manifest_sha256"] == hashlib.sha256(manifest.read_bytes()).hexdigest()
+    assert saved["prostate_label"] == 5
+    assert (output / "failure_panels" / "B003.png").is_file()
