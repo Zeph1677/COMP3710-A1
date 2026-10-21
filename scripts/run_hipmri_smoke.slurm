@@ -75,11 +75,11 @@ cmp --silent evidence/dataset_manifest.json "$RUN_DIR/re_audited_manifest.json" 
 }
 
 cat > "$RUN_DIR/commands.txt" <<EOF
-python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/training_$MODEL_NAME --model $MODEL_NAME --epochs $HIPMRI_EPOCHS --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0
+python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/training_$MODEL_NAME --model $MODEL_NAME --epochs $HIPMRI_EPOCHS --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.75 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0
 python src/predict.py --checkpoint $RUN_DIR/training_$MODEL_NAME/best.pt --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/test_$MODEL_NAME --patch-size 128 128 128 --stride 64 64 64 --device cuda
 EOF
 
-time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/training_$MODEL_NAME" --model "$MODEL_NAME" --epochs "$HIPMRI_EPOCHS" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0
+time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/training_$MODEL_NAME" --model "$MODEL_NAME" --epochs "$HIPMRI_EPOCHS" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.75 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0
 time python src/predict.py --checkpoint "$RUN_DIR/training_$MODEL_NAME/best.pt" --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/test_$MODEL_NAME" --patch-size 128 128 128 --stride 64 64 64 --device cuda
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"

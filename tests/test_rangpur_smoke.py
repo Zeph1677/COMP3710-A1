@@ -17,6 +17,8 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert "python src/audit.py" in script
     assert "python src/train.py" in script
     assert "python src/predict.py" in script
+    assert "--train-patch-shape 96 96 96" in script
+    assert "--foreground-patch-probability 0.75" in script
     assert "python train.py" not in script
     assert "python predict.py" not in script
     assert 'MODEL_NAME="${HIPMRI_MODEL:-baseline}"' in script
