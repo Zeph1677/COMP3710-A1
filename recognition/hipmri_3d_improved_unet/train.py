@@ -149,6 +149,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--prostate-label", required=True, type=int)
     parser.add_argument("--prostate-label-source", required=True)
+    parser.add_argument("--preflight-patient-id")
     return parser
 
 
@@ -178,6 +179,48 @@ def _train_epoch(model: torch.nn.Module, loader: DataLoader, optimizer: torch.op
     if not losses:
         raise ValueError("training partition yielded no batches")
     return sum(losses) / len(losses)
+
+
+def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
+    """Fit one declared train case only; this diagnostic is never reportable."""
+
+    patient_id = str(getattr(args, "preflight_patient_id", "") or "").strip()
+    if not patient_id:
+        raise ValueError("preflight patient ID is required")
+    if args.epochs <= 0 or args.batch_size <= 0 or args.learning_rate <= 0 or args.base_channels <= 0:
+        raise ValueError("epochs, batch size, learning rate and base channels must be positive")
+    output = args.output_dir.resolve()
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"refusing to overwrite non-empty output directory: {output}")
+    pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
+    if patient_id not in split_ids["train"]:
+        raise ValueError("preflight patient must belong to the manifest train split")
+    pair = next(pair for pair in pairs if pair.patient_id == patient_id)
+    device = torch.device(args.device)
+    target_shape = tuple(args.target_shape)
+    torch.manual_seed(args.seed)
+    random.seed(args.seed)
+    data = HipMRI3DDataset([pair], args.data_root, {patient_id}, num_classes, target_shape)
+    loader = DataLoader(data, batch_size=args.batch_size, shuffle=True)
+    model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
+    model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    output.mkdir(parents=True, exist_ok=True)
+    history: list[dict[str, float]] = []
+    for epoch in range(1, args.epochs + 1):
+        loss = _train_epoch(model, loader, optimizer, device, num_classes)
+        metric = evaluate_3d_batches(model, loader, device, num_classes)
+        history.append({"epoch": float(epoch), "train_loss": loss, "train_case_mean_dice": float(metric["mean_dice"])})
+    image, target = data[0]
+    with torch.no_grad():
+        output_logits = model(image[None].to(device))
+        logits = output_logits[0] if isinstance(output_logits, tuple) else output_logits
+    prediction = logits.argmax(1).cpu()[0]
+    predicted, actual = prediction == args.prostate_label, target == args.prostate_label
+    denominator = int(predicted.sum() + actual.sum())
+    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": 2 * int((predicted & actual).sum()) / denominator if denominator else 0.0}
+    _write_json(output / "preflight_summary.json", summary)
+    return summary
 
 
 def run_training(args: argparse.Namespace) -> dict[str, object]:
@@ -243,7 +286,8 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
 
 def main() -> None:
     args = create_argument_parser().parse_args()
-    print(json.dumps(run_training(args), indent=2, sort_keys=True))
+    runner = run_overfit_preflight if args.preflight_patient_id else run_training
+    print(json.dumps(runner(args), indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import torch
 
-from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, run_training, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, run_overfit_preflight, run_training, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -149,3 +149,11 @@ def test_run_training_rejects_nonempty_output_directory(tmp_path: Path):
 
     with pytest.raises(FileExistsError, match="non-empty"):
         run_training(Namespace(manifest=tmp_path / "missing.json", data_root=tmp_path, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation, Table 2"))
+
+
+def test_overfit_preflight_rejects_non_train_patient_before_reading_data(tmp_path: Path):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"summary": {"labels": [0, 1]}, "cases": [{"case_id": "C007_Week0", "patient_id": "C007", "image_path": "missing-image.nii.gz", "mask_path": "missing-mask.nii.gz", "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 1], "split": "validation"}]}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="train split"):
+        run_overfit_preflight(Namespace(manifest=manifest, data_root=tmp_path, output_dir=tmp_path / "preflight", model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation", preflight_patient_id="C007"))
