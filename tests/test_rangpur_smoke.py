@@ -22,6 +22,8 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert "python train.py" not in script
     assert "python predict.py" not in script
     assert 'MODEL_NAME="${HIPMRI_MODEL:-baseline}"' in script
+    assert 'RUN_DIR="$PROJECT_DIR/artifacts/${JOB_ID}_formal_${MODEL_NAME}"' in script
+    assert script.index('MODEL_NAME="${HIPMRI_MODEL:-baseline}"') < script.index('RUN_DIR="$PROJECT_DIR/artifacts/${JOB_ID}_formal_${MODEL_NAME}"')
     assert "HIPMRI_MODEL must be baseline or improved" in script
     assert "set -euo pipefail" in script
     assert 'HIPMRI_EPOCHS="${HIPMRI_EPOCHS:-20}"' in script
@@ -35,7 +37,7 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
     script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_preflight.slurm").read_text(encoding="utf-8")
 
     assert 'PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project directory}"' in script
-    assert 'RUN_DIR="$PROJECT_DIR/artifacts/rangpur_preflight_${JOB_ID}"' in script
+    assert 'RUN_DIR="$PROJECT_DIR/artifacts/${JOB_ID}_preflight"' in script
     assert 'TRAINING_DIR="$RUN_DIR/training"' in script
     assert '--output-dir "$TRAINING_DIR"' in script
     assert "python src/train.py" in script
