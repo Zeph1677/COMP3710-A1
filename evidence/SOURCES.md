@@ -49,3 +49,16 @@ v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block:
 Any future replacement source must be an authoritative source that explicitly
 maps a numeric value to prostate. A source merely stating that prostate was
 segmented is supporting context, not a substitute for the mapping.
+
+## Architecture references from the Hard-difficulty brief
+
+The following papers are implementation background only. They do not change
+the HipMRI data split, label mapping, evaluation protocol, or acceptance
+criterion.
+
+| Course reference | Local file | Verified identity and relevance | SHA-256 |
+| --- | --- | --- | --- |
+| `[2]` | `sources/isensee-2018-brats-2017-challenge-arxiv-1802.10508.pdf` | Isensee et al., *Brain Tumor Segmentation and Radiomics Survival Prediction: Contribution to the BRATS 2017 Challenge*, arXiv:1802.10508; the open preprint corresponding to the 2018 BrainLes chapter, DOI `10.1007/978-3-319-75238-9_25`. It is background for residual and deep-supervision design decisions, not HipMRI performance evidence. | `91E206BDC48D09B3BD5204192EE39780B6DD0027C60DAA66FC5524E0E94DF78A` |
+| `[3]` | `sources/yu-koltun-2016-multi-scale-context-aggregation-arxiv-1511.07122.pdf` | Yu and Koltun, *Multi-Scale Context Aggregation by Dilated Convolutions*, ICLR 2016, arXiv:1511.07122. It is background for dilated-convolution context aggregation. | `ACAC9B267CF8B2498D53FE9A9A5AFCC51B3DC1CC677AE0AE82F8CA626869A8B1` |
+| `[4]` | `sources/cicek-2016-3d-unet-arxiv-1606.06650.pdf` | Çiçek et al., *3D U-Net: Learning Dense Volumetric Segmentation from Sparse Annotation*, MICCAI 2016, arXiv:1606.06650. It is the volumetric U-Net baseline reference. | `267BA70094E23CE2655481EEC5BCA7CEA98EB4797390DAA94476196A1AA31067` |
+| `[5]` | `sources/can3d-compact-context-aggregation-arxiv-2109.05443.pdf` | Dai et al., *CAN3D: Fast 3D Medical Image Segmentation via Compact Context Aggregation*, arXiv:2109.05443 (2021). This is the locally stored public preprint corresponding to the abbreviated 2021 context-aggregation citation; the later journal version has DOI `10.1016/j.media.2022.102562`. | `2583AEDFA2233E101FA0E96F45A818AC7D930418F638D963EC78E1DDE5664964` |
