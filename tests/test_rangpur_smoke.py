@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evidence():
-    script = (Path(__file__).resolve().parents[1] / "run_hipmri_smoke.slurm").read_text(encoding="utf-8")
+    script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_smoke.slurm").read_text(encoding="utf-8")
 
     assert "#SBATCH --account=comp3710" in script
     assert "#SBATCH --partition=comp3710" in script
@@ -27,7 +27,7 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
 
 
 def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patient():
-    script = (Path(__file__).resolve().parents[1] / "run_hipmri_preflight.slurm").read_text(encoding="utf-8")
+    script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_preflight.slurm").read_text(encoding="utf-8")
 
     assert 'PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project directory}"' in script
     assert 'RUN_DIR="$PROJECT_DIR/artifacts/rangpur_preflight_${JOB_ID}"' in script
