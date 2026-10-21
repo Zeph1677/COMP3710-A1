@@ -131,6 +131,12 @@ def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):
     assert (output / "experiment_config.json").is_file()
     assert (output / "history.json").is_file()
     assert (output / "training_summary.json").is_file()
+    history = json.loads((output / "history.json").read_text(encoding="utf-8"))
+    saved_summary = json.loads((output / "training_summary.json").read_text(encoding="utf-8"))
+    assert {"train_seconds", "validation_seconds", "train_peak_vram_mb", "validation_peak_vram_mb"} <= set(history[0])
+    assert history[0]["train_peak_vram_mb"] == 0.0
+    assert history[0]["validation_peak_vram_mb"] == 0.0
+    assert {"peak_train_vram_mb", "peak_validation_vram_mb"} <= set(saved_summary)
     checkpoint = torch.load(output / "best.pt", map_location="cpu", weights_only=False)
     assert checkpoint["epoch"] == 1
     assert checkpoint["config"]["manifest_sha256"]

@@ -156,6 +156,16 @@ def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _reset_cuda_peak(device: torch.device) -> None:
+    if device.type == "cuda":
+        torch.cuda.reset_peak_memory_stats(device)
+        torch.cuda.synchronize(device)
+
+
+def _cuda_peak_mb(device: torch.device) -> float:
+    return torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0
+
+
 def _train_epoch(model: torch.nn.Module, loader: DataLoader, optimizer: torch.optim.Optimizer, device: torch.device, num_classes: int) -> float:
     model.train()
     losses: list[float] = []
@@ -198,15 +208,35 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     best_validation = float("-inf")
     started = time.perf_counter()
     for epoch in range(1, args.epochs + 1):
+        _reset_cuda_peak(device)
+        train_started = time.perf_counter()
         train_loss = _train_epoch(model, train_loader, optimizer, device, num_classes)
+        if device.type == "cuda": torch.cuda.synchronize(device)
+        train_seconds = time.perf_counter() - train_started
+        train_peak_vram_mb = _cuda_peak_mb(device)
         validation = evaluate_3d_batches(model, validation_loader, device, num_classes)
-        row = {"epoch": float(epoch), "train_loss": train_loss, "validation_mean_dice": float(validation["mean_dice"])}
+        row = {
+            "epoch": float(epoch),
+            "train_loss": train_loss,
+            "train_seconds": train_seconds,
+            "validation_mean_dice": float(validation["mean_dice"]),
+            "validation_seconds": float(validation["inference_seconds"]),
+            "train_peak_vram_mb": train_peak_vram_mb,
+            "validation_peak_vram_mb": float(validation["peak_vram_mb"]),
+        }
         history.append(row)
         _write_json(output / "history.json", history)
         if row["validation_mean_dice"] > best_validation:
             best_validation = row["validation_mean_dice"]
             torch.save({"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(), "epoch": epoch, "config": config}, output / "best.pt")
-    summary = {"selected_epoch": select_validation_checkpoint(history)["epoch"], "training_seconds": time.perf_counter() - started, "parameter_count": sum(parameter.numel() for parameter in model.parameters()), "history": history}
+    summary = {
+        "selected_epoch": select_validation_checkpoint(history)["epoch"],
+        "training_seconds": time.perf_counter() - started,
+        "parameter_count": sum(parameter.numel() for parameter in model.parameters()),
+        "peak_train_vram_mb": max(row["train_peak_vram_mb"] for row in history),
+        "peak_validation_vram_mb": max(row["validation_peak_vram_mb"] for row in history),
+        "history": history,
+    }
     _write_json(output / "training_summary.json", summary)
     return summary
 
