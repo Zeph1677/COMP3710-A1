@@ -17,8 +17,10 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert "python src/audit.py" in script
     assert "python src/train.py" in script
     assert "python src/predict.py" in script
-    assert "--train-patch-shape 96 96 96" in script
-    assert "--foreground-patch-probability 0.75" in script
+    assert 'CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-formal-b}"' in script
+    assert 'python src/experiment_configs.py --candidate "$CONFIG_CANDIDATE" --shell' in script
+    assert "--train-patch-shape $CONFIG_TRAIN_PATCH_SHAPE" in script
+    assert "--foreground-patch-probability $CONFIG_FOREGROUND_PATCH_PROBABILITY" in script
     assert "python train.py" not in script
     assert "python predict.py" not in script
     assert 'MODEL_NAME="${HIPMRI_MODEL:-baseline}"' in script
@@ -44,14 +46,19 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
     assert "python train.py" not in script
     assert 'source "$HOME/miniconda3/bin/activate"' in script
     assert 'HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"' in script
-    assert 'HIPMRI_PREFLIGHT_EPOCHS="${HIPMRI_PREFLIGHT_EPOCHS:-200}"' in script
+    assert 'HIPMRI_PREFLIGHT_UPDATES="${HIPMRI_PREFLIGHT_UPDATES:-200}"' in script
+    assert 'HIPMRI_PREFLIGHT_EVAL_EVERY="${HIPMRI_PREFLIGHT_EVAL_EVERY:-20}"' in script
     assert "#SBATCH --time=03:00:00" in script
     assert 'HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE="${HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE:-0.70}"' in script
-    assert 'HIPMRI_PROSTATE_CE_WEIGHT="${HIPMRI_PROSTATE_CE_WEIGHT:-4.0}"' in script
-    assert 'HIPMRI_PROSTATE_DICE_WEIGHT="${HIPMRI_PROSTATE_DICE_WEIGHT:-4.0}"' in script
-    assert 'HIPMRI_FOREGROUND_PATCH_PROBABILITY="${HIPMRI_FOREGROUND_PATCH_PROBABILITY:-0.50}"' in script
+    assert 'CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-preflight-a}"' in script
+    assert 'python src/experiment_configs.py --candidate "$CONFIG_CANDIDATE" --shell' in script
+    assert 'HIPMRI_PROSTATE_CE_WEIGHT="$CONFIG_PROSTATE_CE_WEIGHT"' in script
+    assert 'HIPMRI_PROSTATE_DICE_WEIGHT="$CONFIG_PROSTATE_DICE_WEIGHT"' in script
+    assert 'HIPMRI_FOREGROUND_PATCH_PROBABILITY="$CONFIG_FOREGROUND_PATCH_PROBABILITY"' in script
     assert "--preflight-patient-id" in script
-    assert "--train-patch-shape 96 96 96" in script
+    assert "--preflight-updates" in script
+    assert "--preflight-eval-every" in script
+    assert "--train-patch-shape $CONFIG_TRAIN_PATCH_SHAPE" in script
     assert "--foreground-patch-probability \"$HIPMRI_FOREGROUND_PATCH_PROBABILITY\"" in script
     assert "--prostate-ce-weight \"$HIPMRI_PROSTATE_CE_WEIGHT\"" in script
     assert "--prostate-dice-weight \"$HIPMRI_PROSTATE_DICE_WEIGHT\"" in script

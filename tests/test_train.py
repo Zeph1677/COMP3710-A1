@@ -182,3 +182,32 @@ def test_overfit_preflight_rejects_non_train_patient_before_reading_data(tmp_pat
 
     with pytest.raises(ValueError, match="train split"):
         run_overfit_preflight(Namespace(manifest=manifest, data_root=tmp_path, output_dir=tmp_path / "preflight", model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation", preflight_patient_id="C007"))
+
+
+def test_preflight_summary_has_complete_contract_and_consistent_prostate_counts(tmp_path: Path):
+    root = tmp_path / "data"
+    image_path = root / "semantic_MRs" / "B006_Week0_LFOV.nii.gz"
+    mask_path = root / "semantic_labels_only" / "B006_Week0_SEMANTIC.nii.gz"
+    image_path.parent.mkdir(parents=True)
+    mask_path.parent.mkdir(parents=True)
+    image = np.zeros((16, 16, 16), dtype=np.float32)
+    mask = np.zeros((16, 16, 16), dtype=np.int16)
+    mask[4:12, 4:12, 4:12] = 1
+    nib.save(nib.Nifti1Image(image, np.eye(4)), image_path)
+    nib.save(nib.Nifti1Image(mask, np.eye(4)), mask_path)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"summary": {"labels": [0, 1]}, "cases": [{"case_id": "B006_Week0", "patient_id": "B006", "image_path": str(image_path.relative_to(root)).replace("\\\\", "/"), "mask_path": str(mask_path.relative_to(root)).replace("\\\\", "/"), "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 1], "split": "train"}]}), encoding="utf-8")
+    output = tmp_path / "preflight"
+
+    summary = run_overfit_preflight(Namespace(manifest=manifest, data_root=root, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), train_patch_shape=(16, 16, 16), foreground_patch_probability=0.0, seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation", prostate_ce_weight=4.0, prostate_dice_weight=4.0, preflight_patient_id="B006", preflight_updates=3, preflight_eval_every=2))
+
+    saved = json.loads((output / "preflight_summary.json").read_text(encoding="utf-8"))
+    assert saved == summary
+    assert {"preflight_only", "case_id", "patient_id", "manifest_sha256", "prostate_label_source", "target_shape", "train_patch_shape", "foreground_patch_probability", "prostate_ce_weight", "prostate_dice_weight"} <= set(saved)
+    assert saved["true_positive_voxels"] + saved["false_negative_voxels"] == saved["reference_prostate_voxels"]
+    assert saved["true_positive_voxels"] + saved["false_positive_voxels"] == saved["predicted_prostate_voxels"]
+    denominator = 2 * saved["true_positive_voxels"] + saved["false_positive_voxels"] + saved["false_negative_voxels"]
+    assert saved["prostate_dice"] == pytest.approx(2 * saved["true_positive_voxels"] / denominator if denominator else 0.0)
+    assert saved["optimizer_updates"] == 3
+    assert saved["evaluation_interval_updates"] == 2
+    assert [row["optimizer_updates"] for row in saved["history"]] == [2, 3]

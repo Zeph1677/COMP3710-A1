@@ -162,6 +162,8 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--train-patch-shape", type=int, nargs=3)
     parser.add_argument("--foreground-patch-probability", type=float, default=0.0)
     parser.add_argument("--preflight-patient-id")
+    parser.add_argument("--preflight-updates", type=int)
+    parser.add_argument("--preflight-eval-every", type=int)
     return parser
 
 
@@ -237,6 +239,10 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
         raise ValueError("preflight patient ID is required")
     if args.epochs <= 0 or args.batch_size <= 0 or args.learning_rate <= 0 or args.base_channels <= 0:
         raise ValueError("epochs, batch size, learning rate and base channels must be positive")
+    updates = int(getattr(args, "preflight_updates", None) or args.epochs)
+    evaluation_interval = int(getattr(args, "preflight_eval_every", None) or updates)
+    if updates <= 0 or evaluation_interval <= 0:
+        raise ValueError("preflight updates and evaluation interval must be positive")
     output = args.output_dir.resolve()
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"refusing to overwrite non-empty output directory: {output}")
@@ -258,17 +264,18 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     output.mkdir(parents=True, exist_ok=True)
     history: list[dict[str, float]] = []
-    for epoch in range(1, args.epochs + 1):
+    for update in range(1, updates + 1):
         loss = _train_epoch(model, loader, optimizer, device, num_classes, args.prostate_label, getattr(args, "prostate_ce_weight", 8.0), getattr(args, "prostate_dice_weight", 8.0))
-        metric = evaluate_3d_batches(model, assessment_loader, device, num_classes)
-        history.append({"epoch": float(epoch), "train_loss": loss, "train_case_mean_dice": float(metric["mean_dice"])})
+        if update % evaluation_interval == 0 or update == updates:
+            metric = evaluate_3d_batches(model, assessment_loader, device, num_classes)
+            history.append({"optimizer_updates": update, "train_loss": loss, "train_case_mean_dice": float(metric["mean_dice"])})
     image, target = assessment_data[0]
     with torch.no_grad():
         output_logits = model(image[None].to(device))
         logits = output_logits[0] if isinstance(output_logits, tuple) else output_logits
     prediction = logits.argmax(1).cpu()[0]
     diagnostics = prostate_diagnostics(prediction, target, args.prostate_label)
-    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
+    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "optimizer_updates": updates, "evaluation_interval_updates": evaluation_interval, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_label": args.prostate_label, "prostate_label_source": args.prostate_label_source, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
     _write_json(output / "preflight_summary.json", summary)
     return summary
 

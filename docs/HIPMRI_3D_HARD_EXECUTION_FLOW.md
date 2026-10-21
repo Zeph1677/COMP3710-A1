@@ -35,7 +35,7 @@
 - `>= 0.70` 适用于该患者级 prostate Dice mean，不能改为 pooled-voxel Dice、foreground macro Dice 或全类别均值。
 - 报告所有非 background labels 的 Dice；background 不报告。
 - sliding-window inference 可用，但两个模型共用 split、preprocessing、downsampling 和 evaluation protocol；记录 patch size、overlap 与 logit merging method。
-- failure cases 来自 held-out HipMRI 低表现样本，优先 prostate base。
+- failure cases 来自 held-out HipMRI 低表现样本。比较工具按共同 FP/FN 错误分数排序，并在 GT 前列腺范围内取误差最大的切片；不得把未经方向与解剖验证的数组索引称为 prostate base。
 
 ### 2.3 已冻结的 label mapping 与仍然适用的停止条件
 
@@ -82,6 +82,14 @@
 - 两模型共享 manifest、preprocessing、target geometry、patch/stride/overlap、metrics、validation-only selection rule 与 test protocol。
 - Rangpur 或经 staff 批准的替代环境保存 GPU model、CUDA/PyTorch versions、command、job/session ID、exit state、stdout、stderr 和 peak VRAM。
 - 先完成 baseline GPU smoke，再运行完整 baseline/improved。
+
+### E. 当前 preflight 与抽样证据边界
+
+- `683036` 的 `PD (Priority)` 仅表示调度等待。不得重复提交同类 preflight，也不得用本地缩小 geometry 的训练结果替代其 `128³`、A100、200 optimizer updates 证据。
+- 作业运行或结束后，读取 `artifacts/rangpur_preflight_683036/git_sha.txt`。其 SHA 不等于当前预期提交时，产物只可用于排错，不能用于决定正式配置。
+- `configs/hipmri_experiment_candidates.json` 是唯一共享超参数来源：`preflight-a` 固定 CE/Dice 权重 `4.0/4.0`、前景采样概率 `0.50`；`formal-b` 固定 `8.0/8.0` 与 `0.75`。两者共享 `128³` target、`96³` train patch 与 seed 42。模型名称不属于共享候选配置：preflight 明确使用 Baseline，正式脚本以其单独记录的 `HIPMRI_MODEL` 指定 Baseline 或 Improved。
+- 本地 `B006_Week0` patch audit 已在 `128³ → 96³`、每个概率 200 次抽样下完成。`p=0.50` 与 `p=0.75` 都有 100% patch 含 prostate，均值均为 2552 个 prostate voxels；因此该病例不能证明提高采样概率会增加正例暴露。
+- `preflight_summary.json` 现受端到端契约测试约束，包含 patient/case、manifest SHA、标签来源、几何、权重、采样概率、固定 optimizer updates、评估间隔、TP/FP/FN 与 Dice。默认诊断为 200 updates、每 20 updates 评估一次；正式 Baseline、Improved、held-out 指标和同病例 panels 仍未完成。
 - 实验产物放 Git 忽略目录；不提交 data、weights、checkpoints 或大临时文件。
 
 ### E. Feasibility、提交与 code review

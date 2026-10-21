@@ -19,15 +19,19 @@ JOB_ID="${SLURM_JOB_ID:?this script must run under Slurm}"
 RUN_DIR="$PROJECT_DIR/artifacts/${JOB_ID}_preflight"
 TRAINING_DIR="$RUN_DIR/training"
 HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"
-HIPMRI_PREFLIGHT_EPOCHS="${HIPMRI_PREFLIGHT_EPOCHS:-200}"
+HIPMRI_PREFLIGHT_UPDATES="${HIPMRI_PREFLIGHT_UPDATES:-200}"
+HIPMRI_PREFLIGHT_EVAL_EVERY="${HIPMRI_PREFLIGHT_EVAL_EVERY:-20}"
 HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE="${HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE:-0.70}"
-HIPMRI_PROSTATE_CE_WEIGHT="${HIPMRI_PROSTATE_CE_WEIGHT:-4.0}"
-HIPMRI_PROSTATE_DICE_WEIGHT="${HIPMRI_PROSTATE_DICE_WEIGHT:-4.0}"
-HIPMRI_FOREGROUND_PATCH_PROBABILITY="${HIPMRI_FOREGROUND_PATCH_PROBABILITY:-0.50}"
+CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-preflight-a}"
+PREFLIGHT_MODEL="baseline"
 PROSTATE_SOURCE="CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate."
 EXPECTED_SOURCE_NORMALIZED_SHA256="89C5EF8336573B6C359D0828E2FFCF6819149490FEE20071F7436ED411DD89AF"
 
 cd "$PROJECT_DIR"
+eval "$(python src/experiment_configs.py --candidate "$CONFIG_CANDIDATE" --shell)"
+HIPMRI_PROSTATE_CE_WEIGHT="$CONFIG_PROSTATE_CE_WEIGHT"
+HIPMRI_PROSTATE_DICE_WEIGHT="$CONFIG_PROSTATE_DICE_WEIGHT"
+HIPMRI_FOREGROUND_PATCH_PROBABILITY="$CONFIG_FOREGROUND_PATCH_PROBABILITY"
 if [[ -n "$(git status --porcelain)" ]]; then
     echo "Refusing to run from a dirty checkout; commit or stash changes first." >&2
     exit 2
@@ -41,12 +45,14 @@ if [[ "$(tr -d '\r' < evidence/sources/csiro-brief-data-description.txt | sha256
     exit 2
 fi
 
-python - "$HIPMRI_PREFLIGHT_EPOCHS" "$HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE" "$HIPMRI_PROSTATE_CE_WEIGHT" "$HIPMRI_PROSTATE_DICE_WEIGHT" "$HIPMRI_FOREGROUND_PATCH_PROBABILITY" <<'PY'
+python - "$HIPMRI_PREFLIGHT_UPDATES" "$HIPMRI_PREFLIGHT_EVAL_EVERY" "$HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE" "$HIPMRI_PROSTATE_CE_WEIGHT" "$HIPMRI_PROSTATE_DICE_WEIGHT" "$HIPMRI_FOREGROUND_PATCH_PROBABILITY" <<'PY'
 import sys
 
-epochs, minimum_dice, ce_weight, dice_weight, foreground_probability = sys.argv[1:]
-if not epochs.isdigit() or int(epochs) <= 0:
-    raise SystemExit("HIPMRI_PREFLIGHT_EPOCHS must be a positive integer.")
+updates, eval_every, minimum_dice, ce_weight, dice_weight, foreground_probability = sys.argv[1:]
+if not updates.isdigit() or int(updates) <= 0:
+    raise SystemExit("HIPMRI_PREFLIGHT_UPDATES must be a positive integer.")
+if not eval_every.isdigit() or int(eval_every) <= 0:
+    raise SystemExit("HIPMRI_PREFLIGHT_EVAL_EVERY must be a positive integer.")
 if float(minimum_dice) < 0.0 or float(minimum_dice) > 1.0:
     raise SystemExit("HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE must be in [0, 1].")
 if float(ce_weight) <= 0.0 or float(dice_weight) <= 0.0:
@@ -72,11 +78,11 @@ cmp --silent evidence/dataset_manifest.json "$RUN_DIR/re_audited_manifest.json" 
 }
 
 cat > "$RUN_DIR/commands.txt" <<EOF
-python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $TRAINING_DIR --model baseline --epochs $HIPMRI_PREFLIGHT_EPOCHS --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability $HIPMRI_FOREGROUND_PATCH_PROBABILITY --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight $HIPMRI_PROSTATE_CE_WEIGHT --prostate-dice-weight $HIPMRI_PROSTATE_DICE_WEIGHT --preflight-patient-id $HIPMRI_PREFLIGHT_PATIENT_ID
+python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $TRAINING_DIR --model $PREFLIGHT_MODEL --epochs 1 --preflight-updates $HIPMRI_PREFLIGHT_UPDATES --preflight-eval-every $HIPMRI_PREFLIGHT_EVAL_EVERY --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape $CONFIG_TARGET_SHAPE --train-patch-shape $CONFIG_TRAIN_PATCH_SHAPE --foreground-patch-probability $HIPMRI_FOREGROUND_PATCH_PROBABILITY --seed $CONFIG_SEED --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight $HIPMRI_PROSTATE_CE_WEIGHT --prostate-dice-weight $HIPMRI_PROSTATE_DICE_WEIGHT --preflight-patient-id $HIPMRI_PREFLIGHT_PATIENT_ID
 minimum_preflight_prostate_dice=$HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE
 EOF
 
-python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "$HIPMRI_PREFLIGHT_EPOCHS" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability "$HIPMRI_FOREGROUND_PATCH_PROBABILITY" --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight "$HIPMRI_PROSTATE_CE_WEIGHT" --prostate-dice-weight "$HIPMRI_PROSTATE_DICE_WEIGHT" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
+python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model "$PREFLIGHT_MODEL" --epochs 1 --preflight-updates "$HIPMRI_PREFLIGHT_UPDATES" --preflight-eval-every "$HIPMRI_PREFLIGHT_EVAL_EVERY" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape $CONFIG_TARGET_SHAPE --train-patch-shape $CONFIG_TRAIN_PATCH_SHAPE --foreground-patch-probability "$HIPMRI_FOREGROUND_PATCH_PROBABILITY" --seed "$CONFIG_SEED" --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight "$HIPMRI_PROSTATE_CE_WEIGHT" --prostate-dice-weight "$HIPMRI_PROSTATE_DICE_WEIGHT" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
 
 python - "$TRAINING_DIR/preflight_summary.json" "$HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE" <<'PY'
 import json
