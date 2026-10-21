@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from compare_failures import common_error_score, error_relevant_prostate_slice, rank_failure_cases, render_comparative_prostate_panel, validate_comparison_inputs
+from compare_failures import build_selection_manifest, common_error_score, error_relevant_prostate_slice, rank_failure_cases, render_comparative_prostate_panel, validate_comparison_inputs
 
 
 def _metrics(**overrides):
@@ -73,3 +73,11 @@ def test_comparison_panel_renders_the_deterministic_error_relevant_slice(tmp_pat
 
     assert slice_index == 2
     assert output.is_file() and output.stat().st_size > 0
+
+
+def test_selection_manifest_records_rule_and_frozen_git_sha():
+    manifest = build_selection_manifest([{"patient_id": "B006", "case_id": "B006_Week0", "slice_index": 4, "error_score": 7.0}], git_sha="0950a0f")
+
+    assert manifest["git_sha"] == "0950a0f"
+    assert manifest["rule_version"] == 1
+    assert manifest["selected_cases"][0]["patient_id"] == "B006"

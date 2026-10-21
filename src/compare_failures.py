@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import subprocess
 
 import matplotlib.pyplot as plt
 import torch
@@ -100,6 +101,14 @@ def rank_failure_cases(baseline_predictions: dict[str, dict[str, object]], impro
     return sorted(ranking, key=lambda item: (-float(item["error_score"]), str(item["patient_id"]), str(item["case_id"])))
 
 
+def build_selection_manifest(selected_cases: list[dict[str, object]], git_sha: str) -> dict[str, object]:
+    """Preserve the deterministic selection rule together with the code identity."""
+
+    if not git_sha.strip():
+        raise ValueError("selection manifest requires a Git SHA")
+    return {"rule_version": 1, "git_sha": git_sha, "rule": "mean FP plus FN across baseline and improved; patient_id then case_id tie break; highest-error slice inside GT prostate extent", "selected_cases": selected_cases}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline-dir", type=Path, required=True)
@@ -120,7 +129,9 @@ def main() -> None:
         payload = baseline_predictions[case_id]
         entry["panel"] = str(Path("comparison_panels") / f"{entry['patient_id']}__{case_id}.png")
         entry["slice_index"] = render_comparative_prostate_panel(payload["image"], payload["target"], payload["prediction"], improved_predictions[case_id]["prediction"], int(baseline_metrics["prostate_label"]), args.output_dir / entry["panel"])
-    (args.output_dir / "selection_manifest.json").write_text(json.dumps({"rule_version": 1, "rule": "mean FP plus FN across baseline and improved; patient_id then case_id tie break; highest-error slice inside GT prostate extent", "selected_cases": selected}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    git_sha = subprocess.run(["git", "rev-parse", "HEAD"], check=True, capture_output=True, text=True).stdout.strip()
+    manifest = build_selection_manifest(selected, git_sha)
+    (args.output_dir / "selection_manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

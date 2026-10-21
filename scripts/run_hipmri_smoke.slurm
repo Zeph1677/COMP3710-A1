@@ -22,7 +22,7 @@ MODEL_NAME="${HIPMRI_MODEL:-baseline}"
 RUN_DIR="$PROJECT_DIR/artifacts/${JOB_ID}_formal_${MODEL_NAME}"
 HIPMRI_EPOCHS="${HIPMRI_EPOCHS:-20}"
 HIPMRI_RUN_KIND="${HIPMRI_RUN_KIND:-formal}"
-CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-formal-b}"
+CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-preflight-a}"
 PROSTATE_SOURCE="CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate."
 # Git may normalize CRLF to LF on Linux. This checksum validates the same text
 # after LF normalization; SOURCES.md retains the raw downloaded-file checksum.

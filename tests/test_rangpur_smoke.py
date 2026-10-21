@@ -17,7 +17,7 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert "python src/audit.py" in script
     assert "python src/train.py" in script
     assert "python src/predict.py" in script
-    assert 'CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-formal-b}"' in script
+    assert 'CONFIG_CANDIDATE="${HIPMRI_CONFIG_CANDIDATE:-preflight-a}"' in script
     assert 'python src/experiment_configs.py --candidate "$CONFIG_CANDIDATE" --shell' in script
     assert "--train-patch-shape $CONFIG_TRAIN_PATCH_SHAPE" in script
     assert "--foreground-patch-probability $CONFIG_FOREGROUND_PATCH_PROBABILITY" in script
