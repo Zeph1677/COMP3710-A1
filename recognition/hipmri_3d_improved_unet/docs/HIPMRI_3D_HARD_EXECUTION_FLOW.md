@@ -15,7 +15,7 @@
 | 患者隔离 | seed 42；train/validation/test 为 27/6/5 patients、146/46/19 volumes | manifest、`dataset.py`、`audit.py` | 模型没有其他设计问题 |
 | label mapping | `0=Background, 1=Body, 2=Bones, 3=Bladder, 4=Rectum, 5=Prostate` | `evidence/SOURCES.md`、CSIRO v2 DOI `10.25919/45T8-P065` 的 `Labels:` block | 任意模型性能或临床可用性 |
 | 现有代码 | 数据审计、模型、训练 CLI、validation checkpoint、checkpoint restore、test-only sliding-window inference、JSON metrics、ranking 与多平面 failure panels | Python 源码、测试 | 真实 GPU、正式 checkpoint 或 Dice 已达标 |
-| 本地测试 | 2026-10-21：`python -m pytest -q` 为 `24 passed` | 本地输出 | 真实 GPU、checkpoint 或 Dice 已达标 |
+| 本地测试 | 2026-10-21：`python -m pytest -q` 为 `26 passed` | 本地输出 | 真实 GPU、checkpoint 或 Dice 已达标 |
 
 ## 2. 已确认的课程与 staff 约束
 
@@ -52,18 +52,18 @@
 - [x] 生成 manifest，固定 patient-disjoint seed-42 split。
 - [x] 核验 211 cases / 38 patients，患者分组 27/6/5。
 - [ ] 保存至少三位真实患者的 axial/coronal/sagittal 图与标签叠图。`render_case_views()` 可生成面板，但当前没有真实数据产物。
-- [ ] 获取并记录 label-to-structure mapping 的权威来源。
+- [x] 记录 CSIRO collection v2 的权威 label-to-structure mapping；`5=Prostate`。
 
-### B. 训练程序：已具备本地可执行链路，尚缺真实 GPU 证据
+### B. 训练程序：已具备本地可执行链路与真实 A100 smoke 证据，尚缺正式双模型实验
 
 `train.py` 已有 CLI、manifest-driven DataLoader、Adam、epoch loop、validation-only checkpoint selection、`experiment_config.json`、`history.json`、`best.pt` 与 `training_summary.json`，并拒绝覆盖非空 artifact directory。checkpoint 内保存模型配置、manifest SHA-256 与 prostate label/source；`load_checkpoint_model()` 可按其声明恢复 baseline 或 improved architecture。
 
 - 训练只使用 train patients；validation 选择 best checkpoint；test 不参与 epoch、patch size、loss 或配置选择。
 - 正式 Slurm 运行仍须补充 Git SHA、Python/PyTorch/CUDA、GPU、stdout/stderr、job ID、exit state 与峰值显存；这些环境记录尚未由当前训练 CLI 自动写入。
 - 当前实现是每-volume z-score 和固定 `target_shape`；“仅从 train patients 拟合 normalisation 参数”尚未实现，不得写成现状。
-- 真实 GPU smoke 需覆盖 forward、backward、optimizer step、checkpoint save/load 与小型 inference。
+- Rangpur jobs `680366` 与 `680381` 已覆盖 forward、backward、optimizer step、checkpoint save/load 与 held-out inference；两者均为一 epoch smoke，不能作为正式性能结论。
 
-### C. 预测与患者级指标：已具备 CLI，尚无真实运行产物
+### C. 预测与患者级指标：已有真实 smoke 产物，尚缺新版正式资源证据
 
 `predict.py` 已从 validation-selected `best.pt` 恢复声明的 architecture，验证 manifest SHA-256，且只读取 manifest 的 test patients。它对每个 volume 做 overlap-averaged sliding-window logits 重建，按患者计算 prostate Dice 的算术均值，写出 `test_metrics.json`、非背景 label Dice/IoU、failure ranking 和每名 test patient 的代表性多平面 panel。合成 NIfTI 端到端测试证明该命令不会访问训练/验证病例。
 
@@ -72,7 +72,7 @@
 1. 每位患者的已确认 prostate label Dice；
 2. `mean_patient_prostate_dice` 与 test patient count；
 3. 每个非 background label 的 Dice/IoU；
-4. 参数量、peak VRAM、总训练时间与 per-patient inference time；当前 predict CLI 尚未写入这些正式资源字段；
+4. 参数量、peak VRAM、总训练时间与 per-patient inference time；新版 CLI 已写入这些字段，下一次正式 run 才会产生真实新版 artifact；
 5. 按预先声明的患者级 prostate error 排序的 3–5 个真实 held-out failure panels。
 
 必须新增测试，证明患者 Dice 算术均值不能被 pooled-voxel Dice 替代；baseline 与 improved 使用同一实现。

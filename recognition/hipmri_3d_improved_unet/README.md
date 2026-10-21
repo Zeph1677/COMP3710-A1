@@ -41,7 +41,7 @@ The staff reply does **not** identify which of the observed labels `0`–`5` is 
 
 **Acceptance criteria.** Zero patient overlap; identical test patients for both models; mean per-held-out-patient prostate Dice at least 0.70 after full-volume reconstruction; Dice/IoU for every non-background label, peak VRAM and per-case inference time; 3-5 real failure cases with prostate base as the priority.
 
-**Preliminary evidence.** Local synthetic-NIfTI tests validate recursive pairing, missing-pair rejection, shape/affine checks, patient splitting, 3D forward/backward passes, deep supervision and held-out metric fields. This is engineering evidence, not a trained-model result.
+**Smoke evidence, not a formal result.** Rangpur A100 40 GB jobs `680366` (baseline) and `680381` (improved) each completed one epoch, checkpoint selection and held-out full-volume inference with the same manifest. Their patient-level prostate Dice values were both `0.0`; this demonstrates the real-data execution chain only and must not be used as a model comparison or target claim. Formal runs record `sacct`, peak VRAM, per-patient inference time and prostate-specific comparison panels.
 
 **Risks, budget and fallback.** 3D memory demand, small foreground regions, NIfTI orientation, slow I/O and failed cluster jobs require a short GPU smoke run before full Slurm training. If the improved model does not improve real held-out boundary errors at acceptable cost, report the plain 3D U-Net as the recommended fallback.
 

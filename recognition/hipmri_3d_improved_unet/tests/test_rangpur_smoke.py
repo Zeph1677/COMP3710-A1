@@ -19,3 +19,8 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert 'MODEL_NAME="${HIPMRI_MODEL:-baseline}"' in script
     assert "HIPMRI_MODEL must be baseline or improved" in script
     assert "set -euo pipefail" in script
+    assert 'HIPMRI_EPOCHS="${HIPMRI_EPOCHS:-20}"' in script
+    assert 'HIPMRI_RUN_KIND="${HIPMRI_RUN_KIND:-formal}"' in script
+    assert 'sacct -P -j "$JOB_ID"' in script
+    assert "State,ExitCode,Elapsed,AllocTRES" in script
+    assert "--preflight-patient-id" not in script
