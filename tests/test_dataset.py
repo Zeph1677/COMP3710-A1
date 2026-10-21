@@ -103,3 +103,27 @@ def test_dataset_resizes_image_and_mask_to_divisible_3d_training_geometry(tmp_pa
     assert image.shape == (1, 8, 8, 8)
     assert mask.shape == (8, 8, 8)
     assert set(mask.unique().tolist()) <= {0, 1}
+
+
+def test_foreground_patch_sampling_keeps_declared_label_in_training_patch(tmp_path: Path):
+    _make_hipmri_named_pair(tmp_path, "B006_Week0", shape=(16, 16, 16))
+    label_path = tmp_path / "semantic_labels_only" / "B006_Week0_SEMANTIC.nii.gz"
+    label = np.zeros((16, 16, 16), dtype=np.uint8)
+    label[1, 1, 1] = 5
+    _write_volume(label_path, label)
+    pairs = discover_volume_pairs(tmp_path)
+
+    image, mask = HipMRI3DDataset(
+        pairs,
+        tmp_path,
+        patient_ids={"B006"},
+        num_classes=6,
+        target_shape=(16, 16, 16),
+        training_patch_shape=(8, 8, 8),
+        foreground_label=5,
+        foreground_probability=1.0,
+    )[0]
+
+    assert image.shape == (1, 8, 8, 8)
+    assert mask.shape == (8, 8, 8)
+    assert int((mask == 5).sum()) >= 1

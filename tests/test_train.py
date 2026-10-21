@@ -119,11 +119,14 @@ def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
     args = parser.parse_args([
         "--manifest", "manifest.json", "--data-root", "data", "--prostate-label", "2",
         "--prostate-label-source", "HipMRI documentation, Table 2", "--target-shape", "32", "32", "32",
+        "--train-patch-shape", "16", "16", "16", "--foreground-patch-probability", "0.75",
     ])
 
     assert args.model == "baseline"
     assert args.target_shape == [32, 32, 32]
     assert args.prostate_label == 2
+    assert args.train_patch_shape == [16, 16, 16]
+    assert args.foreground_patch_probability == 0.75
 
 
 def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):
@@ -134,17 +137,17 @@ def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):
         mask_path = root / "semantic_labels_only" / f"{patient}_Week0_SEMANTIC.nii.gz"
         image_path.parent.mkdir(parents=True, exist_ok=True)
         mask_path.parent.mkdir(parents=True, exist_ok=True)
-        image = np.zeros((16, 16, 16), dtype=np.float32)
-        mask = np.zeros((16, 16, 16), dtype=np.int16)
-        mask[4:12, 4:12, 4:12] = 1
+        image = np.zeros((32, 32, 32), dtype=np.float32)
+        mask = np.zeros((32, 32, 32), dtype=np.int16)
+        mask[8:24, 8:24, 8:24] = 1
         nib.save(nib.Nifti1Image(image, np.eye(4)), image_path)
         nib.save(nib.Nifti1Image(mask, np.eye(4)), mask_path)
-        cases.append({"case_id": f"{patient}_Week0", "patient_id": patient, "image_path": str(image_path.relative_to(root)).replace("\\", "/"), "mask_path": str(mask_path.relative_to(root)).replace("\\", "/"), "shape": [16, 16, 16], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 1], "split": split})
+        cases.append({"case_id": f"{patient}_Week0", "patient_id": patient, "image_path": str(image_path.relative_to(root)).replace("\\", "/"), "mask_path": str(mask_path.relative_to(root)).replace("\\", "/"), "shape": [32, 32, 32], "spacing": [1, 1, 1], "orientation": ["R", "A", "S"], "labels": [0, 1], "split": split})
     manifest = tmp_path / "manifest.json"
     manifest.write_text(json.dumps({"summary": {"labels": [0, 1]}, "cases": cases}), encoding="utf-8")
     output = tmp_path / "run"
 
-    summary = run_training(Namespace(manifest=manifest, data_root=root, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(16, 16, 16), seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation, Table 2"))
+    summary = run_training(Namespace(manifest=manifest, data_root=root, output_dir=output, model="baseline", epochs=1, batch_size=1, learning_rate=1e-3, base_channels=2, target_shape=(32, 32, 32), train_patch_shape=(16, 16, 16), foreground_patch_probability=1.0, seed=42, device="cpu", prostate_label=1, prostate_label_source="Dataset documentation, Table 2"))
 
     assert summary["selected_epoch"] == 1.0
     assert (output / "experiment_config.json").is_file()
@@ -156,6 +159,9 @@ def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):
     assert history[0]["train_peak_vram_mb"] == 0.0
     assert history[0]["validation_peak_vram_mb"] == 0.0
     assert {"peak_train_vram_mb", "peak_validation_vram_mb"} <= set(saved_summary)
+    config = json.loads((output / "experiment_config.json").read_text(encoding="utf-8"))
+    assert config["train_patch_shape"] == [16, 16, 16]
+    assert config["foreground_patch_probability"] == 1.0
     checkpoint = torch.load(output / "best.pt", map_location="cpu", weights_only=False)
     assert checkpoint["epoch"] == 1
     assert checkpoint["config"]["manifest_sha256"]

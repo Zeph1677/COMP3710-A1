@@ -177,15 +177,34 @@ class HipMRI3DDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         patient_ids: set[str],
         num_classes: int,
         target_shape: tuple[int, int, int] | None = None,
+        training_patch_shape: tuple[int, int, int] | None = None,
+        foreground_label: int | None = None,
+        foreground_probability: float = 0.0,
     ) -> None:
         self.records = [pair for pair in pairs if pair.patient_id in patient_ids]
         self.root = Path(data_root).resolve()
         self.num_classes = num_classes
         self.target_shape = target_shape
+        self.training_patch_shape = training_patch_shape
+        self.foreground_label = foreground_label
+        self.foreground_probability = foreground_probability
         if not self.records:
             raise ValueError("dataset partition contains no volumes")
         if target_shape is not None and (len(target_shape) != 3 or any(size <= 0 or size % 8 for size in target_shape)):
             raise ValueError("target_shape must contain three positive dimensions divisible by 8")
+        if training_patch_shape is not None:
+            if target_shape is None:
+                raise ValueError("training_patch_shape requires target_shape")
+            if len(training_patch_shape) != 3 or any(size <= 0 or size % 8 for size in training_patch_shape):
+                raise ValueError("training_patch_shape must contain three positive dimensions divisible by 8")
+            if any(patch > target for patch, target in zip(training_patch_shape, target_shape)):
+                raise ValueError("training_patch_shape cannot exceed target_shape")
+        if foreground_label is not None and not 0 <= foreground_label < num_classes:
+            raise ValueError("foreground_label is outside the declared label range")
+        if not 0.0 <= foreground_probability <= 1.0:
+            raise ValueError("foreground_probability must be in [0, 1]")
+        if foreground_probability and (training_patch_shape is None or foreground_label is None):
+            raise ValueError("foreground sampling requires a patch shape and declared foreground label")
 
     def __len__(self) -> int:
         return len(self.records)
@@ -203,4 +222,24 @@ class HipMRI3DDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         if self.target_shape is not None:
             image_tensor = F.interpolate(image_tensor[None], size=self.target_shape, mode="trilinear", align_corners=False)[0]
             mask_tensor = F.interpolate(mask_tensor[None, None].float(), size=self.target_shape, mode="nearest")[0, 0].long()
+        if self.training_patch_shape is not None:
+            starts = self._sample_patch_starts(mask_tensor)
+            slices = tuple(slice(start, start + size) for start, size in zip(starts, self.training_patch_shape))
+            image_tensor, mask_tensor = image_tensor[(slice(None), *slices)], mask_tensor[slices]
         return image_tensor, mask_tensor
+
+    def _sample_patch_starts(self, mask: torch.Tensor) -> tuple[int, int, int]:
+        """Choose a valid crop that contains foreground when requested."""
+
+        assert self.training_patch_shape is not None
+        coordinates = torch.empty((0, 3), dtype=torch.long)
+        if self.foreground_label is not None and torch.rand(()) < self.foreground_probability:
+            coordinates = torch.nonzero(mask == self.foreground_label, as_tuple=False)
+        if len(coordinates):
+            point = coordinates[torch.randint(len(coordinates), ())]
+            starts = []
+            for coordinate, size, patch in zip(point.tolist(), mask.shape, self.training_patch_shape):
+                low, high = max(0, coordinate - patch + 1), min(coordinate, size - patch)
+                starts.append(int(torch.randint(low, high + 1, ()).item()))
+            return tuple(starts)
+        return tuple(int(torch.randint(0, size - patch + 1, ()).item()) for size, patch in zip(mask.shape, self.training_patch_shape))

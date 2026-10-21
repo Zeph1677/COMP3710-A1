@@ -159,6 +159,8 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prostate-label-source", required=True)
     parser.add_argument("--prostate-ce-weight", type=float, default=8.0)
     parser.add_argument("--prostate-dice-weight", type=float, default=8.0)
+    parser.add_argument("--train-patch-shape", type=int, nargs=3)
+    parser.add_argument("--foreground-patch-probability", type=float, default=0.0)
     parser.add_argument("--preflight-patient-id")
     return parser
 
@@ -175,6 +177,25 @@ def _reset_cuda_peak(device: torch.device) -> None:
 
 def _cuda_peak_mb(device: torch.device) -> float:
     return torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0
+
+
+def training_patch_options(args: argparse.Namespace, target_shape: tuple[int, int, int]) -> tuple[tuple[int, int, int] | None, float]:
+    """Validate the train-only crop configuration retained in run metadata."""
+
+    raw_shape = getattr(args, "train_patch_shape", None)
+    probability = float(getattr(args, "foreground_patch_probability", 0.0))
+    if not 0.0 <= probability <= 1.0:
+        raise ValueError("foreground patch probability must be in [0, 1]")
+    if raw_shape is None:
+        if probability:
+            raise ValueError("foreground patch probability requires --train-patch-shape")
+        return None, probability
+    patch_shape = tuple(raw_shape)
+    if len(patch_shape) != 3 or any(size <= 0 or size % 8 for size in patch_shape):
+        raise ValueError("train patch shape must contain three positive dimensions divisible by 8")
+    if any(patch > target for patch, target in zip(patch_shape, target_shape)):
+        raise ValueError("train patch shape cannot exceed target shape")
+    return patch_shape, probability
 
 
 def prostate_diagnostics(prediction: torch.Tensor, target: torch.Tensor, prostate_label: int) -> dict[str, int | float]:
@@ -225,10 +246,13 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     pair = next(pair for pair in pairs if pair.patient_id == patient_id)
     device = torch.device(args.device)
     target_shape = tuple(args.target_shape)
+    training_patch_shape, foreground_probability = training_patch_options(args, target_shape)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
-    data = HipMRI3DDataset([pair], args.data_root, {patient_id}, num_classes, target_shape)
+    data = HipMRI3DDataset([pair], args.data_root, {patient_id}, num_classes, target_shape, training_patch_shape, args.prostate_label, foreground_probability)
+    assessment_data = HipMRI3DDataset([pair], args.data_root, {patient_id}, num_classes, target_shape)
     loader = DataLoader(data, batch_size=args.batch_size, shuffle=True)
+    assessment_loader = DataLoader(assessment_data, batch_size=1, shuffle=False)
     model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -236,15 +260,15 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     history: list[dict[str, float]] = []
     for epoch in range(1, args.epochs + 1):
         loss = _train_epoch(model, loader, optimizer, device, num_classes, args.prostate_label, getattr(args, "prostate_ce_weight", 8.0), getattr(args, "prostate_dice_weight", 8.0))
-        metric = evaluate_3d_batches(model, loader, device, num_classes)
+        metric = evaluate_3d_batches(model, assessment_loader, device, num_classes)
         history.append({"epoch": float(epoch), "train_loss": loss, "train_case_mean_dice": float(metric["mean_dice"])})
-    image, target = data[0]
+    image, target = assessment_data[0]
     with torch.no_grad():
         output_logits = model(image[None].to(device))
         logits = output_logits[0] if isinstance(output_logits, tuple) else output_logits
     prediction = logits.argmax(1).cpu()[0]
     diagnostics = prostate_diagnostics(prediction, target, args.prostate_label)
-    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
+    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
     _write_json(output / "preflight_summary.json", summary)
     return summary
 
@@ -260,10 +284,11 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     target_shape = tuple(args.target_shape)
+    training_patch_shape, foreground_probability = training_patch_options(args, target_shape)
     config = build_experiment_config(args.manifest, args.model, target_shape, args.seed, args.prostate_label, args.prostate_label_source)
     pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
     device = torch.device(args.device)
-    train_data = HipMRI3DDataset(pairs, args.data_root, split_ids["train"], num_classes, target_shape)
+    train_data = HipMRI3DDataset(pairs, args.data_root, split_ids["train"], num_classes, target_shape, training_patch_shape, args.prostate_label, foreground_probability)
     validation_data = HipMRI3DDataset(pairs, args.data_root, split_ids["validation"], num_classes, target_shape)
     train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
     validation_loader = DataLoader(validation_data, batch_size=args.batch_size, shuffle=False)
@@ -271,7 +296,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     output.mkdir(parents=True, exist_ok=True)
-    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0)})
+    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability})
     _write_json(output / "experiment_config.json", config)
     history: list[dict[str, float]] = []
     best_validation = float("-inf")
