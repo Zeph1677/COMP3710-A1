@@ -68,19 +68,19 @@ python --version > "$RUN_DIR/python_version.txt"
 python -c "import json, platform, torch; print(json.dumps({'platform': platform.platform(), 'torch': torch.__version__, 'cuda': torch.version.cuda, 'cuda_available': torch.cuda.is_available(), 'device_name': torch.cuda.get_device_name(0) if torch.cuda.is_available() else None}, indent=2))" > "$RUN_DIR/environment.json"
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_before.csv"
 
-python audit.py "$DATA_ROOT" --output "$RUN_DIR/re_audited_manifest.json" --seed 42
+python src/audit.py "$DATA_ROOT" --output "$RUN_DIR/re_audited_manifest.json" --seed 42
 cmp --silent evidence/dataset_manifest.json "$RUN_DIR/re_audited_manifest.json" || {
     echo "Shared data audit does not match the committed manifest; refusing to train." >&2
     exit 2
 }
 
 cat > "$RUN_DIR/commands.txt" <<EOF
-python train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/training_$MODEL_NAME --model $MODEL_NAME --epochs $HIPMRI_EPOCHS --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE"
-python predict.py --checkpoint $RUN_DIR/training_$MODEL_NAME/best.pt --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/test_$MODEL_NAME --patch-size 128 128 128 --stride 64 64 64 --device cuda
+python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/training_$MODEL_NAME --model $MODEL_NAME --epochs $HIPMRI_EPOCHS --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE"
+python src/predict.py --checkpoint $RUN_DIR/training_$MODEL_NAME/best.pt --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $RUN_DIR/test_$MODEL_NAME --patch-size 128 128 128 --stride 64 64 64 --device cuda
 EOF
 
-time python train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/training_$MODEL_NAME" --model "$MODEL_NAME" --epochs "$HIPMRI_EPOCHS" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE"
-time python predict.py --checkpoint "$RUN_DIR/training_$MODEL_NAME/best.pt" --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/test_$MODEL_NAME" --patch-size 128 128 128 --stride 64 64 64 --device cuda
+time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/training_$MODEL_NAME" --model "$MODEL_NAME" --epochs "$HIPMRI_EPOCHS" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE"
+time python src/predict.py --checkpoint "$RUN_DIR/training_$MODEL_NAME/best.pt" --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR/test_$MODEL_NAME" --patch-size 128 128 128 --stride 64 64 64 --device cuda
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"
 [[ -f "slurm-${JOB_ID}.out" ]] && cp "slurm-${JOB_ID}.out" "$RUN_DIR/slurm-${JOB_ID}.out" || true

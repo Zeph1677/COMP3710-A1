@@ -41,6 +41,6 @@ git rev-parse HEAD > "$RUN_DIR/git_sha.txt"
 python --version > "$RUN_DIR/python_version.txt"
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_before.csv"
 
-python train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
+python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"
