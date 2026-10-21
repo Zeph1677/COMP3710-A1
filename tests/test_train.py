@@ -20,6 +20,16 @@ def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
     assert final.grad is not None and auxiliary.grad is not None
 
 
+def test_composite_loss_penalizes_missed_prostate_more_when_weighted():
+    target = torch.tensor([[[[1]]]])
+    logits = torch.tensor([[[[[4.0]]], [[[0.0]]]]], requires_grad=True)
+
+    unweighted = composite_3d_loss(logits, target, num_classes=2, prostate_label=1, prostate_ce_weight=1.0, prostate_dice_weight=1.0)
+    weighted = composite_3d_loss(logits, target, num_classes=2, prostate_label=1, prostate_ce_weight=8.0, prostate_dice_weight=8.0)
+
+    assert weighted > unweighted
+
+
 def test_evaluator_returns_per_class_metrics_and_resource_fields():
     model = torch.nn.Conv3d(1, 2, 1)
     batches = [(torch.randn(1, 1, 8, 8, 8), torch.randint(0, 2, (1, 8, 8, 8)))]

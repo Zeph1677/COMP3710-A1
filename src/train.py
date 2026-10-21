@@ -78,22 +78,30 @@ def load_audited_pairs(manifest_path: Path | str) -> tuple[list[VolumePair], dic
     return pairs, split_ids, len(labels)
 
 
-def _soft_dice_loss(logits: torch.Tensor, target: torch.Tensor, num_classes: int) -> torch.Tensor:
+def _soft_dice_loss(logits: torch.Tensor, target: torch.Tensor, num_classes: int, class_weights: torch.Tensor | None = None) -> torch.Tensor:
     probabilities = logits.softmax(dim=1)
     one_hot = F.one_hot(target, num_classes).movedim(-1, 1).float()
     overlap = (probabilities * one_hot).sum(dim=(0, 2, 3, 4))
     total = probabilities.sum(dim=(0, 2, 3, 4)) + one_hot.sum(dim=(0, 2, 3, 4))
-    return 1 - ((2 * overlap + 1e-6) / (total + 1e-6)).mean()
+    dice = (2 * overlap + 1e-6) / (total + 1e-6)
+    return 1 - (dice * class_weights).sum() / class_weights.sum() if class_weights is not None else 1 - dice.mean()
 
 
-def composite_3d_loss(output: torch.Tensor | tuple[torch.Tensor, tuple[torch.Tensor, ...]], target: torch.Tensor, num_classes: int) -> torch.Tensor:
+def composite_3d_loss(output: torch.Tensor | tuple[torch.Tensor, tuple[torch.Tensor, ...]], target: torch.Tensor, num_classes: int, prostate_label: int | None = None, prostate_ce_weight: float = 1.0, prostate_dice_weight: float = 1.0) -> torch.Tensor:
     """Cross entropy plus soft Dice, with explicitly downsampled auxiliary targets."""
 
+    if prostate_label is not None and (prostate_label < 0 or prostate_label >= num_classes or prostate_ce_weight <= 0 or prostate_dice_weight <= 0):
+        raise ValueError("prostate label and loss weights must be positive and in range")
     final, auxiliaries = output if isinstance(output, tuple) else (output, ())
-    loss = F.cross_entropy(final, target) + _soft_dice_loss(final, target, num_classes)
+    ce_weights = torch.ones(num_classes, device=final.device)
+    dice_weights = torch.ones(num_classes, device=final.device)
+    if prostate_label is not None:
+        ce_weights[prostate_label] = prostate_ce_weight
+        dice_weights[prostate_label] = prostate_dice_weight
+    loss = F.cross_entropy(final, target, weight=ce_weights, reduction="none").mean() + _soft_dice_loss(final, target, num_classes, dice_weights)
     for auxiliary in auxiliaries:
         scaled_target = F.interpolate(target[:, None].float(), size=auxiliary.shape[-3:], mode="nearest")[:, 0].long()
-        loss = loss + 0.25 * (F.cross_entropy(auxiliary, scaled_target) + _soft_dice_loss(auxiliary, scaled_target, num_classes))
+        loss = loss + 0.25 * (F.cross_entropy(auxiliary, scaled_target, weight=ce_weights, reduction="none").mean() + _soft_dice_loss(auxiliary, scaled_target, num_classes, dice_weights))
     return loss
 
 
@@ -149,6 +157,8 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--prostate-label", required=True, type=int)
     parser.add_argument("--prostate-label-source", required=True)
+    parser.add_argument("--prostate-ce-weight", type=float, default=8.0)
+    parser.add_argument("--prostate-dice-weight", type=float, default=8.0)
     parser.add_argument("--preflight-patient-id")
     return parser
 
@@ -167,12 +177,12 @@ def _cuda_peak_mb(device: torch.device) -> float:
     return torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0
 
 
-def _train_epoch(model: torch.nn.Module, loader: DataLoader, optimizer: torch.optim.Optimizer, device: torch.device, num_classes: int) -> float:
+def _train_epoch(model: torch.nn.Module, loader: DataLoader, optimizer: torch.optim.Optimizer, device: torch.device, num_classes: int, prostate_label: int, prostate_ce_weight: float, prostate_dice_weight: float) -> float:
     model.train()
     losses: list[float] = []
     for images, masks in loader:
         optimizer.zero_grad(set_to_none=True)
-        loss = composite_3d_loss(model(images.to(device)), masks.to(device), num_classes)
+        loss = composite_3d_loss(model(images.to(device)), masks.to(device), num_classes, prostate_label, prostate_ce_weight, prostate_dice_weight)
         loss.backward()
         optimizer.step()
         losses.append(float(loss.detach().cpu()))
@@ -208,7 +218,7 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     output.mkdir(parents=True, exist_ok=True)
     history: list[dict[str, float]] = []
     for epoch in range(1, args.epochs + 1):
-        loss = _train_epoch(model, loader, optimizer, device, num_classes)
+        loss = _train_epoch(model, loader, optimizer, device, num_classes, args.prostate_label, getattr(args, "prostate_ce_weight", 8.0), getattr(args, "prostate_dice_weight", 8.0))
         metric = evaluate_3d_batches(model, loader, device, num_classes)
         history.append({"epoch": float(epoch), "train_loss": loss, "train_case_mean_dice": float(metric["mean_dice"])})
     image, target = data[0]
@@ -245,7 +255,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     output.mkdir(parents=True, exist_ok=True)
-    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels})
+    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0)})
     _write_json(output / "experiment_config.json", config)
     history: list[dict[str, float]] = []
     best_validation = float("-inf")
@@ -253,7 +263,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     for epoch in range(1, args.epochs + 1):
         _reset_cuda_peak(device)
         train_started = time.perf_counter()
-        train_loss = _train_epoch(model, train_loader, optimizer, device, num_classes)
+        train_loss = _train_epoch(model, train_loader, optimizer, device, num_classes, args.prostate_label, getattr(args, "prostate_ce_weight", 8.0), getattr(args, "prostate_dice_weight", 8.0))
         if device.type == "cuda": torch.cuda.synchronize(device)
         train_seconds = time.perf_counter() - train_started
         train_peak_vram_mb = _cuda_peak_mb(device)
