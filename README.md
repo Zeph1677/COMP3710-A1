@@ -31,7 +31,7 @@ The plain 3D U-Net is the baseline. Both models must use the same patient-level 
 
 The headline result is **prostate Dice**. For each held-out test patient, reconstruct the complete volume from its sliding-window logits, convert the reconstructed logits to the final segmentation, and compute Dice for the prostate label. Report the arithmetic mean of those patient-level prostate Dice values. The `>= 0.70` target applies to this value; it is not a pooled-voxel Dice, foreground macro Dice or a mean over every label.
 
-Report Dice for every non-background semantic label as supplementary class-wise results. Do not report background Dice. A formal run must record its patch size, overlap, logit-merging method and the fact that metrics were computed only after full-volume reconstruction. Failure-case discussion must prioritise the prostate base.
+Report Dice for every non-background semantic label as supplementary class-wise results. Do not report background Dice. A formal run must record its patch size, overlap, logit-merging method and the fact that metrics were computed only after full-volume reconstruction. Comparative panels use a predeclared error-relevant slice inside the ground-truth prostate extent; they do not make an unverified anatomical “prostate base” claim.
 
 The staff reply does **not** identify which of the observed labels `0`–`5` is prostate. The authoritative mapping is separately recorded in [`evidence/SOURCES.md`](evidence/SOURCES.md): `5=Prostate`. Record that citation in the immutable experiment configuration and use the same mapping for both models. Do not infer any label from label frequency, mask size or label numbering.
 
@@ -39,9 +39,11 @@ The staff reply does **not** identify which of the observed labels `0`–`5` is 
 
 **Need and scope.** The intended user is a radiotherapy contouring specialist. The prototype drafts a 3D segmentation for review; it is not an autonomous clinical decision system.
 
-**Acceptance criteria.** Zero patient overlap; identical test patients for both models; mean per-held-out-patient prostate Dice at least 0.70 after full-volume reconstruction; Dice/IoU for every non-background label, peak VRAM and per-case inference time; 3-5 real failure cases with prostate base as the priority.
+**Acceptance criteria.** Zero patient overlap; identical test patients for both models; mean per-held-out-patient prostate Dice at least 0.70 after full-volume reconstruction; Dice/IoU for every non-background label, peak VRAM and per-case inference time; 3-5 real failure cases selected by a fixed common-error rule.
 
 **Smoke evidence, not a formal result.** Rangpur A100 40 GB jobs `680366` (baseline) and `680381` (improved) each completed one epoch, checkpoint selection and held-out full-volume inference with the same manifest. Their patient-level prostate Dice values were both `0.0`; this demonstrates the real-data execution chain only and must not be used as a model comparison or target claim. Formal runs record `sacct`, peak VRAM, per-patient inference time and prostate-specific comparison panels.
+
+**Local sampling audit, not model evidence.** `artifacts/patch_audit_B006_Week0_128_96.json` records 200 deterministic samples for each foreground probability on `B006_Week0`, with target geometry `128³` and training patch geometry `96³`. For this case, both `p=0.50` and `p=0.75` yielded prostate-containing patches in all 200 samples and the same mean prostate count (`2552` voxels). The large patch geometry already covers prostate for every sampled crop in this case; this is sampling-path evidence only, not a Dice or performance result.
 
 **Risks, budget and fallback.** 3D memory demand, small foreground regions, NIfTI orientation, slow I/O and failed cluster jobs require a short GPU smoke run before full Slurm training. If the improved model does not improve real held-out boundary errors at acceptable cost, report the plain 3D U-Net as the recommended fallback.
 
