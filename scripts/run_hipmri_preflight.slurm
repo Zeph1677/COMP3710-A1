@@ -4,7 +4,7 @@
 #SBATCH --partition=comp3710
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=00:30:00
+#SBATCH --time=03:00:00
 #SBATCH --output=slurm-preflight-%j.out
 #SBATCH --error=slurm-preflight-%j.err
 

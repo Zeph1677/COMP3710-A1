@@ -43,6 +43,7 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
     assert 'source "$HOME/miniconda3/bin/activate"' in script
     assert 'HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"' in script
     assert 'HIPMRI_PREFLIGHT_EPOCHS="${HIPMRI_PREFLIGHT_EPOCHS:-200}"' in script
+    assert "#SBATCH --time=03:00:00" in script
     assert 'HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE="${HIPMRI_PREFLIGHT_MIN_PROSTATE_DICE:-0.70}"' in script
     assert 'HIPMRI_PROSTATE_CE_WEIGHT="${HIPMRI_PROSTATE_CE_WEIGHT:-4.0}"' in script
     assert 'HIPMRI_PROSTATE_DICE_WEIGHT="${HIPMRI_PROSTATE_DICE_WEIGHT:-4.0}"' in script
