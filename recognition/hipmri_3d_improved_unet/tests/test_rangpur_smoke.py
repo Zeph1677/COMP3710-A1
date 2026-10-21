@@ -24,3 +24,14 @@ def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evide
     assert 'sacct -P -j "$JOB_ID"' in script
     assert "State,ExitCode,Elapsed,AllocTRES" in script
     assert "--preflight-patient-id" not in script
+
+
+def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patient():
+    script = (Path(__file__).resolve().parents[1] / "run_hipmri_preflight.slurm").read_text(encoding="utf-8")
+
+    assert 'PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project directory}"' in script
+    assert 'RUN_DIR="$PROJECT_DIR/artifacts/rangpur_preflight_${JOB_ID}"' in script
+    assert 'source "$HOME/miniconda3/bin/activate"' in script
+    assert 'HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"' in script
+    assert "--preflight-patient-id" in script
+    assert "python predict.py" not in script
