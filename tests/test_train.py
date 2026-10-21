@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import torch
 
-from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, run_overfit_preflight, run_training, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, prostate_diagnostics, run_overfit_preflight, run_training, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -28,6 +28,15 @@ def test_composite_loss_penalizes_missed_prostate_more_when_weighted():
     weighted = composite_3d_loss(logits, target, num_classes=2, prostate_label=1, prostate_ce_weight=8.0, prostate_dice_weight=8.0)
 
     assert weighted > unweighted
+
+
+def test_prostate_diagnostics_reports_counts_consistent_with_dice():
+    prediction = torch.tensor([[[5, 0], [5, 0]]])
+    target = torch.tensor([[[5, 5], [0, 0]]])
+
+    result = prostate_diagnostics(prediction, target, prostate_label=5)
+
+    assert result == {"reference_prostate_voxels": 2, "predicted_prostate_voxels": 2, "true_positive_voxels": 1, "false_positive_voxels": 1, "false_negative_voxels": 1, "prostate_dice": pytest.approx(0.5)}
 
 
 def test_evaluator_returns_per_class_metrics_and_resource_fields():

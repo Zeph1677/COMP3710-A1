@@ -177,6 +177,23 @@ def _cuda_peak_mb(device: torch.device) -> float:
     return torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0
 
 
+def prostate_diagnostics(prediction: torch.Tensor, target: torch.Tensor, prostate_label: int) -> dict[str, int | float]:
+    """Return auditable prostate overlap counts for train-only preflight."""
+
+    predicted, reference = prediction == prostate_label, target == prostate_label
+    true_positive = int((predicted & reference).sum())
+    predicted_count, reference_count = int(predicted.sum()), int(reference.sum())
+    denominator = predicted_count + reference_count
+    return {
+        "reference_prostate_voxels": reference_count,
+        "predicted_prostate_voxels": predicted_count,
+        "true_positive_voxels": true_positive,
+        "false_positive_voxels": predicted_count - true_positive,
+        "false_negative_voxels": reference_count - true_positive,
+        "prostate_dice": 2 * true_positive / denominator if denominator else 0.0,
+    }
+
+
 def _train_epoch(model: torch.nn.Module, loader: DataLoader, optimizer: torch.optim.Optimizer, device: torch.device, num_classes: int, prostate_label: int, prostate_ce_weight: float, prostate_dice_weight: float) -> float:
     model.train()
     losses: list[float] = []
@@ -226,9 +243,8 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
         output_logits = model(image[None].to(device))
         logits = output_logits[0] if isinstance(output_logits, tuple) else output_logits
     prediction = logits.argmax(1).cpu()[0]
-    predicted, actual = prediction == args.prostate_label, target == args.prostate_label
-    denominator = int(predicted.sum() + actual.sum())
-    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": 2 * int((predicted & actual).sum()) / denominator if denominator else 0.0}
+    diagnostics = prostate_diagnostics(prediction, target, args.prostate_label)
+    summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
     _write_json(output / "preflight_summary.json", summary)
     return summary
 
