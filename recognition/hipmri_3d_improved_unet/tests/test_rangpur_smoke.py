@@ -31,6 +31,8 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
 
     assert 'PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project directory}"' in script
     assert 'RUN_DIR="$PROJECT_DIR/artifacts/rangpur_preflight_${JOB_ID}"' in script
+    assert 'TRAINING_DIR="$RUN_DIR/training"' in script
+    assert '--output-dir "$TRAINING_DIR"' in script
     assert 'source "$HOME/miniconda3/bin/activate"' in script
     assert 'HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"' in script
     assert "--preflight-patient-id" in script

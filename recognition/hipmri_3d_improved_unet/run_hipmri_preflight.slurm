@@ -17,6 +17,7 @@ PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file with sbatch from the project d
 DATA_ROOT="${HIPMRI_DATA_ROOT:-/home/groups/comp3710/HipMRI_Study_open}"
 JOB_ID="${SLURM_JOB_ID:?this script must run under Slurm}"
 RUN_DIR="$PROJECT_DIR/artifacts/rangpur_preflight_${JOB_ID}"
+TRAINING_DIR="$RUN_DIR/training"
 HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"
 PROSTATE_SOURCE="CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate."
 
@@ -40,6 +41,6 @@ git rev-parse HEAD > "$RUN_DIR/git_sha.txt"
 python --version > "$RUN_DIR/python_version.txt"
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_before.csv"
 
-python train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$RUN_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
+python train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"
