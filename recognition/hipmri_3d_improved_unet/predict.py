@@ -5,11 +5,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import torch
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 from modules import BaselineUNet3D, ImprovedUNet3D
 from dataset import HipMRI3DDataset
@@ -91,6 +95,17 @@ def _class_metrics(prediction: torch.Tensor, target: torch.Tensor, num_classes: 
     return result
 
 
+def _cuda_synchronize(device: torch.device) -> None:
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+
+
+def _overlap(patch_size: tuple[int, int, int], stride: tuple[int, int, int]) -> list[float]:
+    if any(step <= 0 or step > patch for patch, step in zip(patch_size, stride, strict=True)):
+        raise ValueError("stride dimensions must be positive and no greater than patch dimensions")
+    return [1 - step / patch for patch, step in zip(patch_size, stride, strict=True)]
+
+
 def run_prediction(args: argparse.Namespace) -> dict[str, object]:
     output = args.output_dir.resolve()
     if output.exists() and any(output.iterdir()):
@@ -105,23 +120,36 @@ def run_prediction(args: argparse.Namespace) -> dict[str, object]:
         raise ValueError("checkpoint lacks a cited prostate label mapping")
     pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
     output.mkdir(parents=True, exist_ok=True)
+    prediction_dir = output / "predictions"
+    prediction_dir.mkdir()
+    patch_size, stride = tuple(args.patch_size), tuple(args.stride)
+    overlap = _overlap(patch_size, stride)
+    if device.type == "cuda": torch.cuda.reset_peak_memory_stats(device)
     patient_scores: dict[str, list[float]] = {}
+    patient_seconds: dict[str, list[float]] = {}
     representative_cases: dict[str, tuple[float, torch.Tensor, torch.Tensor, torch.Tensor]] = {}
     class_parts: dict[str, list[dict[str, float | None]]] = {str(label): [] for label in range(num_classes)}
     for pair in pairs:
         if pair.patient_id not in split_ids["test"]:
             continue
         image, target = HipMRI3DDataset([pair], args.data_root, {pair.patient_id}, num_classes, tuple(config["target_shape"]))[0]
-        logits = sliding_window_logits(model, image.to(device), tuple(args.patch_size), tuple(args.stride))
+        _cuda_synchronize(device)
+        case_started = time.perf_counter()
+        logits = sliding_window_logits(model, image.to(device), patch_size, stride)
+        _cuda_synchronize(device)
+        case_seconds = time.perf_counter() - case_started
         prediction = logits.argmax(0).cpu()
+        torch.save({"case_id": pair.case_id, "patient_id": pair.patient_id, "prediction": prediction.long(), "manifest_sha256": manifest_hash, "prostate_label": prostate_label, "target_shape": config["target_shape"]}, prediction_dir / f"{pair.case_id}.pt")
         case_score = patient_prostate_dice(prediction, target, prostate_label)
         patient_scores.setdefault(pair.patient_id, []).append(case_score)
+        patient_seconds.setdefault(pair.patient_id, []).append(case_seconds)
         representative = representative_cases.get(pair.patient_id)
         if representative is None or case_score < representative[0]:
             representative_cases[pair.patient_id] = (case_score, image[0].cpu(), target.cpu(), prediction)
         for label, values in _class_metrics(prediction, target, num_classes).items():
             class_parts[label].append(values)
     per_patient = {patient: sum(scores) / len(scores) for patient, scores in patient_scores.items()}
+    per_patient_seconds = {patient: sum(seconds) for patient, seconds in patient_seconds.items()}
     per_class = {label: {metric: (sum(value[metric] for value in values if value[metric] is not None) / sum(value[metric] is not None for value in values)) if any(value[metric] is not None for value in values) else None for metric in ("dice", "iou")} for label, values in class_parts.items()}
     metrics = build_test_metrics(per_patient, per_class, prostate_label)
     panel_dir = output / "failure_panels"
@@ -132,7 +160,7 @@ def run_prediction(args: argparse.Namespace) -> dict[str, object]:
         panel_path = panel_dir / f"{patient_id}.png"
         render_case_views(image, target, prediction, panel_path, title=f"{patient_id}: patient prostate Dice={failure['prostate_dice']:.4f}")
         panel_files.append(str(panel_path.relative_to(output)))
-    metrics.update({"checkpoint": str(args.checkpoint), "manifest_sha256": manifest_hash, "prostate_label_source": config["prostate_label_source"], "patch_size": list(args.patch_size), "stride": list(args.stride), "failure_panels": panel_files})
+    metrics.update({"checkpoint": str(args.checkpoint), "manifest_sha256": manifest_hash, "prostate_label_source": config["prostate_label_source"], "target_shape": config["target_shape"], "patch_size": list(patch_size), "stride": list(stride), "overlap": overlap, "logit_merge_method": "overlap_averaged_logits", "per_patient_inference_seconds": per_patient_seconds, "total_inference_seconds": sum(per_patient_seconds.values()), "mean_patient_inference_seconds": sum(per_patient_seconds.values()) / len(per_patient_seconds), "peak_inference_vram_mb": torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0, "failure_panels": panel_files})
     (output / "test_metrics.json").write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return metrics
 

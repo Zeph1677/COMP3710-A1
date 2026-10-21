@@ -121,4 +121,13 @@ def test_run_prediction_writes_test_only_metrics_and_ranked_failure_panel(tmp_pa
     assert saved["failure_ranking"][0]["patient_id"] == "B003"
     assert saved["manifest_sha256"] == hashlib.sha256(manifest.read_bytes()).hexdigest()
     assert saved["prostate_label"] == 5
+    assert saved["peak_inference_vram_mb"] == 0.0
+    assert saved["total_inference_seconds"] >= 0.0
+    assert saved["mean_patient_inference_seconds"] >= 0.0
+    assert saved["overlap"] == [0.0, 0.0, 0.0]
+    assert saved["logit_merge_method"] == "overlap_averaged_logits"
+    saved_prediction = torch.load(output / "predictions" / "B003_Week0.pt", map_location="cpu", weights_only=False)
+    assert saved_prediction["case_id"] == "B003_Week0"
+    assert saved_prediction["patient_id"] == "B003"
+    assert saved_prediction["prediction"].dtype == torch.long
     assert (output / "failure_panels" / "B003.png").is_file()
