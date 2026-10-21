@@ -41,4 +41,8 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
     assert 'source "$HOME/miniconda3/bin/activate"' in script
     assert 'HIPMRI_PREFLIGHT_PATIENT_ID="${HIPMRI_PREFLIGHT_PATIENT_ID:?set a manifest train patient ID}"' in script
     assert "--preflight-patient-id" in script
+    assert "--train-patch-shape 96 96 96" in script
+    assert "--foreground-patch-probability 0.75" in script
+    assert "final_train_case_prostate_dice" in script
+    assert "Preflight failed: prostate Dice must be greater than zero" in script
     assert "python predict.py" not in script

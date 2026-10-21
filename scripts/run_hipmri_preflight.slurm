@@ -52,6 +52,15 @@ cmp --silent evidence/dataset_manifest.json "$RUN_DIR/re_audited_manifest.json" 
     exit 2
 }
 
-python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0 --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
+python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model baseline --epochs "${HIPMRI_PREFLIGHT_EPOCHS:-10}" --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.75 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 8.0 --prostate-dice-weight 8.0 --preflight-patient-id "$HIPMRI_PREFLIGHT_PATIENT_ID"
+
+python - "$TRAINING_DIR/preflight_summary.json" <<'PY'
+import json
+import sys
+
+summary = json.load(open(sys.argv[1], encoding="utf-8"))
+if float(summary["final_train_case_prostate_dice"]) <= 0.0:
+    raise SystemExit("Preflight failed: prostate Dice must be greater than zero before formal training.")
+PY
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"
