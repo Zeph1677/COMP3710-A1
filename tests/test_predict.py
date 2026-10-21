@@ -130,4 +130,6 @@ def test_run_prediction_writes_test_only_metrics_and_ranked_failure_panel(tmp_pa
     assert saved_prediction["case_id"] == "B003_Week0"
     assert saved_prediction["patient_id"] == "B003"
     assert saved_prediction["prediction"].dtype == torch.long
+    assert saved_prediction["target"].dtype == torch.long
+    assert saved_prediction["image"].shape == (1, 16, 16, 16)
     assert (output / "failure_panels" / "B003.png").is_file()

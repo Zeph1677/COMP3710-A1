@@ -139,7 +139,7 @@ def run_prediction(args: argparse.Namespace) -> dict[str, object]:
         _cuda_synchronize(device)
         case_seconds = time.perf_counter() - case_started
         prediction = logits.argmax(0).cpu()
-        torch.save({"case_id": pair.case_id, "patient_id": pair.patient_id, "prediction": prediction.long(), "manifest_sha256": manifest_hash, "prostate_label": prostate_label, "target_shape": config["target_shape"]}, prediction_dir / f"{pair.case_id}.pt")
+        torch.save({"case_id": pair.case_id, "patient_id": pair.patient_id, "image": image.cpu(), "target": target.cpu().long(), "prediction": prediction.long(), "manifest_sha256": manifest_hash, "prostate_label": prostate_label, "target_shape": config["target_shape"]}, prediction_dir / f"{pair.case_id}.pt")
         case_score = patient_prostate_dice(prediction, target, prostate_label)
         patient_scores.setdefault(pair.patient_id, []).append(case_score)
         patient_seconds.setdefault(pair.patient_id, []).append(case_seconds)
