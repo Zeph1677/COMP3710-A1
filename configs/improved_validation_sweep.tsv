@@ -1,0 +1,7 @@
+candidate_id	slug	learning_rate	base_channels	prostate_ce_weight	prostate_dice_weight	foreground_patch_probability	epochs	selection_metric
+0	control	0.001	16	4.0	4.0	0.50	20	prostate_dice
+1	lr_low	0.0005	16	4.0	4.0	0.50	20	prostate_dice
+2	lr_high	0.0020	16	4.0	4.0	0.50	20	prostate_dice
+3	foreground_low	0.001	16	4.0	4.0	0.25	20	prostate_dice
+4	prostate_weight_low	0.001	16	2.0	2.0	0.50	20	prostate_dice
+5	wide20	0.001	20	4.0	4.0	0.50	20	prostate_dice

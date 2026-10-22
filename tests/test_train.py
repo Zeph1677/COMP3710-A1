@@ -46,9 +46,45 @@ def test_evaluator_returns_per_class_metrics_and_resource_fields():
     assert {"mean_dice", "mean_iou", "per_class", "inference_seconds", "peak_vram_mb"} <= set(result)
 
 
+def test_evaluator_records_patient_level_prostate_validation_metrics():
+    model = torch.nn.Conv3d(1, 2, 1)
+    with torch.no_grad():
+        model.weight.zero_()
+        model.bias[:] = torch.tensor([0.0, 1.0])
+    images = torch.zeros((2, 1, 2, 2, 2))
+    masks = torch.zeros((2, 2, 2, 2), dtype=torch.long)
+    masks[0] = 1
+    masks[1, :, :, :1] = 1
+
+    result = evaluate_3d_batches(
+        model,
+        [(images, masks)],
+        torch.device("cpu"),
+        num_classes=2,
+        prostate_label=1,
+        patient_ids=["C007", "D008"],
+    )
+
+    assert result["validation_patient_prostate_dice"] == pytest.approx((1.0 + 2 / 3) / 2)
+    assert result["validation_worst_patient_prostate_dice"] == pytest.approx(2 / 3)
+    assert result["validation_prostate_false_positive_voxels"] == 4
+    assert result["validation_prostate_false_negative_voxels"] == 0
+    assert result["validation_patient_prostate_dice_by_patient"] == {"C007": pytest.approx(1.0), "D008": pytest.approx(2 / 3)}
+
+
 def test_checkpoint_selection_uses_validation_metric_only():
     history = [{"epoch": 1, "validation_mean_dice": 0.5, "test_mean_dice": 0.9}, {"epoch": 2, "validation_mean_dice": 0.7, "test_mean_dice": 0.1}]
     assert select_validation_checkpoint(history)["epoch"] == 2
+
+
+def test_checkpoint_selection_uses_prostate_metric_then_worst_case_then_false_positives_and_negatives():
+    history = [
+        {"epoch": 1, "validation_mean_dice": 0.9, "validation_patient_prostate_dice": 0.75, "validation_worst_patient_prostate_dice": 0.50, "validation_prostate_false_positive_voxels": 10, "validation_prostate_false_negative_voxels": 10},
+        {"epoch": 2, "validation_mean_dice": 0.1, "validation_patient_prostate_dice": 0.75, "validation_worst_patient_prostate_dice": 0.60, "validation_prostate_false_positive_voxels": 100, "validation_prostate_false_negative_voxels": 100},
+        {"epoch": 3, "validation_mean_dice": 0.2, "validation_patient_prostate_dice": 0.75, "validation_worst_patient_prostate_dice": 0.60, "validation_prostate_false_positive_voxels": 50, "validation_prostate_false_negative_voxels": 50},
+    ]
+
+    assert select_validation_checkpoint(history, selection_metric="prostate_dice")["epoch"] == 3
 
 
 def test_load_audited_pairs_restores_relative_case_metadata(tmp_path: Path):
@@ -127,6 +163,7 @@ def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
     assert args.prostate_label == 2
     assert args.train_patch_shape == [16, 16, 16]
     assert args.foreground_patch_probability == 0.75
+    assert args.selection_metric == "mean_dice"
 
 
 def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):

@@ -105,7 +105,7 @@ def composite_3d_loss(output: torch.Tensor | tuple[torch.Tensor, tuple[torch.Ten
     return loss
 
 
-def evaluate_3d_batches(model: torch.nn.Module, batches: Iterable[tuple[torch.Tensor, torch.Tensor]], device: torch.device, num_classes: int) -> dict[str, object]:
+def evaluate_3d_batches(model: torch.nn.Module, batches: Iterable[tuple[torch.Tensor, torch.Tensor]], device: torch.device, num_classes: int, prostate_label: int | None = None, patient_ids: Iterable[str] | None = None) -> dict[str, object]:
     """Compute hard held-out Dice/IoU and resource fields without model selection."""
 
     model.eval()
@@ -130,14 +130,54 @@ def evaluate_3d_batches(model: torch.nn.Module, batches: Iterable[tuple[torch.Te
         per_class[str(label)] = {"dice": dice, "iou": iou, "voxels": int(actual.sum())}
         if dice is not None: dice_values.append(dice)
         if iou is not None: iou_values.append(iou)
-    return {"per_class": per_class, "mean_dice": sum(dice_values) / len(dice_values), "mean_iou": sum(iou_values) / len(iou_values), "inference_seconds": time.perf_counter() - started, "peak_vram_mb": torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0}
+    result: dict[str, object] = {"per_class": per_class, "mean_dice": sum(dice_values) / len(dice_values), "mean_iou": sum(iou_values) / len(iou_values), "inference_seconds": time.perf_counter() - started, "peak_vram_mb": torch.cuda.max_memory_allocated(device) / 1024**2 if device.type == "cuda" else 0.0}
+    if (prostate_label is None) != (patient_ids is None):
+        raise ValueError("prostate_label and patient_ids must be supplied together")
+    if prostate_label is not None and patient_ids is not None:
+        patient_scores: dict[str, list[float]] = {}
+        false_positive = false_negative = 0
+        identifiers = iter(patient_ids)
+        for predicted, actual in zip(prediction, target):
+            try:
+                patient_id = next(identifiers)
+            except StopIteration as error:
+                raise ValueError("patient_ids has fewer entries than validation volumes") from error
+            counts = prostate_diagnostics(predicted, actual, prostate_label)
+            patient_scores.setdefault(patient_id, []).append(float(counts["prostate_dice"]))
+            false_positive += int(counts["false_positive_voxels"])
+            false_negative += int(counts["false_negative_voxels"])
+        if next(identifiers, None) is not None:
+            raise ValueError("patient_ids has more entries than validation volumes")
+        per_patient = {patient_id: sum(scores) / len(scores) for patient_id, scores in patient_scores.items()}
+        if not per_patient:
+            raise ValueError("validation partition contains no patient prostate scores")
+        result.update({
+            "validation_patient_prostate_dice": sum(per_patient.values()) / len(per_patient),
+            "validation_worst_patient_prostate_dice": min(per_patient.values()),
+            "validation_prostate_false_positive_voxels": false_positive,
+            "validation_prostate_false_negative_voxels": false_negative,
+            "validation_patient_prostate_dice_by_patient": per_patient,
+        })
+    return result
 
 
-def select_validation_checkpoint(history: list[dict[str, float]]) -> dict[str, float]:
+def select_validation_checkpoint(history: list[dict[str, object]], selection_metric: str = "mean_dice") -> dict[str, object]:
     """Choose solely by saved validation Dice; test values cannot influence selection."""
 
     if not history: raise ValueError("cannot select checkpoint from empty history")
-    return max(history, key=lambda row: row["validation_mean_dice"])
+    if selection_metric == "mean_dice":
+        return max(history, key=lambda row: float(row["validation_mean_dice"]))
+    if selection_metric != "prostate_dice":
+        raise ValueError(f"unsupported selection metric: {selection_metric}")
+    required = ("validation_patient_prostate_dice", "validation_worst_patient_prostate_dice", "validation_prostate_false_positive_voxels", "validation_prostate_false_negative_voxels", "epoch")
+    if any(any(key not in row for key in required) for row in history):
+        raise ValueError("prostate_dice selection requires complete validation prostate metrics")
+    return max(history, key=lambda row: (
+        float(row["validation_patient_prostate_dice"]),
+        float(row["validation_worst_patient_prostate_dice"]),
+        -int(row["validation_prostate_false_positive_voxels"]) - int(row["validation_prostate_false_negative_voxels"]),
+        -float(row["epoch"]),
+    ))
 
 
 def create_argument_parser() -> argparse.ArgumentParser:
@@ -161,6 +201,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prostate-dice-weight", type=float, default=8.0)
     parser.add_argument("--train-patch-shape", type=int, nargs=3)
     parser.add_argument("--foreground-patch-probability", type=float, default=0.0)
+    parser.add_argument("--selection-metric", choices=("mean_dice", "prostate_dice"), default="mean_dice")
     parser.add_argument("--preflight-patient-id")
     parser.add_argument("--preflight-updates", type=int)
     parser.add_argument("--preflight-eval-every", type=int)
@@ -285,6 +326,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
 
     if args.epochs <= 0 or args.batch_size <= 0 or args.learning_rate <= 0 or args.base_channels <= 0:
         raise ValueError("epochs, batch size, learning rate and base channels must be positive")
+    selection_metric = getattr(args, "selection_metric", "mean_dice")
     output = args.output_dir.resolve()
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"refusing to overwrite non-empty output directory: {output}")
@@ -303,10 +345,9 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     output.mkdir(parents=True, exist_ok=True)
-    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability})
+    config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "selection_metric": selection_metric})
     _write_json(output / "experiment_config.json", config)
     history: list[dict[str, float]] = []
-    best_validation = float("-inf")
     started = time.perf_counter()
     for epoch in range(1, args.epochs + 1):
         _reset_cuda_peak(device)
@@ -315,7 +356,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
         if device.type == "cuda": torch.cuda.synchronize(device)
         train_seconds = time.perf_counter() - train_started
         train_peak_vram_mb = _cuda_peak_mb(device)
-        validation = evaluate_3d_batches(model, validation_loader, device, num_classes)
+        validation = evaluate_3d_batches(model, validation_loader, device, num_classes, args.prostate_label, [pair.patient_id for pair in validation_data.records])
         row = {
             "epoch": float(epoch),
             "train_loss": train_loss,
@@ -324,14 +365,21 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
             "validation_seconds": float(validation["inference_seconds"]),
             "train_peak_vram_mb": train_peak_vram_mb,
             "validation_peak_vram_mb": float(validation["peak_vram_mb"]),
+            "validation_patient_prostate_dice": float(validation["validation_patient_prostate_dice"]),
+            "validation_worst_patient_prostate_dice": float(validation["validation_worst_patient_prostate_dice"]),
+            "validation_prostate_false_positive_voxels": float(validation["validation_prostate_false_positive_voxels"]),
+            "validation_prostate_false_negative_voxels": float(validation["validation_prostate_false_negative_voxels"]),
+            "validation_patient_prostate_dice_by_patient": validation["validation_patient_prostate_dice_by_patient"],
         }
         history.append(row)
         _write_json(output / "history.json", history)
-        if row["validation_mean_dice"] > best_validation:
-            best_validation = row["validation_mean_dice"]
+        if select_validation_checkpoint(history, selection_metric)["epoch"] == row["epoch"]:
             torch.save({"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(), "epoch": epoch, "config": config}, output / "best.pt")
+    selected = select_validation_checkpoint(history, selection_metric)
     summary = {
-        "selected_epoch": select_validation_checkpoint(history)["epoch"],
+        "selected_epoch": selected["epoch"],
+        "selection_metric": selection_metric,
+        "selection_value": selected["validation_patient_prostate_dice"] if selection_metric == "prostate_dice" else selected["validation_mean_dice"],
         "training_seconds": time.perf_counter() - started,
         "parameter_count": sum(parameter.numel() for parameter in model.parameters()),
         "peak_train_vram_mb": max(row["train_peak_vram_mb"] for row in history),

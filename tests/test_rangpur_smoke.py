@@ -67,3 +67,20 @@ def test_preflight_script_uses_scheduler_relative_paths_and_requires_train_patie
     assert "predicted_prostate_voxels" in script
     assert "true_positive_voxels" in script
     assert "python predict.py" not in script
+
+
+def test_improved_validation_sweep_is_array_based_and_never_reads_test_predictions():
+    root = Path(__file__).resolve().parents[1]
+    script = (root / "scripts" / "run_hipmri_improved_validation_sweep.slurm").read_text(encoding="utf-8")
+    candidates = (root / "configs" / "improved_validation_sweep.tsv").read_text(encoding="utf-8").splitlines()
+
+    assert "#SBATCH --array=0-5%1" in script
+    assert "SLURM_ARRAY_TASK_ID" in script
+    assert "python src/audit.py" in script
+    assert "python src/train.py" in script
+    assert "--selection-metric prostate_dice" in script
+    assert "predict.py" not in script
+    assert "test_metrics.json" not in script
+    assert candidates[0].split("\t") == ["candidate_id", "slug", "learning_rate", "base_channels", "prostate_ce_weight", "prostate_dice_weight", "foreground_patch_probability", "epochs", "selection_metric"]
+    assert len(candidates) == 7
+    assert candidates[1].split("\t")[1] == "control"
