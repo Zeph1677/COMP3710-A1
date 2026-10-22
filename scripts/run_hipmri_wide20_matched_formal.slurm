@@ -15,7 +15,7 @@ export PATH="/opt/slurm/bin:$PATH"
 
 PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit from the project directory}"
 DATA_ROOT="${HIPMRI_DATA_ROOT:-/home/groups/comp3710/HipMRI_Study_open}"
-FORMAL_MODE="${HIPMRI_FORMAL_MODE:?set control, baseline_new, or improved_wide20}"
+FORMAL_MODE="${HIPMRI_FORMAL_MODE:?set control, baseline_new, improved_wide20, or improved_wide20_recovery}"
 JOB_ID="${SLURM_JOB_ID:?this script must run under Slurm}"
 RUN_ROOT="$PROJECT_DIR/artifacts/rangpur_formal_wide20_matched_20261022"
 RUN_DIR="$RUN_ROOT/${JOB_ID}_${FORMAL_MODE}"
@@ -26,6 +26,8 @@ EXPECTED_SOURCE_NORMALIZED_SHA256="89C5EF8336573B6C359D0828E2FFCF6819149490FEE20
 MODEL_NAME=""
 BASE_CHANNELS=""
 CONTROL=0
+RECOVERY=0
+RECOVERED_CHECKPOINT=""
 case "$FORMAL_MODE" in
     control)
         MODEL_NAME="improved"
@@ -40,8 +42,14 @@ case "$FORMAL_MODE" in
         MODEL_NAME="improved"
         BASE_CHANNELS=20
         ;;
+    improved_wide20_recovery)
+        MODEL_NAME="improved"
+        BASE_CHANNELS=20
+        RECOVERY=1
+        RECOVERED_CHECKPOINT="${HIPMRI_RECOVERED_WIDE20_CHECKPOINT:?set the verified wide20 best.pt path}"
+        ;;
     *)
-        echo "HIPMRI_FORMAL_MODE must be control, baseline_new, or improved_wide20." >&2
+        echo "HIPMRI_FORMAL_MODE must be control, baseline_new, improved_wide20, or improved_wide20_recovery." >&2
         exit 2
         ;;
 esac
@@ -57,6 +65,10 @@ if ! git diff --quiet "$TRAINING_CODE_SHA" -- src/train.py src/predict.py src/mo
 fi
 if [[ -e "$RUN_DIR" ]]; then
     echo "Refusing to overwrite existing formal output: $RUN_DIR" >&2
+    exit 2
+fi
+if [[ "$RECOVERY" == "1" && ! -f "$RECOVERED_CHECKPOINT" ]]; then
+    echo "Verified recovered wide20 checkpoint is missing: $RECOVERED_CHECKPOINT" >&2
     exit 2
 fi
 if [[ ! -d "$DATA_ROOT/semantic_MRs" || ! -d "$DATA_ROOT/semantic_labels_only" ]]; then
@@ -95,7 +107,22 @@ cat > "$RUN_DIR/commands.txt" <<EOF
 python src/train.py --manifest evidence/dataset_manifest.json --data-root $DATA_ROOT --output-dir $TRAINING_DIR --model $MODEL_NAME --epochs 20 --batch-size 1 --learning-rate 0.001 --base-channels $BASE_CHANNELS --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.50 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 4.0 --prostate-dice-weight 4.0 --selection-metric prostate_dice
 EOF
 
-time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model "$MODEL_NAME" --epochs 20 --batch-size 1 --learning-rate 0.001 --base-channels "$BASE_CHANNELS" --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.50 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 4.0 --prostate-dice-weight 4.0 --selection-metric prostate_dice
+if [[ "$RECOVERY" == "1" ]]; then
+    recovered_training_dir="$(dirname "$RECOVERED_CHECKPOINT")"
+    for required in best.pt experiment_config.json history.json training_summary.json; do
+        if [[ ! -f "$recovered_training_dir/$required" ]]; then
+            echo "Recovered wide20 training evidence is incomplete: $recovered_training_dir/$required" >&2
+            exit 2
+        fi
+    done
+    mkdir -p "$TRAINING_DIR"
+    cp "$RECOVERED_CHECKPOINT" "$TRAINING_DIR/best.pt"
+    cp "$recovered_training_dir/experiment_config.json" "$TRAINING_DIR/experiment_config.json"
+    cp "$recovered_training_dir/history.json" "$TRAINING_DIR/history.json"
+    cp "$recovered_training_dir/training_summary.json" "$TRAINING_DIR/training_summary.json"
+else
+    time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model "$MODEL_NAME" --epochs 20 --batch-size 1 --learning-rate 0.001 --base-channels "$BASE_CHANNELS" --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.50 --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight 4.0 --prostate-dice-weight 4.0 --selection-metric prostate_dice
+fi
 sha256sum "$TRAINING_DIR/best.pt" > "$RUN_DIR/checkpoint_sha256.txt"
 
 if [[ "$CONTROL" == "0" ]]; then

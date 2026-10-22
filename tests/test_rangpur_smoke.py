@@ -90,7 +90,7 @@ def test_improved_validation_sweep_uses_one_declared_candidate_and_never_reads_t
 def test_matched_wide20_formal_script_separates_control_from_one_test_per_formal_arm():
     script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_wide20_matched_formal.slurm").read_text(encoding="utf-8")
 
-    assert 'FORMAL_MODE="${HIPMRI_FORMAL_MODE:?set control, baseline_new, or improved_wide20}"' in script
+    assert 'FORMAL_MODE="${HIPMRI_FORMAL_MODE:?set control, baseline_new, improved_wide20, or improved_wide20_recovery}"' in script
     assert 'RUN_DIR="$RUN_ROOT/${JOB_ID}_${FORMAL_MODE}"' in script
     assert 'CONTROL=1' in script
     assert '--selection-metric prostate_dice' in script
@@ -100,3 +100,13 @@ def test_matched_wide20_formal_script_separates_control_from_one_test_per_formal
     assert 'python src/predict.py' in script
     assert 'sha256sum "$TRAINING_DIR/best.pt"' in script
     assert 'sacct -X -n -P -j "$JOB_ID"' in script
+
+
+def test_matched_wide20_formal_script_can_test_a_verified_frozen_checkpoint_without_training_again():
+    script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_wide20_matched_formal.slurm").read_text(encoding="utf-8")
+
+    assert "improved_wide20_recovery)" in script
+    assert 'RECOVERED_CHECKPOINT="${HIPMRI_RECOVERED_WIDE20_CHECKPOINT:?set the verified wide20 best.pt path}"' in script
+    assert 'if [[ "$RECOVERY" == "1" ]]; then' in script
+    assert 'cp "$RECOVERED_CHECKPOINT" "$TRAINING_DIR/best.pt"' in script
+    assert 'python src/train.py' in script
