@@ -45,6 +45,41 @@ The staff reply does **not** identify which of the observed labels `0`–`5` is 
 
 **Local sampling audit, not model evidence.** `artifacts/patch_audit_B006_Week0_128_96.json` records 200 deterministic samples for each foreground probability on `B006_Week0`, with target geometry `128³` and training patch geometry `96³`. For this case, both `p=0.50` and `p=0.75` yielded prostate-containing patches in all 200 samples and the same mean prostate count (`2552` voxels). The large patch geometry already covers prostate for every sampled crop in this case; this is sampling-path evidence only, not a Dice or performance result.
 
+## Formal matched experiment results
+
+Rangpur formal jobs `683675` (Baseline) and `683676` (Improved) both completed normally (`COMPLETED|0:0`). They used commit `4232e0d`, manifest SHA-256 `5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07`, seed 42, the same 27/6/5 patient split, target geometry `128³`, training patches `96³`, foreground-patch probability `0.50`, prostate CE/Dice weights `4/4`, batch size 1, base channels 16, learning rate `0.001`, and full-volume overlap-averaged-logit inference with patch `128³` and stride `64³`. The only recorded experiment-configuration difference is `model`.
+
+`best.pt` was selected on validation data only: epoch 20 for Baseline and epoch 18 for Improved. The held-out test set was evaluated once after that selection; no reported test patient was used to change a loss weight, sampling probability, model component, epoch budget or inference setting.
+
+| Metric | Baseline | Improved | Difference (Improved - Baseline) |
+| --- | ---: | ---: | ---: |
+| Mean patient-level prostate Dice (headline; 5 held-out patients) | 0.8115 | 0.8136 | +0.0020 |
+| Mean patient inference time (s) | 0.2314 | 0.2467 | +0.0154 |
+| Peak inference VRAM (MB) | 1047.4 | 1047.5 | +0.1 |
+| Peak training VRAM (MB) | 977.6 | 1193.4 | +215.7 |
+| Training time (s) | 1434.4 | 1417.6 | -16.9 |
+| Parameter count | 1,400,646 | 1,423,106 | +22,460 |
+
+Both models exceed the predeclared held-out mean patient-level prostate Dice target (`>= 0.70`). The mean gain of `0.0020` is not consistent across the five held-out patients: B037 changes by `-0.0621`, H007 by `+0.0584`, K042 by `-0.0085`, L011 by `+0.0144`, and M013 by `+0.0080`. The exploratory two-sided 95% t interval for the paired mean difference is `[-0.0520, 0.0561]` (`n=5`, `df=4`), so it includes both clinically relevant negative and positive directions. This experiment does not establish a statistically significant or practically clear prostate-segmentation advantage for Improved.
+
+| Non-background label | Baseline Dice / IoU | Improved Dice / IoU |
+| --- | ---: | ---: |
+| 1 | 0.9581 / 0.9199 | 0.9778 / 0.9566 |
+| 2 | 0.8591 / 0.7539 | 0.9046 / 0.8260 |
+| 3 | 0.9570 / 0.9178 | 0.9606 / 0.9244 |
+| 4 | 0.8528 / 0.7474 | 0.8616 / 0.7587 |
+| 5 (Prostate) | 0.8226 / 0.7023 | 0.8314 / 0.7155 |
+
+The class-wise rows aggregate label voxels and are supplementary. The headline above remains the arithmetic mean of complete-volume, patient-level prostate Dice.
+
+### Paired prostate-only error inspection
+
+`src/compare_failures.py` compared the two models only after verifying matching manifest, prostate label/source, geometry, patch, stride, test-patient set and prediction-case set. Its selection manifest records commit `4232e0d91d8aa6cf8c1de38883b213c07cc62d10` and the fixed rule: mean FP+FN across both models, patient/case tie-break, then the highest-error slice inside the ground-truth prostate extent. The five generated panels are `B037_Week0`, `L011_Week2`, `L011_Week7`, `K042_Week0` and `L011_Week0`; they are error-selected prostate-containing slices, not anatomical prostate-base slices.
+
+B037 is retained rather than excluded: Improved has fewer false positives on its selected slice (166 vs 393) but substantially more false negatives (3123 vs 2495), consistent with its lower patient-level prostate Dice. Across the selected cases, Improved frequently trades false positives for false negatives rather than showing a uniformly better prostate contour. For compute cost, training VRAM and worst-case patient robustness, this evidence supports Baseline as the engineering recommendation. Improved remains a research candidate for investigating supplementary multi-class metrics, not the default recommended model.
+
+The evidence archive contains the final Slurm accounting record, the comparison selection manifest and five PNG panels; it is kept outside Git because it contains derived medical-image material. No raw data, checkpoints or prediction tensors are committed.
+
 **Risks, budget and fallback.** 3D memory demand, small foreground regions, NIfTI orientation, slow I/O and failed cluster jobs require a short GPU smoke run before full Slurm training. If the improved model does not improve real held-out boundary errors at acceptable cost, report the plain 3D U-Net as the recommended fallback.
 
 ## Current verification
@@ -55,4 +90,4 @@ python -m pip install -r requirements.txt
 python -m pytest -v
 ```
 
-Before a final claim, run the data audit and full baseline/improved training on Rangpur, retain configuration/log/checkpoint/metric artifacts, and inspect 3-5 held-out cases. The tutor check-off, PR, Turnitin receipt and teaching-team review are separate external requirements.
+The completed formal run retains configuration, log, checkpoint, metric and resource artifacts, together with five paired held-out error panels. Future work may use new patient-disjoint splits or multiple seeds, and may investigate B037-like over- or under-segmentation on validation data. It must not use the current held-out patients to tune this completed comparison. The tutor check-off, PR, Turnitin receipt and teaching-team review remain separate external requirements.
