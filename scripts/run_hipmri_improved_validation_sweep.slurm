@@ -5,9 +5,8 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=02:00:00
-#SBATCH --array=0-5%1
-#SBATCH --output=slurm-improved-sweep-%A_%a.out
-#SBATCH --error=slurm-improved-sweep-%A_%a.err
+#SBATCH --output=slurm-improved-sweep-%j.out
+#SBATCH --error=slurm-improved-sweep-%j.err
 
 # Improved-only validation sweep. It intentionally never reads the previously
 # inspected held-out patient partition.
@@ -16,8 +15,8 @@ export PATH="/opt/slurm/bin:$PATH"
 
 PROJECT_DIR="${SLURM_SUBMIT_DIR:?submit this file from the project directory}"
 DATA_ROOT="${HIPMRI_DATA_ROOT:-/home/groups/comp3710/HipMRI_Study_open}"
-ARRAY_ID="${SLURM_ARRAY_TASK_ID:?this script requires a Slurm array task}"
-ARRAY_JOB_ID="${SLURM_ARRAY_JOB_ID:?this script requires a Slurm array job}"
+CANDIDATE_ID="${HIPMRI_SWEEP_CANDIDATE_ID:?set a candidate ID from improved_validation_sweep.tsv}"
+SWEEP_RUN_ID="${HIPMRI_SWEEP_RUN_ID:?set a shared non-empty sweep run ID}"
 JOB_ID="${SLURM_JOB_ID:?this script must run under Slurm}"
 SWEEP_TABLE="$PROJECT_DIR/configs/improved_validation_sweep.tsv"
 PROSTATE_SOURCE="CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate."
@@ -41,19 +40,19 @@ if [[ "$(tr -d '\r' < evidence/sources/csiro-brief-data-description.txt | sha256
     exit 2
 fi
 
-line_number=$((ARRAY_ID + 2))
+line_number=$((CANDIDATE_ID + 2))
 candidate_line="$(sed -n "${line_number}p" "$SWEEP_TABLE")"
 if [[ -z "$candidate_line" ]]; then
-    echo "No sweep candidate for array index $ARRAY_ID." >&2
+    echo "No sweep candidate for ID $CANDIDATE_ID." >&2
     exit 2
 fi
 IFS=$'\t' read -r CANDIDATE_ID SLUG LEARNING_RATE BASE_CHANNELS CE_WEIGHT DICE_WEIGHT FOREGROUND_PROBABILITY EPOCHS SELECTION_METRIC <<< "$candidate_line"
-if [[ "$CANDIDATE_ID" != "$ARRAY_ID" || "$SELECTION_METRIC" != "prostate_dice" ]]; then
+if [[ "$CANDIDATE_ID" != "${HIPMRI_SWEEP_CANDIDATE_ID}" || "$SELECTION_METRIC" != "prostate_dice" ]]; then
     echo "Sweep row does not match the requested candidate or selection metric." >&2
     exit 2
 fi
 
-RUN_ROOT="$PROJECT_DIR/artifacts/rangpur_improved_validation_sweep_${ARRAY_JOB_ID}"
+RUN_ROOT="$PROJECT_DIR/artifacts/rangpur_improved_validation_sweep_${SWEEP_RUN_ID}"
 RUN_DIR="$RUN_ROOT/candidate_$(printf '%02d' "$CANDIDATE_ID")_${SLUG}"
 TRAINING_DIR="$RUN_DIR/training_improved"
 if [[ -e "$RUN_DIR" ]]; then
@@ -89,5 +88,5 @@ EOF
 time python src/train.py --manifest evidence/dataset_manifest.json --data-root "$DATA_ROOT" --output-dir "$TRAINING_DIR" --model improved --epochs "$EPOCHS" --batch-size 1 --learning-rate "$LEARNING_RATE" --base-channels "$BASE_CHANNELS" --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability "$FOREGROUND_PROBABILITY" --seed 42 --device cuda --prostate-label 5 --prostate-label-source "$PROSTATE_SOURCE" --prostate-ce-weight "$CE_WEIGHT" --prostate-dice-weight "$DICE_WEIGHT" --selection-metric "$SELECTION_METRIC"
 
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader > "$RUN_DIR/gpu_after.csv"
-[[ -f "slurm-improved-sweep-${ARRAY_JOB_ID}_${ARRAY_ID}.out" ]] && cp "slurm-improved-sweep-${ARRAY_JOB_ID}_${ARRAY_ID}.out" "$RUN_DIR/slurm-${JOB_ID}.out" || true
-[[ -f "slurm-improved-sweep-${ARRAY_JOB_ID}_${ARRAY_ID}.err" ]] && cp "slurm-improved-sweep-${ARRAY_JOB_ID}_${ARRAY_ID}.err" "$RUN_DIR/slurm-${JOB_ID}.err" || true
+[[ -f "slurm-improved-sweep-${JOB_ID}.out" ]] && cp "slurm-improved-sweep-${JOB_ID}.out" "$RUN_DIR/slurm-${JOB_ID}.out" || true
+[[ -f "slurm-improved-sweep-${JOB_ID}.err" ]] && cp "slurm-improved-sweep-${JOB_ID}.err" "$RUN_DIR/slurm-${JOB_ID}.err" || true
