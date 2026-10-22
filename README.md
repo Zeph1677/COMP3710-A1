@@ -47,6 +47,8 @@ The staff reply does **not** identify which of the observed labels `0`–`5` is 
 
 ## Formal matched experiment results
 
+### Historical protocol: `4232e0d` (preserved)
+
 Rangpur formal jobs `683675` (Baseline) and `683676` (Improved) both completed normally (`COMPLETED|0:0`). They used commit `4232e0d`, manifest SHA-256 `5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07`, seed 42, the same 27/6/5 patient split, target geometry `128³`, training patches `96³`, foreground-patch probability `0.50`, prostate CE/Dice weights `4/4`, batch size 1, base channels 16, learning rate `0.001`, and full-volume overlap-averaged-logit inference with patch `128³` and stride `64³`. The only recorded experiment-configuration difference is `model`.
 
 `best.pt` was selected on validation data only: epoch 20 for Baseline and epoch 18 for Improved. The held-out test set was evaluated once after that selection; no reported test patient was used to change a loss weight, sampling probability, model component, epoch budget or inference setting.
@@ -79,6 +81,12 @@ The class-wise rows aggregate label voxels and are supplementary. The headline a
 B037 is retained rather than excluded: Improved has fewer false positives on its selected slice (166 vs 393) but substantially more false negatives (3123 vs 2495), consistent with its lower patient-level prostate Dice. Across the selected cases, Improved frequently trades false positives for false negatives rather than showing a uniformly better prostate contour. For compute cost, training VRAM and worst-case patient robustness, this evidence supports Baseline as the engineering recommendation. Improved remains a research candidate for investigating supplementary multi-class metrics, not the default recommended model.
 
 The evidence archive contains the final Slurm accounting record, the comparison selection manifest and five PNG panels; it is kept outside Git because it contains derived medical-image material. No raw data, checkpoints or prediction tensors are committed.
+
+### Pending prostate-Dice selection protocol: `2e25298`
+
+`wide20` is the Improved validation-scan candidate selected using validation patient-level prostate Dice. Its held-out performance has not been produced under this protocol. The archived `683675` Baseline result remains historical evidence, but it is not the strict comparator because its checkpoint used `validation_mean_dice` selection.
+
+The pending comparison uses a validation-only `candidate_00_control` (Improved, 16 channels), then a newly trained matched Baseline-new (16 channels) and either a verified frozen Improved-wide20 checkpoint (20 channels) or a replacement 20-epoch Improved-wide20 training run. Both formal arms use prostate-Dice checkpoint selection, the same manifest, preprocessing, seed, loss weights `4/4`, foreground probability `0.50`, geometry and one held-out full-volume evaluation. Result cells remain intentionally empty until final `sacct -X` records show `COMPLETED|0:0`, checkpoints, prediction tensors and paired panels have been verified.
 
 **Risks, budget and fallback.** 3D memory demand, small foreground regions, NIfTI orientation, slow I/O and failed cluster jobs require a short GPU smoke run before full Slurm training. If the improved model does not improve real held-out boundary errors at acceptable cost, report the plain 3D U-Net as the recommended fallback.
 

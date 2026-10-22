@@ -85,3 +85,18 @@ def test_improved_validation_sweep_uses_one_declared_candidate_and_never_reads_t
     assert candidates[0].split("\t") == ["candidate_id", "slug", "learning_rate", "base_channels", "prostate_ce_weight", "prostate_dice_weight", "foreground_patch_probability", "epochs", "selection_metric"]
     assert len(candidates) == 7
     assert candidates[1].split("\t")[1] == "control"
+
+
+def test_matched_wide20_formal_script_separates_control_from_one_test_per_formal_arm():
+    script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_wide20_matched_formal.slurm").read_text(encoding="utf-8")
+
+    assert 'FORMAL_MODE="${HIPMRI_FORMAL_MODE:?set control, baseline_new, or improved_wide20}"' in script
+    assert 'RUN_DIR="$RUN_ROOT/${JOB_ID}_${FORMAL_MODE}"' in script
+    assert 'CONTROL=1' in script
+    assert '--selection-metric prostate_dice' in script
+    assert '--model "$MODEL_NAME"' in script
+    assert '--base-channels "$BASE_CHANNELS"' in script
+    assert 'if [[ "$CONTROL" == "0" ]]; then' in script
+    assert 'python src/predict.py' in script
+    assert 'sha256sum "$TRAINING_DIR/best.pt"' in script
+    assert 'sacct -X -n -P -j "$JOB_ID"' in script

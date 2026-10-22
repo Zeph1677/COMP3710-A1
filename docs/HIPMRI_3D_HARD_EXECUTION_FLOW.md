@@ -92,6 +92,13 @@
 - `preflight_summary.json` 现受端到端契约测试约束，包含 patient/case、manifest SHA、标签来源、几何、权重、采样概率、固定 optimizer updates、评估间隔、TP/FP/FN 与 Dice。默认诊断为 200 updates、每 20 updates 评估一次；正式 Baseline、Improved、held-out 指标和同病例 panels 仍未完成。
 - 实验产物放 Git 忽略目录；不提交 data、weights、checkpoints 或大临时文件。
 
+### E. 2026-10-22 matched Wide20 protocol
+
+- `wide20` 是 validation patient-level prostate Dice 扫描候选，不是已证明更优的 held-out 结果；`candidate_00_control` 必须只完成 Improved-16 的训练与 validation 记录，不得调用 `predict.py`。
+- 新的 Baseline-new 与 Improved-wide20 都固定为 `2e25298` 的模型/数据处理代码、seed 42、`128³` target、`96³` train patch、学习率 `0.001`、CE/Dice 权重 `4/4`、前景 patch 概率 `0.50`、20 epochs 和 `prostate_dice` checkpoint selection。两条正式臂各自只允许一次 held-out prediction。
+- `683675` 及旧正式表保留为 `4232e0d` 历史协议；其 `validation_mean_dice` 选模规则不同，不能替代 Baseline-new。
+- 每个新作业写入 `checkpoint_sha256.txt`、history、summary、test metrics（仅正式臂）、prediction tensors、命令、日志、re-audited manifest、环境和 GPU 记录。退出时的 scheduler 快照不作为最终证据；作业结束后必须用 `sacct -X -j <JOBID> --format=JobID,JobName,State,ExitCode,Elapsed,AllocTRES` 另行取得 final accounting，并要求 `COMPLETED|0:0`。
+
 ### E. Feasibility、提交与 code review
 
 - feasibility review 使用 HipMRI audit、患者隔离、模型设计、实际 smoke evidence、风险、预算与 fallback；不能使用 OASIS 结果。
