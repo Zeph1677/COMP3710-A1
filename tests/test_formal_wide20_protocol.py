@@ -1,6 +1,8 @@
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -51,6 +53,22 @@ def test_verify_wide20_checkpoint_accepts_complete_frozen_candidate(tmp_path: Pa
     assert report["selected_epoch"] == 11
     assert report["selection_metric"] == "prostate_dice"
     assert report["route"] == "reuse_frozen_checkpoint"
+
+
+def test_recovery_cli_writes_a_verification_report(tmp_path: Path):
+    run_dir, digest = _write_wide20_run(tmp_path)
+    output = tmp_path / "recovery.json"
+
+    result = subprocess.run([
+        sys.executable, "src/formal_wide20_protocol.py", str(run_dir),
+        "--git-sha", GIT_SHA,
+        "--manifest-sha256", MANIFEST_SHA,
+        "--checkpoint-sha256", digest,
+        "--output", str(output),
+    ], capture_output=True, text=True)
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(output.read_text(encoding="utf-8"))["route"] == "reuse_frozen_checkpoint"
 
 
 def test_verify_wide20_checkpoint_rejects_changed_checkpoint_bytes(tmp_path: Path):

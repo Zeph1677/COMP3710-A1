@@ -99,7 +99,7 @@ def validate_final_sacct(text: str, *, job_id: str) -> dict[str, str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("verify-wide20", type=Path, nargs="?", help="candidate_05_wide20 directory")
+    parser.add_argument("verify_wide20", type=Path, nargs="?", help="candidate_05_wide20 directory")
     parser.add_argument("--git-sha")
     parser.add_argument("--manifest-sha256")
     parser.add_argument("--checkpoint-sha256")
