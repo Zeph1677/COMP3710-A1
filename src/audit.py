@@ -62,7 +62,7 @@ def write_dataset_manifest(pairs: list[VolumePair], output_path: Path | str, see
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(output.suffix + ".tmp")
-    temporary.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     temporary.replace(output)
     return manifest
 

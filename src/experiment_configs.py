@@ -8,7 +8,9 @@ import shlex
 from pathlib import Path
 
 
-CONFIG_PATH = Path(__file__).resolve().parents[1] / "configs" / "hipmri_experiment_candidates.json"
+_MODULE_DIR = Path(__file__).resolve().parent
+_PROJECT_DIR = _MODULE_DIR.parent if _MODULE_DIR.name == "src" else _MODULE_DIR
+CONFIG_PATH = _PROJECT_DIR / "configs" / "hipmri_experiment_candidates.json"
 _REQUIRED_FIELDS = {
     "seed", "target_shape", "train_patch_shape",
     "foreground_patch_probability", "prostate_ce_weight", "prostate_dice_weight",

@@ -29,6 +29,7 @@ def test_manifest_records_cases_relative_paths_labels_and_patient_disjoint_split
     manifest = write_dataset_manifest(discover_volume_pairs(tmp_path), output, seed=42)
 
     saved = json.loads(output.read_text(encoding="utf-8"))
+    assert b"\r\n" not in output.read_bytes()
     assert saved == manifest
     assert manifest["summary"] == {
         "case_count": 4,

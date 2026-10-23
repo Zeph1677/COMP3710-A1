@@ -81,3 +81,22 @@ def test_selection_manifest_records_rule_and_frozen_git_sha():
     assert manifest["git_sha"] == "0950a0f"
     assert manifest["rule_version"] == 1
     assert manifest["selected_cases"][0]["patient_id"] == "B006"
+
+
+def test_comparison_uses_shared_label_and_error_colors(tmp_path, monkeypatch):
+    from matplotlib.axes import Axes
+
+    calls = []
+    original = Axes.imshow
+
+    def capture(self, data, *args, **kwargs):
+        calls.append(kwargs)
+        return original(self, data, *args, **kwargs)
+
+    monkeypatch.setattr(Axes, "imshow", capture)
+    target = torch.zeros((3, 4, 4), dtype=torch.long)
+    target[1, 1:3, 1:3] = 5
+    render_comparative_prostate_panel(torch.zeros_like(target).float(), target, target, torch.zeros_like(target), 5, tmp_path / "fixed.png")
+    assert calls[1]["norm"] is calls[2]["norm"] is calls[3]["norm"]
+    assert calls[4]["norm"] is calls[5]["norm"]
+    assert calls[4]["cmap"] is calls[5]["cmap"]

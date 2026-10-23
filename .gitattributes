@@ -1,1 +1,2 @@
 *.slurm text eol=lf
+evidence/dataset_manifest.json text eol=lf

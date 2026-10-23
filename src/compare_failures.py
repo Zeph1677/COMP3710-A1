@@ -8,6 +8,8 @@ from pathlib import Path
 import subprocess
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import BoundaryNorm, ListedColormap
+from matplotlib.patches import Patch
 import torch
 
 
@@ -59,12 +61,19 @@ def render_comparative_prostate_panel(image: torch.Tensor, target: torch.Tensor,
     improved_fp_fn[(improved[index] == prostate_label) & ~reference] = 1
     improved_fp_fn[(improved[index] != prostate_label) & reference] = 2
     figure, axes = plt.subplots(1, 6, figsize=(18, 3))
+    label_norm = BoundaryNorm([value - 0.5 for value in range(7)], 20)
+    error_cmap = ListedColormap(["#252525", "#ffffff", "#e31a1c"])
+    error_norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5], 3)
     panels = ((source[index], "MRI", "gray"), (target[index], "Ground truth", "tab20"), (baseline[index], "Baseline", "tab20"), (improved[index], "Improved", "tab20"), (baseline_fp_fn, "Baseline FP/FN", "coolwarm"), (improved_fp_fn, "Improved FP/FN", "coolwarm"))
-    for axis, (data, title, cmap) in zip(axes, panels):
-        axis.imshow(data.numpy(), cmap=cmap, interpolation="nearest")
+    for number, (axis, (data, title, cmap)) in enumerate(zip(axes, panels)):
+        options = {} if number == 0 else {"norm": label_norm}
+        if number >= 4:
+            cmap, options = error_cmap, {"norm": error_norm}
+        axis.imshow(data.numpy(), cmap=cmap, interpolation="nearest", **options)
         axis.set_title(title)
         axis.axis("off")
-    figure.tight_layout()
+    figure.legend(handles=[Patch(facecolor="#252525", label="No prostate error"), Patch(facecolor="#ffffff", edgecolor="black", label="FP"), Patch(facecolor="#e31a1c", label="FN")], loc="lower center", ncol=3)
+    figure.tight_layout(rect=(0, 0.09, 1, 1))
     destination = Path(output_path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(destination, dpi=150, bbox_inches="tight")
