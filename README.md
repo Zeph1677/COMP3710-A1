@@ -18,6 +18,8 @@ The final Rangpur accounting query recorded `COMPLETED|0:0` for 683675, 683676, 
 
 ![Implemented baseline and improved architectures](docs/assets/model_architecture.png)
 
+Editable source: [model_architecture.drawio](docs/assets/model_architecture.drawio).
+
 `src/modules.py` implements the same 3D U-Net skeleton for both models: three encoder reductions, a bottleneck, three decoder expansions, and skip concatenations. The baseline uses convolution blocks. The Improved U-Net replaces them with residual blocks and adds two decoder auxiliary heads for deep supervision during training. It has **no attention gate**. At inference, `predict.py` reads only final `1x1x1` logits.
 
 For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground sampling chooses a prostate voxel as a crop anchor with probability 0.50 when that branch is taken; validation and test scoring use complete reconstructed volumes.
