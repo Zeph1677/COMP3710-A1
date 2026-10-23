@@ -6,11 +6,11 @@ This COMP3710 Hard-difficulty project tests whether a residual, deep-supervised 
 
 The headline is the arithmetic mean of one prostate Dice value per held-out patient after full-volume reconstruction. It is not pooled-voxel Dice, a patch metric, a validation score, or a mean across every class. The frozen mask meaning is `5=Prostate`, supported by the CSIRO v2 `Labels:` block in [evidence/SOURCES.md](evidence/SOURCES.md). Paths, hashes, job identities and archive status are indexed in [docs/EXPERIMENT_EVIDENCE.md](docs/EXPERIMENT_EVIDENCE.md).
 
-| Result status | Code / jobs | Selection rule | Held-out patient prostate Dice | Interpretation |
-| --- | --- | --- | ---: | --- |
-| **Primary matched formal comparison** | `4232e0d`; baseline 683675, improved 683676 | Highest `validation_mean_dice` | Baseline **0.811548**; Improved **0.813587**; difference **+0.002038** | Small observed gain, not a clinical-use claim |
-| Validation scan | five Improved candidates, including Wide20 | validation patient prostate Dice | Not a held-out result | Used to choose a candidate only |
-| **Supplementary matched comparison** | Baseline-new 687753, recovered Wide20 687754 | `prostate_dice` validation selection | Baseline-new **0.818316**; Wide20 **0.794166**; difference **-0.024150** | Negative finding; Wide20 is not the recommended replacement |
+| Result status                               | Code / jobs                                   | Selection rule                         |                                                             Held-out patient prostate Dice | Interpretation                                              |
+| ------------------------------------------- | --------------------------------------------- | -------------------------------------- | -----------------------------------------------------------------------------------------: | ----------------------------------------------------------- |
+| **Primary matched formal comparison** | `4232e0d`; baseline 683675, improved 683676 | Highest `validation_mean_dice`       |   Baseline **0.811548**; Improved **0.813587**; difference **+0.002038** | Small observed gain, not a clinical-use claim               |
+| Validation scan                             | five Improved candidates, including Wide20    | validation patient prostate Dice       |                                                                      Not a held-out result | Used to choose a candidate only                             |
+| **Supplementary matched comparison**  | Baseline-new 687753, recovered Wide20 687754  | `prostate_dice` validation selection | Baseline-new **0.818316**; Wide20 **0.794166**; difference **-0.024150** | Negative finding; Wide20 is not the recommended replacement |
 
 The final Rangpur accounting query recorded `COMPLETED|0:0` for 683675, 683676, 687753 and 687754. Completion validates a clean job exit; it does not convert a supplementary result into independent confirmation or make a contour clinically acceptable.
 
@@ -40,13 +40,13 @@ python -m pytest -q
 
 ## Feasibility review
 
-| Requirement | Evidence and decision |
-| --- | --- |
-| User need and scope | Draft a multi-class 3D pelvic segmentation for specialist inspection and editing; do not issue treatment decisions. |
-| Acceptance criteria | Patient-disjoint split; cited `5=Prostate`; patient-level test prostate Dice at least 0.70; non-background Dice/IoU; peak VRAM and per-patient inference time; 3–5 held-out failure cases. |
-| Model choice | Plain 3D U-Net is the baseline. The Improved variant tests residual blocks and training-time deep supervision while retaining the same geometry and evaluation code. |
+| Requirement             | Evidence and decision                                                                                                                                                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User need and scope     | Draft a multi-class 3D pelvic segmentation for specialist inspection and editing; do not issue treatment decisions.                                                                                                     |
+| Acceptance criteria     | Patient-disjoint split; cited `5=Prostate`; patient-level test prostate Dice at least 0.70; non-background Dice/IoU; peak VRAM and per-patient inference time; 3–5 held-out failure cases.                           |
+| Model choice            | Plain 3D U-Net is the baseline. The Improved variant tests residual blocks and training-time deep supervision while retaining the same geometry and evaluation code.                                                    |
 | Preliminary feasibility | Local synthetic tests and retained Rangpur smoke/preflight records validated loading, forward/backward, checkpoint restoration and whole-volume evaluation. These are engineering checks, not final performance claims. |
-| Risks and fallback | The small main gain and negative Wide20 result show configuration sensitivity. Retain the baseline comparator, use human review, and stop selection before test evaluation. |
+| Risks and fallback      | The small main gain and negative Wide20 result show configuration sensitivity. Retain the baseline comparator, use human review, and stop selection before test evaluation.                                             |
 
 The written review is included as required documentation. A local file does not prove that a tutor feasibility consultation/check-off occurred.
 
@@ -99,18 +99,18 @@ python @historyArgs
 
 The chart reads saved main-experiment histories. It labels the selected epoch directly: baseline epoch 20 and Improved epoch 18. The historical selection metric was `validation_mean_dice`, so the plot intentionally does not relabel it as prostate Dice. Training-loss magnitudes cannot establish model quality because the Improved model includes auxiliary supervision.
 
-| Model | Selected epoch | Parameters | Peak training VRAM (MiB) | Peak inference VRAM (MiB) | Mean patient inference (s) | Patient prostate Dice |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Plain 3D U-Net | 20 | 1,400,646 | 977.641 | 1,047.402 | 0.231 | 0.811548 |
-| Residual + deep-supervision 3D U-Net | 18 | 1,423,106 | 1,193.384 | 1,047.492 | 0.247 | 0.813587 |
+| Model                                | Selected epoch | Parameters | Peak training VRAM (MiB) | Peak inference VRAM (MiB) | Mean patient inference (s) | Patient prostate Dice |
+| ------------------------------------ | -------------: | ---------: | -----------------------: | ------------------------: | -------------------------: | --------------------: |
+| Plain 3D U-Net                       |             20 |  1,400,646 |                  977.641 |                 1,047.402 |                      0.231 |              0.811548 |
+| Residual + deep-supervision 3D U-Net |             18 |  1,423,106 |                1,193.384 |                 1,047.492 |                      0.247 |              0.813587 |
 
 | Non-background label | Baseline Dice / IoU | Improved Dice / IoU |
-| --- | ---: | ---: |
-| 1 Body | 0.958148 / 0.919909 | 0.977807 / 0.956600 |
-| 2 Bones | 0.859094 / 0.753894 | 0.904555 / 0.825972 |
-| 3 Bladder | 0.957028 / 0.917811 | 0.960610 / 0.924385 |
-| 4 Rectum | 0.852767 / 0.747437 | 0.861629 / 0.758713 |
-| 5 Prostate | 0.822599 / 0.702347 | 0.831385 / 0.715546 |
+| -------------------- | ------------------: | ------------------: |
+| 1 Body               | 0.958148 / 0.919909 | 0.977807 / 0.956600 |
+| 2 Bones              | 0.859094 / 0.753894 | 0.904555 / 0.825972 |
+| 3 Bladder            | 0.957028 / 0.917811 | 0.960610 / 0.924385 |
+| 4 Rectum             | 0.852767 / 0.747437 | 0.861629 / 0.758713 |
+| 5 Prostate           | 0.822599 / 0.702347 | 0.831385 / 0.715546 |
 
 ## Failure analysis and engineering recommendation
 
@@ -118,13 +118,13 @@ The chart reads saved main-experiment histories. It labels the selected epoch di
 
 This paired panel comes from the main formal archive, not a new run. The selected case is `B037_Week0`; source Git SHA is `4232e0d91d8aa6cf8c1de38883b213c07cc62d10`, and selected axial index is 70. The deterministic rule ranks common cases by mean baseline/improved prostate FP+FN voxels, breaks ties by patient ID and case ID, and chooses the largest-error slice inside the ground-truth prostate extent. It is therefore a **prostate-range high-error slice**, not an anatomical prostate base. Panels 5 and 6 show prostate-only error: pale/white is false positive and red is false negative.
 
-| Rank | Case | Shared FP+FN error score | Baseline FP / FN | Improved FP / FN | Diagnosis boundary |
-| ---: | --- | ---: | ---: | ---: | --- |
-| 1 | B037_Week0 | 3088.5 | 393 / 2495 | 166 / 3123 | FN increase |
-| 2 | L011_Week2 | 929.5 | 894 / 68 | 738 / 159 | FN increase |
-| 3 | L011_Week7 | 878.5 | 868 / 81 | 661 / 147 | FP/FN trade-off |
-| 4 | K042_Week0 | 876.0 | 432 / 439 | 208 / 673 | FN increase |
-| 5 | L011_Week0 | 830.5 | 803 / 109 | 579 / 170 | FP/FN trade-off |
+| Rank | Case       | Shared FP+FN error score | Baseline FP / FN | Improved FP / FN | Diagnosis boundary |
+| ---: | ---------- | -----------------------: | ---------------: | ---------------: | ------------------ |
+|    1 | B037_Week0 |                   3088.5 |       393 / 2495 |       166 / 3123 | FN increase        |
+|    2 | L011_Week2 |                    929.5 |         894 / 68 |        738 / 159 | FN increase        |
+|    3 | L011_Week7 |                    878.5 |         868 / 81 |        661 / 147 | FP/FN trade-off    |
+|    4 | K042_Week0 |                    876.0 |        432 / 439 |        208 / 673 | FN increase        |
+|    5 | L011_Week0 |                    830.5 |        803 / 109 |        579 / 170 | FP/FN trade-off    |
 
 The first two rows reduce false-positive voxels but increase false-negative voxels; K042 has the same direction. B037 has the largest shared error and the Improved model raises FN from 2,495 to 3,123. Recommendation: use neither model for autonomous contour acceptance. The primary Improved model is a viable human-review drafting prototype because it preserves the matched protocol and gives a small aggregate gain, but B037 and the other paired failures require specialist review. Wide20 is worse than Baseline-new and should not replace the main configuration. Any new validation choice must be registered before another held-out evaluation.
 
@@ -146,4 +146,8 @@ Limitations are the five-patient held-out cohort, downsampled geometry, one spli
 
 ## Artificial Intelligence Usage Disclosure
 
-OpenAI Codex and ChatGPT assisted code modification, debugging, experiment orchestration, test design, documentation drafting, figure-generation scripts, and review of result consistency. The user remains responsible for checking every code change, command, loss formula, metric definition, result table and written claim. Verification includes automated tests, saved-artifact inspection, checksum comparison, fresh scheduler accounting queries, and manual visual inspection of generated figures. Passing tests do not substitute for manual clinical validation or specialist contour review.
+OpenAI Codex and ChatGPT assisted code modification, debugging, experiment orchestration, test design, documentation drafting, figure-generation scripts, and review of result consistency. The user remains responsible for checking every code change, command, loss formula, metric definition, result table and written claim. Verification includes automated tests, saved-artifact inspection, checksum comparison, fresh scheduler accounting queries, and manual visual inspection of generated figures. 
+
+OpenAI Codex and ChatGPT were used primarily to assist with debugging, resolving technical issues, and improving the formatting and visual presentation of project outputs and documentation. This assistance included identifying potential causes of errors, suggesting code fixes, and addressing display and layout inconsistencies.
+
+All AI-suggested changes were reviewed and checked before being incorporated into the project. AI tools were not used to complete the academic work or produce the substantive content of the assignment. The project implementation, experimental work, analysis, and conclusions were completed independently by the author, who retains full responsibility for the accuracy and integrity of the submitted wor
