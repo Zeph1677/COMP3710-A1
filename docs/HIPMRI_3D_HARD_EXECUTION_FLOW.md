@@ -4,7 +4,7 @@ This is the current guide for the flattened private repository. Source code is i
 
 ## Current evidence status
 
-The main matched formal comparison is Git `4232e0d`, jobs 683675 (baseline) and 683676 (Improved). Both final accounting rows are `COMPLETED|0:0`; their test results are 0.811548 and 0.813587 patient-level prostate Dice. The supplementary Wide20 comparison is jobs 687753 and 687754, both `COMPLETED|0:0`; Baseline-new is 0.818316 and recovered Wide20 is 0.794166. Wide20 is a negative supplementary result, not future work and not the headline experiment.
+The main matched formal comparison is Git `4232e0d`, jobs 683675 (baseline) and 683676 (Improved). Both final accounting rows are `COMPLETED|0:0`; their test results are 0.811548 and 0.813587 patient-level prostate Dice. The supplementary Wide20 comparison is jobs 687753 and 687754, both `COMPLETED|0:0`; Baseline-new is 0.818316 and recovered Wide20 is 0.794166. Wide20 is a negative supplementary result, not future work and not the headline experiment. The final raw accounting for 687753/687754 is retained locally at `artifacts/2026-10-23/687753_687754_final_accounting/sacct_final.txt`; it supersedes the earlier running-time snapshot for terminal-state verification.
 
 Read [EXPERIMENT_EVIDENCE.md](EXPERIMENT_EVIDENCE.md) before quoting a result. It contains the retained paths, checksums, selected checkpoints, label source, scheduler evidence, and limitations. Use [EXPERIMENT_ENVIRONMENT.md](EXPERIMENT_ENVIRONMENT.md) to separate formal Rangpur environment facts from local test/plotting versions.
 
@@ -37,15 +37,15 @@ The first command reads histories only. The second extracts the already selected
 
 ## Acceptance checklist
 
-- [ ] `python -m pytest -q` passes.
-- [ ] `python -m compileall src` passes.
-- [ ] `git diff --check` is clean.
-- [ ] `wsl bash -n` passes for each `scripts/*.slurm` file.
-- [ ] README images and local links resolve; the selected epochs on the curve match the corresponding summaries.
-- [ ] Result tables recompute from the cited JSON artifacts, including the negative Wide20 difference.
-- [ ] `git ls-files` contains no raw data, checkpoint, NIfTI, prediction tensor, archive, or `artifacts/` file.
-- [ ] `git status --short` contains only intentional source, documentation, tracked figure, and expected course-PDF changes.
-- [ ] A README PDF export, if a local renderer is available, is visually checked before submission.
+- [x] `python -m pytest -q` passes (62 passed).
+- [x] `python -m compileall src` passes.
+- [x] `git diff --check` is clean.
+- [x] `wsl bash -n` passes for each of the four `scripts/*.slurm` files.
+- [x] README images and local links resolve; the selected epochs on the curve match the corresponding summaries.
+- [x] Result tables recompute from the cited JSON artifacts, including the negative Wide20 difference.
+- [x] `git ls-files` contains no raw data, checkpoint, NIfTI, prediction tensor, archive, or `artifacts/` file.
+- [x] `git status --short` contains only intentional source, documentation, tracked figure, and expected course-PDF changes before the evidence-record commit.
+- [x] README PDF export was visually checked on 2026-10-23. The retained local QA record is `artifacts/2026-10-23/readme_pdf_qa/README_QA_margin050.pdf` plus `README_QA_margin050-1.png` through `README_QA_margin050-5.png`; it is Git-ignored by design.
 
 ## External assessment gates
 

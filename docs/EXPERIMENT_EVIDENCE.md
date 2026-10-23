@@ -33,9 +33,15 @@ Five Improved-U-Net validation candidates are retained at `artifacts/2026-10-22/
 | `artifacts/2026-10-23/686695_wide20_formal_control/` | Validation-only Wide20 control | Selected epoch 19; validation patient prostate Dice 0.797470; no test artifacts | Downloaded locally |
 | `artifacts/2026-10-23/687753_formal_baseline_new/` | Matched Baseline-new arm | Checkpoint SHA-256 `370a44cf229df9e4af1bad2be8cbc68b1a73c60bb0a7651350248bb030731488`; test prostate Dice 0.818316 | Downloaded locally |
 | `artifacts/2026-10-23/687754_formal_improved_wide20_recovery/` | Recovered Wide20 arm | Checkpoint SHA-256 `6cbbcbccb0710643357bef0857f81ebc62b81ce664791f182b5af92253020f59`; test prostate Dice 0.794166 | Downloaded locally |
-| Rangpur read-only command on 2026-10-23 | Final scheduler accounting | `/opt/slurm/bin/sacct -X -j 687753,687754 --format=JobID,JobName%30,State,ExitCode,Elapsed,AllocTRES -P -n` returned `COMPLETED|0:0` for both jobs | Live query completed |
+| `artifacts/2026-10-23/687753_687754_final_accounting/sacct_final.txt` | Final scheduler accounting, captured from Rangpur on 2026-10-23 | SHA-256 `e5c269711aae97345dd3fc1aa93eb84caf6182e51b629eb99ef2df73bd3aa1b7`; `/opt/slurm/bin/sacct -X -j 687753,687754 --format=JobID,JobName%30,State,ExitCode,Elapsed,AllocTRES -P -n` returned `COMPLETED|0:0` and `0:0` for both jobs | Retained locally, Git-ignored |
 
 The supplementary patient-level prostate Dice difference is `0.7941664101589291 - 0.8183164841240353 = -0.0241500739651062`. The result is a negative finding for this Wide20 configuration. It does not justify another selection cycle or a replacement of the main `4232e0d` comparison.
+
+`sacct_exit_snapshot.txt` in the earlier retained result directory is a time-of-capture snapshot that recorded the jobs while they were running. The 2026-10-23 `sacct_final.txt` above is the retained final accounting record and is the scheduler source for their terminal state.
+
+## Local README visual-QA record
+
+`artifacts/2026-10-23/readme_pdf_qa/README_QA_margin050.pdf` was generated from the tracked README with Pandoc and XeLaTeX on 2026-10-23, then rendered to `README_QA_margin050-1.png` through `README_QA_margin050-5.png` for page-by-page visual review. PDF SHA-256: `b5344344fc0ed30486eb700dadd01d8e765d291b0a9e86c73e15d49ce8357eec`. These five rendered pages and the PDF are retained locally and Git-ignored; the review confirmed that the result table, three figures, evidence links, failure-analysis table, and AI-use disclosure are visible and not clipped.
 
 ## Reproduction boundary
 
