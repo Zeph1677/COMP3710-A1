@@ -13,3 +13,5 @@ The records below are observations of the environments that produced retained ar
 `requirements.txt` remains a portable range-based development specification. `docs/requirements-verified-local.txt` is a short, installation-verified local snapshot for the packages imported by this project; it is not a complete `pip freeze`, a lockfile, or evidence for the remote formal experiments.
 
 The saved environment JSON records PyTorch/CUDA/GPU but does not include a complete remote package freeze. No undocumented package version is inferred for the Rangpur runs.
+
+The README's PowerShell and Bash examples declare `--seed 42` and `--device` explicitly for a new, separately registered run. They do not reproduce historical remote environments bit-for-bit, and they must not be used to rerun held-out testing for configuration selection.

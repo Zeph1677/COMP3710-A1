@@ -20,9 +20,25 @@ The final Rangpur accounting query recorded `COMPLETED|0:0` for 683675, 683676, 
 
 `src/modules.py` implements the same 3D U-Net skeleton for both models: three encoder reductions, a bottleneck, three decoder expansions, and skip concatenations. The baseline uses convolution blocks. The Improved U-Net replaces them with residual blocks and adds two decoder auxiliary heads for deep supervision during training. It has **no attention gate**. At inference, `predict.py` reads only final `1x1x1` logits.
 
-For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground-aware patches raise the chance of prostate exposure, while validation and test scoring use complete reconstructed volumes.
+For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground sampling chooses a prostate voxel as a crop anchor with probability 0.50 when that branch is taken; validation and test scoring use complete reconstructed volumes.
+
+`InstanceNorm3d` and batch size 1 are implementation choices suited to the retained volumetric memory budget, while the `128^3` target and `96^3` training crop reduce training memory relative to full-target training. These are design considerations, not isolated performance evidence. The data loader implements resampling, standardization and random crop placement; it does not implement rotation or synthetic intensity augmentation. The local B006_Week0 sampling audit is retained at `artifacts/2026-10-21/local_patch_audit_B006_Week0_128_96.json`: on that one resized case, all 200 sampled `96^3` crops contained prostate because the large crop and anatomy made even the random branch positive. This does not prove that the 0.50 setting increases prostate exposure for every patient, nor does it measure generalization.
 
 Checkpoint choice is validation-only. `predict.py` slides an inference patch over a volume, sums logits at each voxel, divides by overlap count, then takes `argmax`. Test scoring first averages any test volumes belonging to the same patient and then averages five patient Dice scores.
+
+## Training objective and patient-level metric
+
+For a final or auxiliary logit tensor, let `p_{ic}` be the softmax probability at voxel `i` for class `c`, `g_{ic}` its one-hot target, and `w_c` the class weight. `composite_3d_loss()` uses all six classes, including background, with `w_5 = 4` for prostate and `w_c = 1` otherwise. Its final-head loss is
+
+$$L_{final}=\frac{1}{N}\sum_i w_{y_i}[-\log p_{i,y_i}] + 1-\frac{\sum_c w_c\frac{2\sum_i p_{ic}g_{ic}+10^{-6}}{\sum_i p_{ic}+\sum_i g_{ic}+10^{-6}}}{\sum_c w_c}.$$
+
+The weighted cross-entropy is computed with PyTorch `reduction="none"` and then averaged over voxels; its weights are therefore not separately normalized. The soft-Dice term uses the displayed weighted mean across classes. This training soft Dice is not the headline test metric.
+
+For Improved only, the same CE-plus-soft-Dice objective is added for each of two decoder auxiliary heads after nearest-neighbour downsampling of the target to that head's spatial shape:
+
+$$L_{improved}=L_{final}+0.25L_{aux3}+0.25L_{aux2}.$$
+
+The auxiliary heads exist only while `ImprovedUNet3D.training` is true. Evaluation and `predict.py` use final `1x1x1` logits only. The test prostate Dice for a reconstructed patient is hard-label Dice, $D_p=2|P_p\cap G_p|/(|P_p|+|G_p|)$. When a patient has multiple study volumes, `predict.py` first averages that patient's volume Dice values; the reported headline is the arithmetic mean of the five patient values, $\bar D=\frac{1}{5}\sum_p D_p$. The three L011 weekly scans are repeated volumes of one patient, not three independent patients.
 
 ## Data, preprocessing and split
 
@@ -31,7 +47,8 @@ The audited course data contain 211 volumes from 38 patients. The fixed seed-42 
 Raw data remain ignored. On Windows, use the actual local data root. Rangpur uses the course-provided HipMRI data root recorded in the retained command artifacts.
 
 ```powershell
-$dataRoot = Resolve-Path '.\data\HipMRI_Study_open'
+$dataRoot = Resolve-Path '.\data\HipMRI_Study_open' # replace with the local course-data root
+$device = 'cuda' # use 'cpu' only for a deliberately local, non-formal check
 python src\audit.py $dataRoot --output evidence\dataset_manifest.json --seed 42
 python -m pytest -q
 ```
@@ -56,29 +73,52 @@ Install dependencies from `requirements.txt`, then inspect exact local verificat
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m pytest -q
+$dataRoot = Resolve-Path '.\data\HipMRI_Study_open' # replace with the local course-data root
+$manifest = 'evidence\dataset_manifest.json'
+$outputDir = 'artifacts\new_baseline_run'
+$checkpoint = Join-Path $outputDir 'best.pt'
+$device = 'cuda'
 $prostateSource = 'CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: ' +
   '10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.'
 $trainArgs = @(
-  'src\train.py', '--manifest', 'evidence\dataset_manifest.json', '--data-root', $dataRoot,
-  '--output-dir', 'artifacts\training_baseline', '--model', 'baseline', '--epochs', '20',
+  'src\train.py', '--manifest', $manifest, '--data-root', $dataRoot,
+  '--output-dir', $outputDir, '--model', 'baseline', '--epochs', '20',
   '--batch-size', '1', '--learning-rate', '0.001', '--base-channels', '16',
-  '--target-shape', '128', '128', '128', '--train-patch-shape', '96', '96', '96',
+  '--seed', '42', '--device', $device, '--target-shape', '128', '128', '128', '--train-patch-shape', '96', '96', '96',
   '--foreground-patch-probability', '0.50', '--prostate-label', '5',
   '--prostate-ce-weight', '4', '--prostate-dice-weight', '4',
   '--selection-metric', 'mean_dice',
   '--prostate-label-source', $prostateSource
 )
 python @trainArgs
-# For the matched Improved arm, change --model to improved and use a new output directory.
+# A new output directory and a new preregistered plan are required for an Improved arm.
 $predictArgs = @(
-  'src\predict.py', '--checkpoint', 'artifacts\training_baseline\best.pt',
-  '--manifest', 'evidence\dataset_manifest.json', '--data-root', $dataRoot,
-  '--output-dir', 'artifacts\test_baseline', '--patch-size', '128', '128', '128',
-  '--stride', '64', '64', '64'
+  'src\predict.py', '--checkpoint', $checkpoint,
+  '--manifest', $manifest, '--data-root', $dataRoot,
+  '--output-dir', 'artifacts\new_baseline_test', '--patch-size', '128', '128', '128',
+  '--stride', '64', '64', '64', '--device', $device
 )
-python @predictArgs
+# Do not run $predictArgs for configuration selection after looking at the retained test results.
 ```
+
+The formal checkpoints are Git-ignored and are not distributed by this repository. The three distinct uses are: train a new preregistered run; evaluate an already validation-selected checkpoint once; or plot an existing `training_summary.json` without training or inference. The commands above are documentation examples, not an instruction to submit a Rangpur job.
+
+```bash
+data_root=/path/to/HipMRI_Study_open
+manifest=evidence/dataset_manifest.json
+output_dir=artifacts/new_baseline_run
+prostate_source='CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.'
+python src/audit.py "$data_root" --output "$manifest" --seed 42
+python src/train.py --manifest "$manifest" --data-root "$data_root" \
+  --output-dir "$output_dir" --model baseline --epochs 20 --batch-size 1 \
+  --learning-rate 0.001 --base-channels 16 --seed 42 --device cuda \
+  --target-shape 128 128 128 --train-patch-shape 96 96 96 \
+  --foreground-patch-probability 0.50 --prostate-label 5 \
+  --prostate-label-source "$prostate_source" --prostate-ce-weight 4 \
+  --prostate-dice-weight 4 --selection-metric mean_dice
+```
+
+Rangpur commands use the same declared arguments, but the retained remote environment has no complete package freeze. The local package record is not evidence of bit-for-bit remote reproduction.
 
 Training writes `experiment_config.json`, `history.json`, `training_summary.json`, `best.pt`, and `training_curves.png`. Prediction writes `test_metrics.json`, ignored prediction tensors, and failure panels. The test JSON contains the headline patient mean, non-background class Dice/IoU, per-patient scores, patch/stride, overlap, logit merge method, GPU peak and inference timing.
 
@@ -114,6 +154,18 @@ The chart reads saved main-experiment histories. It labels the selected epoch di
 | 3 Bladder            | 0.957028 / 0.917811 | 0.960610 / 0.924385 |
 | 4 Rectum             | 0.852767 / 0.747437 | 0.861629 / 0.758713 |
 | 5 Prostate           | 0.822599 / 0.702347 | 0.831385 / 0.715546 |
+
+`docs/results_summary.json`, generated by `scripts/summarize_report_results.py`, records the raw JSON paths and SHA-256 values used for the tables. The five primary test patients change in different directions:
+
+| Patient | Baseline prostate Dice | Improved prostate Dice | Improved − Baseline |
+| --- | ---: | ---: | ---: |
+| B037 | 0.736256 | 0.674195 | -0.062061 |
+| H007 | 0.781378 | 0.839755 | +0.058377 |
+| K042 | 0.887015 | 0.878500 | -0.008516 |
+| L011 | 0.781136 | 0.795553 | +0.014417 |
+| M013 | 0.871957 | 0.879931 | +0.007974 |
+
+The small cohort mean increase therefore does not mean every patient improved. This table is patient-level; it does not reuse the class-wise pooled-style summary above as the headline.
 
 ## Failure analysis and engineering recommendation
 
@@ -151,7 +203,14 @@ These panels are regenerated from saved main-experiment predictions, with no new
 
 ## Wide20 supplementary result and limitations
 
-The five-candidate scan selected Wide20 on validation data. A validation-only control completed without test artifacts. The final one-time matched supplementary tests completed cleanly, yet Baseline-new outperformed recovered Wide20 by 0.024150 patient-level prostate Dice. This can reflect configuration sensitivity, checkpoint lineage, or limited sample size; it does not prove the residual/deep-supervision architecture globally worse.
+The five-candidate scan selected Wide20 on validation data. A validation-only control completed without test artifacts. The final one-time matched supplementary tests completed cleanly, yet Baseline-new outperformed recovered Wide20 by 0.024150 patient-level prostate Dice. The supplementary pair reused the already viewed five held-out patients, so it is a frozen, one-time post-selection comparison rather than a new independent blind test. It must not start another selection cycle.
+
+| Arm | Patient prostate Dice | Parameters | Peak training VRAM (MiB) | Peak inference VRAM (MiB) | Mean patient inference (s) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline-new 687753 | 0.818316 | 1,400,646 | 977.641 | 1,047.402 | 0.230 |
+| Recovered Wide20 687754 | 0.794166 | 2,222,878 | 1,496.950 | 1,295.299 | 0.299 |
+
+The negative result occurs alongside higher parameter count, memory use and mean inference time. Configuration sensitivity, capacity, and checkpoint lineage are possible explanations to test in a future preregistered experiment; the retained records do not isolate any one cause, and they do not establish that residual blocks or deep supervision alone caused the difference.
 
 Limitations are the five-patient held-out cohort, downsampled geometry, one split/seed, uncalibrated contour confidence, and no clinical review. The project does not claim millimetre-level accuracy, anatomical-base correctness, prospective performance, or clinical safety.
 
@@ -168,11 +227,10 @@ This is the independent development repository. The course contribution must res
 `requirements.txt` provides development dependency ranges. [docs/requirements-verified-local.txt](docs/requirements-verified-local.txt) records exact locally import-verified versions used for current tests and tracked figures; it is not a portable lockfile. Formal artifacts were produced on Rangpur Linux with PyTorch `2.13.0+cu130`, CUDA `13.0`, and an NVIDIA A100-PCIE-40GB; see [docs/EXPERIMENT_ENVIRONMENT.md](docs/EXPERIMENT_ENVIRONMENT.md). Do not assign the local Windows package snapshot to formal runs.
 
 - [Experiment evidence index](docs/EXPERIMENT_EVIDENCE.md)
+- [Generated result summary and source hashes](docs/results_summary.json)
 - [Environment distinction](docs/EXPERIMENT_ENVIRONMENT.md)
 - [Execution and acceptance guide](docs/HIPMRI_3D_HARD_EXECUTION_FLOW.md)
 - [Frozen label and source evidence](evidence/SOURCES.md)
 - [Asset-generation command](scripts/generate_readme_assets.py)
 
 ## Artificial Intelligence Usage Disclosure
-
-OpenAI Codex and ChatGPT assisted code modification, debugging, experiment orchestration, test design, documentation drafting, figure-generation scripts, and review of result consistency. Automated checks include unit tests, saved-artifact inspection, checksum comparison, retained final scheduler accounting, and visual inspection of generated figures. These checks do not establish that every line, interpretation, or clinical implication has been independently validated by the author. The author remains responsible for personally reviewing and defending the implementation, mathematical definitions, data split, experimental claims, and final submission. No clinical validation or tutor approval is implied by automated verification.

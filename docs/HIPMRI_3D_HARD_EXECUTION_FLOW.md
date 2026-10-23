@@ -20,8 +20,8 @@ python -m compileall src
 The audit regenerates a manifest and can change its hash if raw data or code differs. Do not overwrite a preserved formal artifact directory. Use a new ignored `artifacts/` output directory for local reproduction.
 
 ```powershell
-python src\train.py --manifest evidence\dataset_manifest.json --data-root $dataRoot --output-dir artifacts\new_run --model baseline --epochs 20 --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.50 --prostate-label 5 --prostate-label-source 'CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.'
-python src\predict.py --checkpoint artifacts\new_run\best.pt --manifest evidence\dataset_manifest.json --data-root $dataRoot --output-dir artifacts\new_test --patch-size 128 128 128 --stride 64 64 64
+python src\train.py --manifest evidence\dataset_manifest.json --data-root $dataRoot --output-dir artifacts\new_run --model baseline --epochs 20 --batch-size 1 --learning-rate 0.001 --base-channels 16 --target-shape 128 128 128 --train-patch-shape 96 96 96 --foreground-patch-probability 0.50 --prostate-label 5 --prostate-ce-weight 4 --prostate-dice-weight 4 --selection-metric mean_dice --seed 42 --device cuda --prostate-label-source 'CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.'
+python src\predict.py --checkpoint artifacts\new_run\best.pt --manifest evidence\dataset_manifest.json --data-root $dataRoot --output-dir artifacts\new_test --patch-size 128 128 128 --stride 64 64 64 --device cuda
 ```
 
 New output is a new experiment, not proof that it reproduces a retained Rangpur result. Do not select a configuration after reading held-out test metrics.
@@ -37,7 +37,7 @@ The first command reads histories only. The second extracts the already selected
 
 ## Acceptance checklist
 
-- [x] `python -m pytest -q` passes (62 passed).
+- [x] `python -m pytest -q` passes (66 passed on 2026-10-24, including the output-overwrite regression test).
 - [x] `python -m compileall src` passes.
 - [x] `git diff --check` is clean.
 - [x] `wsl bash -n` passes for each of the four `scripts/*.slurm` files.
@@ -45,7 +45,7 @@ The first command reads histories only. The second extracts the already selected
 - [x] Result tables recompute from the cited JSON artifacts, including the negative Wide20 difference.
 - [x] `git ls-files` contains no raw data, checkpoint, NIfTI, prediction tensor, archive, or `artifacts/` file.
 - [x] `git status --short` contains only intentional source, documentation, tracked figure, and expected course-PDF changes before the evidence-record commit.
-- [x] README PDF export was visually checked on 2026-10-23. The retained local QA record is `artifacts/2026-10-23/readme_pdf_qa/README_QA_margin050.pdf` plus `README_QA_margin050-1.png` through `README_QA_margin050-5.png`; it is Git-ignored by design.
+- [x] README PDF export was visually checked on 2026-10-24. The retained local QA record is `local/COMP3710_README_review_20261024.pdf` plus `local/readme-review-20261024/landscape-01.png` through `landscape-11.png`; it is Git-ignored by design.
 
 ## External assessment gates
 
