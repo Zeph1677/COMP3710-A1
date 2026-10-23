@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader
 
 from dataset import HipMRI3DDataset, VolumePair
 from modules import BaselineUNet3D, ImprovedUNet3D
+from plot_training import render_training_curves
 
 
 def build_experiment_config(
@@ -387,6 +388,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
         "history": history,
     }
     _write_json(output / "training_summary.json", summary)
+    render_training_curves({args.model: history}, output / "training_curves.png", selection_metric)
     return summary
 
 
