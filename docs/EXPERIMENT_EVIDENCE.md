@@ -6,7 +6,7 @@ This index distinguishes retained evidence from interpretation. Paths under `art
 
 | Evidence | Purpose | Identity or finding | Completeness |
 | --- | --- | --- | --- |
-| `evidence/dataset_manifest.json` | Patient-disjoint split and geometry audit | SHA-256 `188a42ad99e4a1a29ba6835828e3cc00a88edab9d691f7db753cfd0351e6b08a`; 211 volumes, 38 patients, split seed 42 | Present locally |
+| `evidence/dataset_manifest.json` | Patient-disjoint split and geometry audit | LF SHA-256 `5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07`; 211 volumes, 38 patients, split seed 42; identical JSON to the former CRLF copy | Present locally, matches formal checkpoint |
 | `evidence/SOURCES.md` and `evidence/sources/csiro-brief-data-description.txt` | Semantic label interpretation | CSIRO v2 DOI `10.25919/45T8-P065`, `Labels:` block: `5=Prostate`; source SHA-256 `dc3a99204684ced859872d79a75707af3c0ad31d00f5f3213063ce5e30727ee6` | Present locally |
 | `src/dataset.py`, `src/audit.py` | Pairing, split and preprocessing implementation | Relative PID-first pairing, affine/shape checks, patient-level split | Source tracked and tested |
 
@@ -40,6 +40,8 @@ The supplementary patient-level prostate Dice difference is `0.7941664101589291 
 `sacct_exit_snapshot.txt` in the earlier retained result directory is a time-of-capture snapshot that recorded the jobs while they were running. The 2026-10-23 `sacct_final.txt` above is the retained final accounting record and is the scheduler source for their terminal state.
 
 ## Local README visual-QA record
+
+The following five-page record is historical and predates the latest README edits. The current review export is `local/COMP3710_README_review_20261023.pdf` (nine A4 landscape pages), rendered to `local/readme-review-20261023/landscape-1.png` through `landscape-9.png` and visually checked page by page. It includes the corrected five-case panels and revised AI disclosure. It is not a submission receipt.
 
 `artifacts/2026-10-23/readme_pdf_qa/README_QA_margin050.pdf` was generated from the tracked README with Pandoc and XeLaTeX on 2026-10-23, then rendered to `README_QA_margin050-1.png` through `README_QA_margin050-5.png` for page-by-page visual review. PDF SHA-256: `b5344344fc0ed30486eb700dadd01d8e765d291b0a9e86c73e15d49ce8357eec`. These five rendered pages and the PDF are retained locally and Git-ignored; the review confirmed that the result table, three figures, evidence links, failure-analysis table, and AI-use disclosure are visible and not clipped.
 

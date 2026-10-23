@@ -20,13 +20,13 @@ The final Rangpur accounting query recorded `COMPLETED|0:0` for 683675, 683676, 
 
 `src/modules.py` implements the same 3D U-Net skeleton for both models: three encoder reductions, a bottleneck, three decoder expansions, and skip concatenations. The baseline uses convolution blocks. The Improved U-Net replaces them with residual blocks and adds two decoder auxiliary heads for deep supervision during training. It has **no attention gate**. At inference, `predict.py` reads only final `1x1x1` logits.
 
-For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation, then standardizes each volume. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground-aware patches raise the chance of prostate exposure, while validation and test scoring use complete reconstructed volumes.
+For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground-aware patches raise the chance of prostate exposure, while validation and test scoring use complete reconstructed volumes.
 
 Checkpoint choice is validation-only. `predict.py` slides an inference patch over a volume, sums logits at each voxel, divides by overlap count, then takes `argmax`. Test scoring first averages any test volumes belonging to the same patient and then averages five patient Dice scores.
 
 ## Data, preprocessing and split
 
-The audited course data contain 211 volumes from 38 patients. The fixed seed-42 manifest has 27 train, 6 validation and 5 test patients; a patient never appears in more than one partition. `audit.py` validates image/mask shape, affine, orientation, finite MRI values and integral labels before the manifest is written. The manifest SHA-256 is `188a42ad99e4a1a29ba6835828e3cc00a88edab9d691f7db753cfd0351e6b08a`.
+The audited course data contain 211 volumes from 38 patients. The fixed seed-42 manifest has 27 train, 6 validation and 5 test patients; a patient never appears in more than one partition. `audit.py` validates image/mask shape, affine, orientation, finite MRI values and integral labels before the manifest is written. The LF-encoded manifest SHA-256 is `5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07`, matching the formal checkpoints. Git enforces LF for this file. The earlier Windows CRLF copy had hash `188a42ad99e4a1a29ba6835828e3cc00a88edab9d691f7db753cfd0351e6b08a`; its parsed JSON was identical.
 
 Raw data remain ignored. On Windows, use the actual local data root. Rangpur uses the course-provided HipMRI data root recorded in the retained command artifacts.
 
@@ -65,9 +65,12 @@ $trainArgs = @(
   '--batch-size', '1', '--learning-rate', '0.001', '--base-channels', '16',
   '--target-shape', '128', '128', '128', '--train-patch-shape', '96', '96', '96',
   '--foreground-patch-probability', '0.50', '--prostate-label', '5',
+  '--prostate-ce-weight', '4', '--prostate-dice-weight', '4',
+  '--selection-metric', 'mean_dice',
   '--prostate-label-source', $prostateSource
 )
 python @trainArgs
+# For the matched Improved arm, change --model to improved and use a new output directory.
 $predictArgs = @(
   'src\predict.py', '--checkpoint', 'artifacts\training_baseline\best.pt',
   '--manifest', 'evidence\dataset_manifest.json', '--data-root', $dataRoot,
@@ -116,7 +119,7 @@ The chart reads saved main-experiment histories. It labels the selected epoch di
 
 ![B037_Week0 paired prostate-focused panel](docs/assets/failure_case_b037.png)
 
-This paired panel comes from the main formal archive, not a new run. The selected case is `B037_Week0`; source Git SHA is `4232e0d91d8aa6cf8c1de38883b213c07cc62d10`, and selected axial index is 70. The deterministic rule ranks common cases by mean baseline/improved prostate FP+FN voxels, breaks ties by patient ID and case ID, and chooses the largest-error slice inside the ground-truth prostate extent. It is therefore a **prostate-range high-error slice**, not an anatomical prostate base. Panels 5 and 6 show prostate-only error: pale/white is false positive and red is false negative.
+These panels are regenerated from saved main-experiment predictions, with no new inference. The historical selection manifest in [failure_selection.json](docs/assets/failure_selection.json) retains source Git SHA `4232e0d91d8aa6cf8c1de38883b213c07cc62d10` and the five original case/slice selections. B037_Week0 uses axial index 70. The rule ranks common cases by mean baseline/improved prostate FP+FN voxels, breaks ties by patient ID and case ID, and chooses the largest-error slice within the reference prostate extent. These are **prostate-range high-error slices**, not anatomically verified base/apex slices. Segmentation panels share a fixed class-color mapping; white denotes prostate FP, red denotes FN, and dark grey denotes no prostate classification error. Counts below describe whole volumes, whereas each panel displays one selected slice.
 
 | Rank | Case       | Shared FP+FN error score | Baseline FP / FN | Improved FP / FN | Diagnosis boundary |
 | ---: | ---------- | -----------------------: | ---------------: | ---------------: | ------------------ |
@@ -126,13 +129,39 @@ This paired panel comes from the main formal archive, not a new run. The selecte
 |    4 | K042_Week0 |                    876.0 |        432 / 439 |        208 / 673 | FN increase        |
 |    5 | L011_Week0 |                    830.5 |        803 / 109 |        579 / 170 | FP/FN trade-off    |
 
-The first two rows reduce false-positive voxels but increase false-negative voxels; K042 has the same direction. B037 has the largest shared error and the Improved model raises FN from 2,495 to 3,123. Recommendation: use neither model for autonomous contour acceptance. The primary Improved model is a viable human-review drafting prototype because it preserves the matched protocol and gives a small aggregate gain, but B037 and the other paired failures require specialist review. Wide20 is worse than Baseline-new and should not replace the main configuration. Any new validation choice must be registered before another held-out evaluation.
+**B037_Week0: severe omission.** The Improved prediction misses the complete prostate cross-section at the selected slice; Baseline retains only a small region. Whole-volume FN rises from 2,495 to 3,123 despite fewer FP. This is not a contour that can be accepted on the strength of its cohort-average Dice. A reviewer must inspect the complete gland extent. Ambiguous local appearance and downsampling are possible explanations, not experimentally isolated causes.
+
+![L011 Week2 paired comparison](docs/assets/failure_case_l011_week2.png)
+
+**L011_Week2: over-contouring with a sensitivity trade-off.** The selected Baseline slice has an outer ring of FP; Improved removes part of that ring but introduces a small FN region. Across the volume, FP drops from 894 to 738 while FN rises from 68 to 159. The image supports a change in contour extent, not proof of reduced injury to an adjacent organ. Inspect the MRI together with both masks before accepting the smaller draft.
+
+![L011 Week7 paired comparison](docs/assets/failure_case_l011_week7.png)
+
+**L011_Week7: residual boundary excess.** Both models retain visible peripheral FP at the selected slice, while Improved also has a small omitted region. Whole-volume FP/FN changes from 868/81 to 661/147. Additional context reduces some excess without resolving all boundary errors. This repeat scan belongs to L011 and is not an independent patient; weekly variation must be reviewed within the patient's sequence.
+
+![K042 Week0 paired comparison](docs/assets/failure_case_k042_week0.png)
+
+**K042_Week0: contraction loses reference boundary.** Baseline contains both outward FP and an omitted border; Improved reduces outward excess but leaves more FN on the selected slice. Whole-volume FP halves approximately (432 to 208), while FN rises from 439 to 673. Inspect apparent edge sharpness critically: a cleaner-looking outline can still exclude reference prostate voxels. Quantifying physical-distance error would require preserved spacing and a separate surface-distance analysis.
+
+![L011 Week0 paired comparison](docs/assets/failure_case_l011_week0.png)
+
+**L011_Week0: persistent outward extension.** Both models exceed the reference contour at the selected boundary. Improved reduces whole-volume FP from 803 to 579 but raises FN from 109 to 170; the selected slice alone cannot explain the complete volume-level change. Compare this scan with L011 Week2/Week7 to inspect temporal inconsistency. The three L011 examples show repeat-scan behavior, not three additional patients.
+
+**Recommendation.** Neither model supports autonomous contour acceptance. The main Improved result adds only 0.002038 cohort Dice, while B037 deteriorates and several cases exchange FP for FN. Retain Baseline as the operational comparator; evaluate Improved only as a specialist-reviewed research draft, prioritizing omitted regions and inter-slice transitions. There is no demonstrated contour-editing time saving. Wide20 should not replace the main configuration. Anatomically verified base/apex analysis and clinical review remain outstanding; the images do not establish those outcomes. Reuse saved predictions for further analysis rather than selecting a new model on these test cases.
 
 ## Wide20 supplementary result and limitations
 
 The five-candidate scan selected Wide20 on validation data. A validation-only control completed without test artifacts. The final one-time matched supplementary tests completed cleanly, yet Baseline-new outperformed recovered Wide20 by 0.024150 patient-level prostate Dice. This can reflect configuration sensitivity, checkpoint lineage, or limited sample size; it does not prove the residual/deep-supervision architecture globally worse.
 
 Limitations are the five-patient held-out cohort, downsampled geometry, one split/seed, uncalibrated contour confidence, and no clinical review. The project does not claim millimetre-level accuracy, anatomical-base correctness, prospective performance, or clinical safety.
+
+## Literature and course concepts
+
+Volumetric convolution and encoder-decoder skip connections follow the 3D U-Net concept of Çiçek et al., *3D U-Net: Learning Dense Volumetric Segmentation from Sparse Annotation* (MICCAI 2016, arXiv:1606.06650). Residual units and auxiliary supervision are motivated by Isensee et al., *Brain Tumor Segmentation and Radiomics Survival Prediction: Contribution to the BRATS 2017 Challenge* (arXiv:1802.10508), the brief's reference [2]. This implementation adapts those ideas and does not reproduce that paper's full system. Softmax, categorical cross-entropy, one-hot Dice targets, gradient optimization and held-out patient separation connect the implementation to course concepts. Bibliographic identities and retained paper hashes are indexed in [SOURCES.md](evidence/SOURCES.md). Literature motivates the design; only the retained HipMRI experiments support the reported results.
+
+## Submission status
+
+This is the independent development repository. The course contribution must reside under `recognition/HipMRI_3D_UNet_s4910970/` in the course fork, with a PR targeting upstream `topic-recognition`. A local export is not a PR and does not carry the development history by itself. Tutor check-off, the final README PDF submitted to Turnitin, and the later teaching-team review response require their own records. The feasibility section above is a retrospective summary; the actual midpoint consultation and its dated one-page review must be confirmed by the author. No tutor completion, numerical resource budget, or clinical approval is invented here.
 
 ## Environment and evidence index
 
@@ -146,8 +175,4 @@ Limitations are the five-patient held-out cohort, downsampled geometry, one spli
 
 ## Artificial Intelligence Usage Disclosure
 
-OpenAI Codex and ChatGPT assisted code modification, debugging, experiment orchestration, test design, documentation drafting, figure-generation scripts, and review of result consistency. The user remains responsible for checking every code change, command, loss formula, metric definition, result table and written claim. Verification includes automated tests, saved-artifact inspection, checksum comparison, fresh scheduler accounting queries, and manual visual inspection of generated figures. 
-
-OpenAI Codex and ChatGPT were used primarily to assist with debugging, resolving technical issues, and improving the formatting and visual presentation of project outputs and documentation. This assistance included identifying potential causes of errors, suggesting code fixes, and addressing display and layout inconsistencies.
-
-All AI-suggested changes were reviewed and checked before being incorporated into the project. AI tools were not used to complete the academic work or produce the substantive content of the assignment. The project implementation, experimental work, analysis, and conclusions were completed independently by the author, who retains full responsibility for the accuracy and integrity of the submitted wor
+OpenAI Codex and ChatGPT assisted code modification, debugging, experiment orchestration, test design, documentation drafting, figure-generation scripts, and review of result consistency. Automated checks include unit tests, saved-artifact inspection, checksum comparison, retained final scheduler accounting, and visual inspection of generated figures. These checks do not establish that every line, interpretation, or clinical implication has been independently validated by the author. The author remains responsible for personally reviewing and defending the implementation, mathematical definitions, data split, experimental claims, and final submission. No clinical validation or tutor approval is implied by automated verification.
