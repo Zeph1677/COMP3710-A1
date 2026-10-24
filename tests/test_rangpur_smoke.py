@@ -91,6 +91,27 @@ def test_improved_validation_sweep_uses_one_declared_candidate_and_never_reads_t
     assert candidates[1].split("\t")[1] == "control"
 
 
+def test_baseline_validation_control_is_matched_and_never_reads_test_predictions():
+    script = (Path(__file__).resolve().parents[1] / "scripts" / "run_hipmri_baseline_validation_control.slurm").read_text(encoding="utf-8")
+
+    assert "#SBATCH --job-name=hipmri-baseline-validation" in script
+    assert 'RUN_DIR="$PROJECT_DIR/artifacts/rangpur_baseline_validation_control_context_v2_retry_20261024/${JOB_ID}_baseline"' in script
+    assert '--model baseline' in script
+    assert '--epochs 20' in script
+    assert '--learning-rate 0.001' in script
+    assert '--base-channels 16' in script
+    assert '--target-shape 128 128 128' in script
+    assert '--train-patch-shape 96 96 96' in script
+    assert '--foreground-patch-probability 0.50' in script
+    assert '--prostate-ce-weight 4.0' in script
+    assert '--prostate-dice-weight 4.0' in script
+    assert '--selection-metric prostate_dice' in script
+    assert "python src/audit.py" in script
+    assert "python src/train.py" in script
+    assert "predict.py" not in script
+    assert "test_metrics.json" not in script
+
+
 def test_improved_validation_sweep_accepts_a_crlf_candidate_row_before_audit(tmp_path: Path):
     """A CRLF checkout must not reject a valid candidate before the data audit starts."""
     root = Path(__file__).resolve().parents[1]
