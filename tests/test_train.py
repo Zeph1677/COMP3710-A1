@@ -111,7 +111,7 @@ def test_experiment_config_requires_cited_prostate_label_and_records_manifest_ha
         build_experiment_config(
             manifest_path=manifest,
             model_name="baseline",
-            target_shape=(8, 8, 8),
+            target_shape=(16, 16, 16),
             seed=42,
             prostate_label=1,
             prostate_label_source="",
@@ -120,7 +120,7 @@ def test_experiment_config_requires_cited_prostate_label_and_records_manifest_ha
     config = build_experiment_config(
         manifest_path=manifest,
         model_name="baseline",
-        target_shape=(8, 8, 8),
+        target_shape=(16, 16, 16),
         seed=42,
         prostate_label=1,
         prostate_label_source="HipMRI documentation, Table 2",
@@ -139,7 +139,7 @@ def test_experiment_config_rejects_out_of_range_prostate_label(tmp_path: Path):
         build_experiment_config(
             manifest_path=manifest,
             model_name="baseline",
-            target_shape=(8, 8, 8),
+            target_shape=(16, 16, 16),
             seed=42,
             prostate_label=3,
             prostate_label_source="HipMRI documentation, Table 2",

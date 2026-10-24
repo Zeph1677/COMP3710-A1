@@ -36,14 +36,14 @@ def build_experiment_config(
         raise ValueError("model name must be 'baseline' or 'improved'")
     if not isinstance(labels, list) or not labels:
         raise ValueError("manifest must define at least one label")
-    if len(target_shape) != 3 or any(size <= 0 or size % 8 for size in target_shape):
-        raise ValueError("target shape must contain three positive dimensions divisible by 8")
+    if len(target_shape) != 3 or any(size < 16 or size % 8 for size in target_shape):
+        raise ValueError("target shape must contain dimensions of at least 16 divisible by 8")
     if isinstance(prostate_label, bool) or prostate_label not in labels:
         raise ValueError("prostate label is outside manifest labels")
     source = prostate_label_source.strip()
     if not source:
         raise ValueError("prostate label source is required")
-    return {
+    config: dict[str, object] = {
         "schema_version": 1,
         "model": model_name,
         "seed": seed,
@@ -54,6 +54,9 @@ def build_experiment_config(
         "manifest_path": str(path),
         "manifest_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
     }
+    if model_name == "improved":
+        config["architecture_version"] = ImprovedUNet3D.architecture_version
+    return config
 
 
 def load_audited_pairs(manifest_path: Path | str) -> tuple[list[VolumePair], dict[str, set[str]], int]:
@@ -235,8 +238,8 @@ def training_patch_options(args: argparse.Namespace, target_shape: tuple[int, in
             raise ValueError("foreground patch probability requires --train-patch-shape")
         return None, probability
     patch_shape = tuple(raw_shape)
-    if len(patch_shape) != 3 or any(size <= 0 or size % 8 for size in patch_shape):
-        raise ValueError("train patch shape must contain three positive dimensions divisible by 8")
+    if len(patch_shape) != 3 or any(size < 16 or size % 8 for size in patch_shape):
+        raise ValueError("train patch shape must contain dimensions of at least 16 divisible by 8")
     if any(patch > target for patch, target in zip(patch_shape, target_shape)):
         raise ValueError("train patch shape cannot exceed target shape")
     return patch_shape, probability

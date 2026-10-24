@@ -66,6 +66,8 @@ def load_checkpoint_model(checkpoint_path: Path | str, device: torch.device) -> 
     model_name, num_classes, base_channels = config.get("model"), config.get("num_classes"), config.get("base_channels")
     if model_name not in {"baseline", "improved"} or not isinstance(num_classes, int) or not isinstance(base_channels, int):
         raise ValueError("checkpoint config does not declare a supported model")
+    if model_name == "improved" and config.get("architecture_version") != ImprovedUNet3D.architecture_version:
+        raise ValueError("improved checkpoint architecture version is incompatible with the current model")
     model_type = BaselineUNet3D if model_name == "baseline" else ImprovedUNet3D
     model = model_type(num_classes=num_classes, base_channels=base_channels).to(device)
     model.load_state_dict(checkpoint["model_state_dict"])

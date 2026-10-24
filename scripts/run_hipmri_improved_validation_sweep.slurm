@@ -41,7 +41,7 @@ if [[ "$(tr -d '\r' < evidence/sources/csiro-brief-data-description.txt | sha256
 fi
 
 line_number=$((CANDIDATE_ID + 2))
-candidate_line="$(sed -n "${line_number}p" "$SWEEP_TABLE")"
+candidate_line="$(sed -n "${line_number}p" "$SWEEP_TABLE" | tr -d '\r')"
 if [[ -z "$candidate_line" ]]; then
     echo "No sweep candidate for ID $CANDIDATE_ID." >&2
     exit 2

@@ -1,4 +1,8 @@
+import shutil
+import subprocess
 from pathlib import Path
+
+import pytest
 
 
 def test_rangpur_smoke_script_records_declared_mapping_and_reproducibility_evidence():
@@ -85,6 +89,49 @@ def test_improved_validation_sweep_uses_one_declared_candidate_and_never_reads_t
     assert candidates[0].split("\t") == ["candidate_id", "slug", "learning_rate", "base_channels", "prostate_ce_weight", "prostate_dice_weight", "foreground_patch_probability", "epochs", "selection_metric"]
     assert len(candidates) == 7
     assert candidates[1].split("\t")[1] == "control"
+
+
+def test_improved_validation_sweep_accepts_a_crlf_candidate_row_before_audit(tmp_path: Path):
+    """A CRLF checkout must not reject a valid candidate before the data audit starts."""
+    root = Path(__file__).resolve().parents[1]
+    (tmp_path / "configs").mkdir()
+    (tmp_path / "evidence" / "sources").mkdir(parents=True)
+    (tmp_path / "data" / "semantic_MRs").mkdir(parents=True)
+    (tmp_path / "data" / "semantic_labels_only").mkdir(parents=True)
+    shutil.copyfile(root / "evidence" / "sources" / "csiro-brief-data-description.txt", tmp_path / "evidence" / "sources" / "csiro-brief-data-description.txt")
+    (tmp_path / "configs" / "improved_validation_sweep.tsv").write_bytes(
+        b"candidate_id\tslug\tlearning_rate\tbase_channels\tprostate_ce_weight\tprostate_dice_weight\tforeground_patch_probability\tepochs\tselection_metric\r\n"
+        b"0\tcontrol\t0.001\t16\t4.0\t4.0\t0.50\t20\tprostate_dice\r\n"
+    )
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    (fake_bin / "git").write_bytes(b"#!/usr/bin/env bash\n[[ $1 == status ]] && exit 0\nexit 0\n")
+    (fake_bin / "python").write_bytes(b"#!/usr/bin/env bash\nexit 86\n")
+    for command in ("git", "python"):
+        (fake_bin / command).chmod(0o755)
+    activate = tmp_path / "home" / "miniconda3" / "bin" / "activate"
+    activate.parent.mkdir(parents=True)
+    activate.write_bytes(b"conda() { return 0; }\n")
+    def wsl_path(path: Path) -> str:
+        resolved = path.resolve()
+        return f"/mnt/{resolved.drive[0].lower()}/" + "/".join(resolved.parts[1:])
+
+    subprocess.run(["wsl", "chmod", "+x", wsl_path(fake_bin / "git"), wsl_path(fake_bin / "python")], check=True)
+    completed = subprocess.run([
+        "wsl", "env",
+        f"SLURM_SUBMIT_DIR={wsl_path(tmp_path)}",
+        "SLURM_JOB_ID=999999",
+        "HIPMRI_SWEEP_CANDIDATE_ID=0",
+        "HIPMRI_SWEEP_RUN_ID=crlf-regression",
+        f"HIPMRI_DATA_ROOT={wsl_path(tmp_path / 'data')}",
+        f"HOME={wsl_path(tmp_path / 'home')}",
+        f"PATH={wsl_path(fake_bin)}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "bash", wsl_path(root / "scripts" / "run_hipmri_improved_validation_sweep.slurm"),
+    ], capture_output=True)
+
+    stderr = completed.stderr.decode("utf-8", errors="replace")
+    assert completed.returncode == 86, stderr
+    assert "Sweep row does not match" not in stderr
 
 
 def test_matched_wide20_formal_script_separates_control_from_one_test_per_formal_arm():

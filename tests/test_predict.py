@@ -9,7 +9,7 @@ import torch
 
 import pytest
 
-from modules import BaselineUNet3D
+from modules import BaselineUNet3D, ImprovedUNet3D
 from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, run_prediction, sliding_window_logits
 
 
@@ -73,6 +73,29 @@ def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
 
     assert isinstance(restored, BaselineUNet3D)
     assert config["model"] == "baseline"
+    assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
+
+
+def test_checkpoint_loader_rejects_legacy_improved_checkpoint_without_architecture_version(tmp_path: Path):
+    """Legacy Improved weights cannot be safely interpreted as the revised architecture."""
+    original = ImprovedUNet3D(num_classes=2, base_channels=2)
+    checkpoint_path = tmp_path / "legacy-improved.pt"
+    torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "num_classes": 2, "base_channels": 2}}, checkpoint_path)
+
+    with pytest.raises(ValueError, match="architecture version"):
+        load_checkpoint_model(checkpoint_path, torch.device("cpu"))
+
+
+def test_checkpoint_loader_restores_versioned_improved_checkpoint(tmp_path: Path):
+    """A revised Improved checkpoint records and restores its exact architecture."""
+    original = ImprovedUNet3D(num_classes=2, base_channels=2)
+    checkpoint_path = tmp_path / "improved-v2.pt"
+    torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "architecture_version": ImprovedUNet3D.architecture_version, "num_classes": 2, "base_channels": 2}}, checkpoint_path)
+
+    restored, config = load_checkpoint_model(checkpoint_path, torch.device("cpu"))
+
+    assert isinstance(restored, ImprovedUNet3D)
+    assert config["architecture_version"] == ImprovedUNet3D.architecture_version
     assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
 
 
