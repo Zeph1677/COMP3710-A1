@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 import hashlib
 import json
 import random
@@ -14,9 +15,9 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 
-from dataset import HipMRI3DDataset, VolumePair
+from dataset import HipMRI3DDataset, VolumePair, AugmentationConfig
 from modules import BaselineUNet3D, ImprovedUNet3D
-from plot_training import render_training_curves
+from plot_training import render_training_curves, render_learning_rate_curve
 
 
 def build_experiment_config(
@@ -195,6 +196,10 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-3)
+    parser.add_argument("--augmentation", action="store_true", help="Enable train-only augmentation")
+    parser.add_argument("--scheduler", choices=("none", "cosine"), default="none")
+    parser.add_argument("--eta-min", type=float, default=1e-5)
+    parser.add_argument("--validation-gifs", action="store_true")
     parser.add_argument("--base-channels", type=int, default=16)
     parser.add_argument("--target-shape", type=int, nargs=3, default=(128, 128, 128))
     parser.add_argument("--seed", type=int, default=42)
@@ -341,16 +346,27 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     config = build_experiment_config(args.manifest, args.model, target_shape, args.seed, args.prostate_label, args.prostate_label_source)
     pairs, split_ids, num_classes = load_audited_pairs(args.manifest)
     device = torch.device(args.device)
-    train_data = HipMRI3DDataset(pairs, args.data_root, split_ids["train"], num_classes, target_shape, training_patch_shape, args.prostate_label, foreground_probability)
+    augmentation = AugmentationConfig() if getattr(args, "augmentation", False) else None
+    scheduler_name = getattr(args, "scheduler", "none")
+    eta_min = getattr(args, "eta_min", 1e-5)
+    if scheduler_name not in {"none", "cosine"} or not 0 <= eta_min <= args.learning_rate:
+        raise ValueError("invalid scheduler or eta_min")
+    train_data = HipMRI3DDataset(pairs, args.data_root, split_ids["train"], num_classes, target_shape, training_patch_shape, args.prostate_label, foreground_probability, augmentation_config=augmentation, split="train")
     validation_data = HipMRI3DDataset(pairs, args.data_root, split_ids["validation"], num_classes, target_shape)
     train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
     validation_loader = DataLoader(validation_data, batch_size=args.batch_size, shuffle=False)
     model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
     model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs, eta_min=eta_min) if scheduler_name == "cosine" else None
     output.mkdir(parents=True, exist_ok=True)
     config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "selection_metric": selection_metric})
+    config.update({"augmentation_config": asdict(augmentation) if augmentation else None, "validation_augmentation": False, "test_augmentation": False, "scheduler": scheduler_name, "eta_min": eta_min, "scheduler_t_max": args.epochs, "lr_recording": "rate used for this epoch, scheduler steps after epoch", "validation_gifs": getattr(args, "validation_gifs", False)})
     _write_json(output / "experiment_config.json", config)
+    visual_index = min(range(len(validation_data.records)), key=lambda index: (validation_data.records[index].patient_id, validation_data.records[index].case_id))
+    visual_record = validation_data.records[visual_index]
+    if getattr(args, "validation_gifs", False):
+        _write_json(output / "validation_visualization.json", {"split": "validation", "patient_id": visual_record.patient_id, "case_id": visual_record.case_id, "epochs": [1,5], "also_render_best": True})
     history: list[dict[str, float]] = []
     started = time.perf_counter()
     for epoch in range(1, args.epochs + 1):
@@ -363,6 +379,7 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
         validation = evaluate_3d_batches(model, validation_loader, device, num_classes, args.prostate_label, [pair.patient_id for pair in validation_data.records])
         row = {
             "epoch": float(epoch),
+            "learning_rate": float(optimizer.param_groups[0]["lr"]),
             "train_loss": train_loss,
             "train_seconds": train_seconds,
             "validation_mean_dice": float(validation["mean_dice"]),
@@ -375,10 +392,15 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
             "validation_prostate_false_negative_voxels": float(validation["validation_prostate_false_negative_voxels"]),
             "validation_patient_prostate_dice_by_patient": validation["validation_patient_prostate_dice_by_patient"],
         }
+        if getattr(args, "validation_gifs", False) and epoch in {1,5}:
+            from validation_visuals import render_validation_gif
+            render_validation_gif(model, validation_data, visual_index, device, args.prostate_label, output / f"validation_epoch_{epoch}.gif", epoch)
         history.append(row)
         _write_json(output / "history.json", history)
+        if scheduler is not None:
+            scheduler.step()
         if select_validation_checkpoint(history, selection_metric)["epoch"] == row["epoch"]:
-            torch.save({"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(), "epoch": epoch, "config": config}, output / "best.pt")
+            torch.save({"model_state_dict": model.state_dict(), "optimizer_state_dict": optimizer.state_dict(), "scheduler_state_dict": scheduler.state_dict() if scheduler else None, "epoch": epoch, "config": config}, output / "best.pt")
     selected = select_validation_checkpoint(history, selection_metric)
     summary = {
         "selected_epoch": selected["epoch"],
@@ -392,6 +414,12 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     }
     _write_json(output / "training_summary.json", summary)
     render_training_curves({args.model: history}, output / "training_curves.png", selection_metric)
+    render_learning_rate_curve({args.model: history}, output / "learning_rate_schedule.png")
+    if getattr(args, "validation_gifs", False):
+        from validation_visuals import render_validation_gif
+        checkpoint = torch.load(output / "best.pt", map_location=device, weights_only=False)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        render_validation_gif(model, validation_data, visual_index, device, args.prostate_label, output / "validation_best_epoch.gif", checkpoint["epoch"])
     return summary
 
 

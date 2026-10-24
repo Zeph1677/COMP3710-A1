@@ -24,7 +24,7 @@ Editable source: [model_architecture.drawio](docs/assets/model_architecture.draw
 
 For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground sampling chooses a prostate voxel as a crop anchor with probability 0.50 when that branch is taken; validation and test scoring use complete reconstructed volumes.
 
-`InstanceNorm3d` and batch size 1 are implementation choices suited to the retained volumetric memory budget, while the `128^3` target and `96^3` training crop reduce training memory relative to full-target training. These are design considerations, not isolated performance evidence. The data loader implements resampling, standardization and random crop placement; it does not implement rotation or synthetic intensity augmentation. The local B006_Week0 sampling audit is retained at `artifacts/2026-10-21/local_patch_audit_B006_Week0_128_96.json`: on that one resized case, all 200 sampled `96^3` crops contained prostate because the large crop and anatomy made even the random branch positive. This does not prove that the 0.50 setting increases prostate exposure for every patient, nor does it measure generalization.
+`InstanceNorm3d` and batch size 1 are implementation choices suited to the retained volumetric memory budget, while the `128^3` target and `96^3` training crop reduce training memory relative to full-target training. These are design considerations, not isolated performance evidence. Historical runs used resampling, standardization and random crop placement without synthetic intensity augmentation. The new opt-in training augmentation described below adds paired anatomical flips and MRI-only noise, blur and gamma; it remains disabled by default and is forbidden for validation/test. The local B006_Week0 sampling audit is retained at `artifacts/2026-10-21/local_patch_audit_B006_Week0_128_96.json`: on that one resized case, all 200 sampled `96^3` crops contained prostate because the large crop and anatomy made even the random branch positive. This does not prove that the 0.50 setting increases prostate exposure for every patient, nor does it measure generalization.
 
 Checkpoint choice is validation-only. `predict.py` slides an inference patch over a volume, sums logits at each voxel, divides by overlap count, then takes `argmax`. Test scoring first averages any test volumes belonging to the same patient and then averages five patient Dice scores.
 
@@ -238,5 +238,53 @@ This is the independent development repository. The course contribution must res
 - [Execution and acceptance guide](docs/HIPMRI_3D_HARD_EXECUTION_FLOW.md)
 - [Frozen label and source evidence](evidence/SOURCES.md)
 - [Asset-generation command](scripts/generate_readme_assets.py)
+
+### Context v2 validation candidate and new ablation workflow (24 October 2026)
+
+Job `691652` completed with exit code `0:0` in `00:29:12`. Its only retained candidate is `candidate_00_control` (`improved_context_v2`, base channels 16). Validation patient prostate Dice selected epoch 15: **0.818697**, worst validation patient **0.783926**, validation FN **15,516**, FP **17,185**. This candidate has no held-out test metrics. These figures describe validation selection and do not establish superiority over Baseline. Historical Improved test results belong to their historical architecture and checkpoints.
+
+The checkpoint identity is recorded by SHA-256 in `artifacts/2026-10-24/context_v2_followup/frozen_context_v2_checkpoint.json`; recording its hash does not make the file read-only. Its bytes are preserved. The historical validation-only comparison plot is regenerated from the saved histories, not from test metrics. Missing historical learning-rate fields are not invented.
+
+![Context v2 architecture](docs/assets/model_architecture_context_v2.png)
+
+The editable source is [Context v2 draw.io](docs/assets/model_architecture_context_v2.drawio). `scripts/generate_context_architecture.py` generates both files from the same graph specification. Context blocks use affine `InstanceNorm3d`, `LeakyReLU`, residual shortcuts and `Dropout3d(0.3)` throughout encoder, bottleneck and decoder. Each decoder uses trilinear upsampling followed by convolution, and concatenates its encoder skip. Two auxiliary heads contribute resized logits to the final sum during both training and inference; their additional supervision losses apply during training.
+
+`--augmentation` enables training only: LR/AP flips (0.5 each, mapped through each NIfTI orientation), MRI Gaussian noise (0.5; normalized standard deviation uniform 0–0.1), separable Gaussian blur (0.25; sigma uniform 0.5–1.0 voxels), and range-preserving gamma (0.25; exponent uniform 0.7–1.5). Augmentation runs after resampling/cropping. Mask values remain integer classes. Dataset construction rejects augmentation for validation/test. These ranges are initial engineering choices, not a claim of clinical validity.
+
+`--scheduler cosine --eta-min 0.00001` retains Adam and steps `CosineAnnealingLR(T_max=epochs)` after every epoch. Each history row records the learning rate actually used in that epoch. All enabled probabilities/ranges and scheduler settings are saved in `experiment_config.json`; checkpoints include scheduler state. `--validation-gifs` renders epoch 1, epoch 5 and the validation-selected best epoch for the lexicographically first validation patient/case. No missing historical epoch predictions are reconstructed.
+
+The A/B/C/D runner preserves the audited manifest, seed 42, `128³` target, `96³` training crop, base channels 16, 20 epochs, batch size 1, LR 0.001, foreground sampling 0.5, loss weights 4/4 and patient-level prostate-Dice selection:
+
+| Arm | Model | Augmentation | Scheduler |
+| --- | --- | --- | --- |
+| A | Context v2 | Off | Fixed LR |
+| B | Context v2 | On | Fixed LR |
+| C | Context v2 | On | Cosine |
+| D | Baseline | Off | Fixed LR |
+
+```bash
+python src/run_validation_ablation.py --data-root data/HipMRI_Study_open --output-root artifacts/2026-10-24/context_v2_ablation_local --device cuda
+# For Rangpur: sbatch scripts/run_hipmri_context_ablation.slurm
+python src/validation_ablation_report.py --run-root artifacts/2026-10-24/context_v2_ablation_local
+```
+
+The earlier local run was launched on 24 October; its status must be read from its own `history.json` / `training_summary.json`. The completed Rangpur A/B/C/D results from job `692354` are recorded below and are a separate run. Never rerun into a non-empty arm directory. The report requires all four complete, matched runs and creates validation comparison/LR curves plus checkpoint hashes. Screening criteria are declared in `validation_ablation_report.py` before B/C results: mean gain at least 0.01, worst-patient drop at most 0.02, FN increase at most 10%, training VRAM at most 1.35× Baseline, and validation inference time at most 2× Baseline. They are operational criteria, not statistical significance or course thresholds. A single-seed result needs cautious interpretation.
+
+`validation_diagnostics.py` generates five worst validation-patient panels using prostate-specific FP/FN and the highest-error slice inside the reference prostate extent. These support validation diagnosis; they do not replace the course-required independent-test failure analysis. No command in the ablation runner launches a test. Before any new held-out evaluation, review completed validation gates, the actual failure panels and resource costs, then freeze the chosen checkpoint. Do not choose a new epoch using test outcomes.
+
+## Context v2 A/B/C/D validation results (25 October 2026)
+
+**B (Context v2 + augmentation + fixed LR) has the highest validation mean patient prostate Dice, but fails the predeclared training-memory gate. No arm qualifies for test review under the current rules.** These are validation results from job `692354`, not new held-out test evidence. See the [full English ablation record](docs/context_v2_ablation_results_20261025.md) for matched settings, source artifacts, checkpoint identity, error counts, resource screening and limitations.
+
+| Arm | Configuration | Selected epoch | Validation mean patient prostate Dice | Worst patient Dice | Peak training MiB |
+| --- | --- | --- | --- | --- | --- |
+| B | Context v2, augmentation, fixed LR | 19 | **0.829472** | **0.778456** | 1,455.8 |
+| A | Context v2, no augmentation, fixed LR | 19 | 0.818156 | 0.772367 | 1,455.8 |
+| D | Baseline, no augmentation, fixed LR | 17 | 0.810463 | 0.722912 | 979.6 |
+| C | Context v2, augmentation, cosine | 13 | 0.785744 | 0.752366 | 1,455.8 |
+
+All four arms use the same audited manifest, seed 42, 20-epoch budget and patient-level prostate-Dice selection protocol. B minus A is +0.011316 mean Dice; C minus B is -0.043727. This supports augmentation and disfavors the tested cosine schedule within this split, seed and budget. B minus D is +0.019009 mean Dice (+2.35%), with 645 fewer FN and 1,891 fewer FP. The higher cohort minimum does not mean every patient improves: B improves four of six patients versus D.
+
+B requires **1.486 times** D's peak training memory (+48.6%), exceeding the **1.35** limit; `eligible_for_test_review` and `automatic_test_permitted` are both `false`. B remains the validation-first candidate requiring resource review, rather than a replacement for the formal tested model. A later budget change would be a documented post-result policy revision. No held-out evaluation was run for this update, and historical test conclusions remain unchanged. User-reported job completion is distinct from independently archived scheduler accounting; final `sacct -X` evidence remains to be retained with the package.
 
 ## Artificial Intelligence Usage Disclosure

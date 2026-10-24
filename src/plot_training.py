@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 from typing import Mapping, Sequence
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
@@ -105,6 +107,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--label", action="append", required=True, help="Series label; repeat in the same order as --history")
     parser.add_argument("--selection-metric", choices=("mean_dice", "prostate_dice"), default="mean_dice")
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--lr-output", type=Path, help="Optional plot of recorded rates; missing rates cause an error")
     return parser
 
 
@@ -112,8 +115,26 @@ def main() -> None:
     args = create_argument_parser().parse_args()
     if len(args.history) != len(args.label):
         raise ValueError("--history and --label must be supplied equally often")
-    render_training_curves({label: load_history(path) for label, path in zip(args.label, args.history, strict=True)}, args.output, args.selection_metric)
+    histories = {label: load_history(path) for label, path in zip(args.label, args.history, strict=True)}
+    render_training_curves(histories, args.output, args.selection_metric)
+    if args.lr_output is not None:
+        render_learning_rate_curve(histories, args.lr_output)
 
+
+
+
+def render_learning_rate_curve(histories, output_path):
+    """Render only recorded rates; historical missing rates are never invented."""
+    for label, history in histories.items():
+        if not history or any("learning_rate" not in row or "epoch" not in row for row in history):
+            raise ValueError(f"{label} lacks recorded learning_rate")
+    figure, axis = plt.subplots(figsize=(7,4), constrained_layout=True)
+    for label, history in histories.items():
+        axis.plot([row["epoch"] for row in history], [row["learning_rate"] for row in history], marker="o", label=label)
+    axis.set(xlabel="Epoch", ylabel="Learning rate used", title="Recorded optimizer learning rate")
+    axis.grid(alpha=0.25); axis.legend()
+    output = Path(output_path); output.parent.mkdir(parents=True,exist_ok=True)
+    figure.savefig(output,dpi=180); plt.close(figure)
 
 if __name__ == "__main__":
     main()

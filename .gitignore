@@ -15,3 +15,8 @@ tmp/
 local/
 .vscode/
 docs/
+
+# Retain the English Context v2 ablation record while keeping other local docs ignored.
+!docs/
+docs/*
+!docs/context_v2_ablation_results_20261025.md
