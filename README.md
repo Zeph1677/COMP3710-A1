@@ -287,4 +287,22 @@ All four arms use the same audited manifest, seed 42, 20-epoch budget and patien
 
 B requires **1.486 times** D's peak training memory (+48.6%), exceeding the **1.35** limit; `eligible_for_test_review` and `automatic_test_permitted` are both `false`. B remains the validation-first candidate requiring resource review, rather than a replacement for the formal tested model. A later budget change would be a documented post-result policy revision. No held-out evaluation was run for this update, and historical test conclusions remain unchanged. User-reported job completion is distinct from independently archived scheduler accounting; final `sacct -X` evidence remains to be retained with the package.
 
+### Validation visual evidence and failure review
+
+The retained job supplies 12 original GIFs (four arms, each at epoch 1, epoch 5 and its selected best epoch). The [local visual gallery](docs/assets/context_v2_ablation_692354/gallery.html) and [full ablation record](docs/context_v2_ablation_results_20261025.md#curves-patient-comparison-and-validation-animations) collect all animations, source hashes and five paired B/D failure diagnoses.
+
+![A/B/C/D actual training and validation histories](docs/assets/context_v2_ablation_692354/training_loss_and_validation_dice.png)
+
+![Recorded optimizer LR](docs/assets/context_v2_ablation_692354/learning_rate_schedule.png)
+
+![Validation patient comparison](docs/assets/context_v2_ablation_692354/patient_validation_dice.png)
+
+![B at epoch 1, epoch 5 and selected epoch 19](docs/assets/context_v2_ablation_692354/B_progress.gif)
+
+The GIF rows compare B's training checkpoints on the fixed validation scan `G021_Week0`. Frames sweep the same sampled spatial slices, not training epochs; red is prostate FP and cyan is FN. The [four-arm synchronized GIF](docs/assets/context_v2_ablation_692354/best_ABCD.gif) shows each arm's validation-selected checkpoint and labels the differing epochs. The source volumes are resampled validation volumes, and no test patients appear.
+
+The additional local reconstruction covers all 46 validation scans for frozen B and D. Five distinct-patient cases were selected by combined B/D whole-volume FP+FN, followed by the highest-error slice inside GT prostate extent. The [full record](docs/context_v2_ablation_results_20261025.md#paired-validation-failure-analysis-d-versus-b) shows N010_Week3, S022_Week2, W012_Week0, G021_Week6 and M030_Week0, using identical MRI/GT/slices for both models. B improves two of these selected scans and declines on three; this count is selection-dependent and does not replace the cohort metric. In M030_Week0, FN rises from 324 to 523 despite reduced FP, lowering case Dice from 0.875641 to 0.820749. N010_Week3 looks better on the displayed slice but has worse full-volume Dice. These examples prevent a favorable single-image comparison from being mistaken for universal improvement.
+
+The validation image review is complete for this selected five-case set, but the failed memory gate and missing archived final scheduler accounting remain unresolved. Keep B as a validation candidate; the new plots/GIFs do not authorize a new test or alter historical test conclusions. Regenerate with `python scripts/publish_context_validation_assets.py --device cuda`; source data and retained checkpoint files are required.
+
 ## Artificial Intelligence Usage Disclosure

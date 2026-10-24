@@ -20,3 +20,9 @@ docs/
 !docs/
 docs/*
 !docs/context_v2_ablation_results_20261025.md
+# Publish only the Context v2 validation presentation assets referenced by README.
+!docs/assets/
+docs/assets/*
+!docs/assets/context_v2_ablation_692354/
+!docs/assets/model_architecture_context_v2.png
+!docs/assets/model_architecture_context_v2.drawio
