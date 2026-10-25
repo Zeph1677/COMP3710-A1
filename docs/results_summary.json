@@ -1,0 +1,347 @@
+{
+  "experiment_groups": [
+    {
+      "arms": {
+        "baseline": {
+          "git_sha": "4232e0d91d8aa6cf8c1de38883b213c07cc62d10",
+          "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+          "mean_patient_prostate_dice": 0.8115482976429129,
+          "missing_fields": [],
+          "model": "baseline",
+          "patient_scores": {
+            "B037": 0.7362557077625571,
+            "H007": 0.7813780260707635,
+            "K042": 0.8870151770657673,
+            "L011": 0.781136068105175,
+            "M013": 0.8719565092103027
+          },
+          "prostate_label": 5,
+          "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+          "resource_metrics": {
+            "mean_patient_inference_seconds": 0.23136245720088483,
+            "parameter_count": 1400646,
+            "peak_inference_vram_mb": 1047.40234375,
+            "peak_train_vram_mb": 977.64111328125
+          },
+          "selected_epoch": 20.0,
+          "source_files": {
+            "config": {
+              "path": "artifacts/2026-10-22/683675_formal_baseline/experiment_config.json",
+              "sha256": "846d14cd9fb2fb13d41d29cf61beb1b315339ab6b79ea4443583b1f3f29f298e"
+            },
+            "git_sha": {
+              "path": "artifacts/2026-10-22/683675_formal_baseline/git_sha.txt",
+              "sha256": "1ea8dc0f2747e9aceb99e0451b001ae4da35160a971755de9b0f25eed2f8bc04"
+            },
+            "metrics": {
+              "path": "artifacts/2026-10-22/683675_formal_baseline/test_metrics.json",
+              "sha256": "950abcdbe66080b664bcc1c6fe4d78ba4b08a7b78b205b6f095d0fe2fc004fdc"
+            },
+            "training_summary": {
+              "path": "artifacts/2026-10-22/683675_formal_baseline/training_summary.json",
+              "sha256": "0c796b3c2071e6ae6b6c4b60527457d8f0d9b046c32874250aee0c1cbb6db3b6"
+            }
+          },
+          "test_protocol": {
+            "logit_merge_method": "overlap_averaged_logits",
+            "patch_size": [
+              128,
+              128,
+              128
+            ],
+            "stride": [
+              64,
+              64,
+              64
+            ]
+          }
+        },
+        "improved": {
+          "git_sha": "4232e0d91d8aa6cf8c1de38883b213c07cc62d10",
+          "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+          "mean_patient_prostate_dice": 0.8135865944699171,
+          "missing_fields": [],
+          "model": "improved",
+          "patient_scores": {
+            "B037": 0.6741951461119366,
+            "H007": 0.839754816112084,
+            "K042": 0.8784995173079575,
+            "L011": 0.7955527240899413,
+            "M013": 0.8799307687276666
+          },
+          "prostate_label": 5,
+          "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+          "resource_metrics": {
+            "mean_patient_inference_seconds": 0.24671274609863758,
+            "parameter_count": 1423106,
+            "peak_inference_vram_mb": 1047.49169921875,
+            "peak_train_vram_mb": 1193.3837890625
+          },
+          "selected_epoch": 18.0,
+          "source_files": {
+            "config": {
+              "path": "artifacts/2026-10-22/683676_formal_improved/experiment_config.json",
+              "sha256": "4dedd006844ce9a60f28bf4db370b36f66804e6bc03282896f207ae87e8ff7af"
+            },
+            "git_sha": {
+              "path": "artifacts/2026-10-22/683676_formal_improved/git_sha.txt",
+              "sha256": "1ea8dc0f2747e9aceb99e0451b001ae4da35160a971755de9b0f25eed2f8bc04"
+            },
+            "metrics": {
+              "path": "artifacts/2026-10-22/683676_formal_improved/test_metrics.json",
+              "sha256": "e5498df5b442a1cecdaefb3405a0c536cdd0f7bdf33294f842d8e3063b1fd50f"
+            },
+            "training_summary": {
+              "path": "artifacts/2026-10-22/683676_formal_improved/training_summary.json",
+              "sha256": "89e4a6c6a15f19778d0c37580290d2c4237f5638ae8dc77c5f8d18d3b4a409d1"
+            }
+          },
+          "test_protocol": {
+            "logit_merge_method": "overlap_averaged_logits",
+            "patch_size": [
+              128,
+              128,
+              128
+            ],
+            "stride": [
+              64,
+              64,
+              64
+            ]
+          }
+        }
+      },
+      "group_id": "main_matched_formal_4232e0d",
+      "headline": {
+        "baseline_mean_patient_prostate_dice": 0.8115482976429129,
+        "improved_mean_patient_prostate_dice": 0.8135865944699171,
+        "improved_minus_baseline": 0.0020382968270041824
+      },
+      "job_ids": {
+        "baseline": "683675",
+        "improved": "683676"
+      },
+      "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+      "paired_patient_dice": [
+        {
+          "baseline": 0.7362557077625571,
+          "improved": 0.6741951461119366,
+          "improved_minus_baseline": -0.06206056165062046,
+          "patient_id": "B037"
+        },
+        {
+          "baseline": 0.7813780260707635,
+          "improved": 0.839754816112084,
+          "improved_minus_baseline": 0.05837679004132057,
+          "patient_id": "H007"
+        },
+        {
+          "baseline": 0.8870151770657673,
+          "improved": 0.8784995173079575,
+          "improved_minus_baseline": -0.008515659757809768,
+          "patient_id": "K042"
+        },
+        {
+          "baseline": 0.781136068105175,
+          "improved": 0.7955527240899413,
+          "improved_minus_baseline": 0.014416655984766269,
+          "patient_id": "L011"
+        },
+        {
+          "baseline": 0.8719565092103027,
+          "improved": 0.8799307687276666,
+          "improved_minus_baseline": 0.007974259517363969,
+          "patient_id": "M013"
+        }
+      ],
+      "prostate_label": 5,
+      "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+      "selection_metric": "validation_mean_dice",
+      "test_protocol": {
+        "logit_merge_method": "overlap_averaged_logits",
+        "patch_size": [
+          128,
+          128,
+          128
+        ],
+        "stride": [
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "arms": {
+        "baseline": {
+          "git_sha": "2e2529857a586a009f0f4cad2e260dc810531ac0",
+          "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+          "mean_patient_prostate_dice": 0.8183164841240353,
+          "missing_fields": [],
+          "model": "baseline",
+          "patient_scores": {
+            "B037": 0.7234082750802947,
+            "H007": 0.7948618139353835,
+            "K042": 0.8925727711786973,
+            "L011": 0.7951936374911359,
+            "M013": 0.8855459229346649
+          },
+          "prostate_label": 5,
+          "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+          "resource_metrics": {
+            "mean_patient_inference_seconds": 0.23043580502271652,
+            "parameter_count": 1400646,
+            "peak_inference_vram_mb": 1047.40234375,
+            "peak_train_vram_mb": 977.64111328125
+          },
+          "selected_epoch": 17.0,
+          "source_files": {
+            "config": {
+              "path": "artifacts/2026-10-23/687753_formal_baseline_new/training_baseline/experiment_config.json",
+              "sha256": "9cb79b4fad1cbee1b415cba6becc085229f0678ab9b8f085c38d1b8ab9d33063"
+            },
+            "git_sha": {
+              "path": "artifacts/2026-10-23/687753_formal_baseline_new/training_code_git_sha.txt",
+              "sha256": "2e3df98fbea6c462a0e0f33a83f8e2c86c1b717c2b7a6c234bc52b6bfdc255c7"
+            },
+            "metrics": {
+              "path": "artifacts/2026-10-23/687753_formal_baseline_new/test_baseline/test_metrics.json",
+              "sha256": "1573783dbeadde30326b062544ec41b1e87e339f2b15d932170f76148460f159"
+            },
+            "training_summary": {
+              "path": "artifacts/2026-10-23/687753_formal_baseline_new/training_baseline/training_summary.json",
+              "sha256": "fc9610204d0ba32e1733e4566d49c9910d9cd979fdabe2454906f9dc076e9a18"
+            }
+          },
+          "test_protocol": {
+            "logit_merge_method": "overlap_averaged_logits",
+            "patch_size": [
+              128,
+              128,
+              128
+            ],
+            "stride": [
+              64,
+              64,
+              64
+            ]
+          }
+        },
+        "improved": {
+          "git_sha": "2e2529857a586a009f0f4cad2e260dc810531ac0",
+          "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+          "mean_patient_prostate_dice": 0.7941664101589291,
+          "missing_fields": [],
+          "model": "improved",
+          "patient_scores": {
+            "B037": 0.7394615657102374,
+            "H007": 0.768,
+            "K042": 0.8447189311822536,
+            "L011": 0.751943997629915,
+            "M013": 0.8667075562722395
+          },
+          "prostate_label": 5,
+          "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+          "resource_metrics": {
+            "mean_patient_inference_seconds": 0.29903790038079026,
+            "parameter_count": 2222878,
+            "peak_inference_vram_mb": 1295.298828125,
+            "peak_train_vram_mb": 1496.94970703125
+          },
+          "selected_epoch": 11.0,
+          "source_files": {
+            "config": {
+              "path": "artifacts/2026-10-23/687754_formal_improved_wide20_recovery/training_improved/experiment_config.json",
+              "sha256": "a930b4ff787e5886aa0b92042fb01959bfcc0de1d6432554b64d274805c87b77"
+            },
+            "git_sha": {
+              "path": "artifacts/2026-10-23/687754_formal_improved_wide20_recovery/training_code_git_sha.txt",
+              "sha256": "2e3df98fbea6c462a0e0f33a83f8e2c86c1b717c2b7a6c234bc52b6bfdc255c7"
+            },
+            "metrics": {
+              "path": "artifacts/2026-10-23/687754_formal_improved_wide20_recovery/test_improved/test_metrics.json",
+              "sha256": "2b5d66a4d896047a12853e1649bbd49daa2d240c7c792753c1b71128b423c3e0"
+            },
+            "training_summary": {
+              "path": "artifacts/2026-10-23/687754_formal_improved_wide20_recovery/training_improved/training_summary.json",
+              "sha256": "f81c1b2c09ec28289509f2ef856bd9c56c3a3094383f3ddfc6d1cd79c73067b1"
+            }
+          },
+          "test_protocol": {
+            "logit_merge_method": "overlap_averaged_logits",
+            "patch_size": [
+              128,
+              128,
+              128
+            ],
+            "stride": [
+              64,
+              64,
+              64
+            ]
+          }
+        }
+      },
+      "group_id": "wide20_supplementary_matched",
+      "headline": {
+        "baseline_mean_patient_prostate_dice": 0.8183164841240353,
+        "improved_mean_patient_prostate_dice": 0.7941664101589291,
+        "improved_minus_baseline": -0.024150073965106267
+      },
+      "job_ids": {
+        "baseline": "687753",
+        "improved": "687754"
+      },
+      "manifest_sha256": "5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07",
+      "paired_patient_dice": [
+        {
+          "baseline": 0.7234082750802947,
+          "improved": 0.7394615657102374,
+          "improved_minus_baseline": 0.01605329062994265,
+          "patient_id": "B037"
+        },
+        {
+          "baseline": 0.7948618139353835,
+          "improved": 0.768,
+          "improved_minus_baseline": -0.02686181393538345,
+          "patient_id": "H007"
+        },
+        {
+          "baseline": 0.8925727711786973,
+          "improved": 0.8447189311822536,
+          "improved_minus_baseline": -0.04785383999644366,
+          "patient_id": "K042"
+        },
+        {
+          "baseline": 0.7951936374911359,
+          "improved": 0.751943997629915,
+          "improved_minus_baseline": -0.04324963986122088,
+          "patient_id": "L011"
+        },
+        {
+          "baseline": 0.8855459229346649,
+          "improved": 0.8667075562722395,
+          "improved_minus_baseline": -0.018838366662425443,
+          "patient_id": "M013"
+        }
+      ],
+      "prostate_label": 5,
+      "prostate_label_source": "CSIRO, Labelled weekly MR images of the male pelvis, v2, DOI: 10.25919/45T8-P065, BriefDataDescription.txt, Labels block: 5=Prostate.",
+      "selection_metric": "prostate_dice",
+      "test_protocol": {
+        "logit_merge_method": "overlap_averaged_logits",
+        "patch_size": [
+          128,
+          128,
+          128
+        ],
+        "stride": [
+          64,
+          64,
+          64
+        ]
+      }
+    }
+  ],
+  "schema_version": 1
+}

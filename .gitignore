@@ -1,37 +1,18 @@
-# Default deny: only the reviewed core files below can be added.
-/*
-!/.gitignore
-!/.gitattributes
-!/LICENSE.txt
-!/README.md
-!/requirements.txt
-!/src/
-/src/*
-!/src/audit.py
-!/src/dataset.py
-!/src/modules.py
-!/src/train.py
-!/src/predict.py
-!/src/plot_training.py
-!/src/validation_visuals.py
-
-# Local-only plans, experiments, configs, reports, tests and generated data.
-/plan/
-/local/
-/configs/
-/tests/
-/docs/
-/evidence/
-/data/
-/artifacts/
-/checkpoints/
-/formal_results/
-/Temp/
-/.vscode/
-/.venv/
+# Python and editor state
 __pycache__/
+*.py[cod]
 .pytest_cache/
 .ruff_cache/
+.venv/
+.vscode/
+
+# Raw or generated experiment data
+data/
+artifacts/
+checkpoints/
+formal_results/
+Temp/
+local/
 *.log
 *.out
 *.err
@@ -43,3 +24,26 @@ __pycache__/
 *.nii.gz
 .env
 .env.*
+
+# Internal material outside the minimal public core
+configs/
+docs/superpowers/
+docs/COMP3710_Report_*.pdf
+evidence/Essay/
+evidence/sources/*.pdf
+
+# Whitelist only the small evidence and README assets used by the public core.
+docs/*
+!docs/assets/
+docs/assets/*
+!docs/assets/model_architecture.drawio
+!docs/assets/model_architecture.drawio.png
+!docs/requirements-verified-local.txt
+!docs/results_summary.json
+
+evidence/*
+!evidence/SOURCES.md
+!evidence/dataset_manifest.json
+!evidence/sources/
+evidence/sources/*
+!evidence/sources/csiro-brief-data-description.txt
