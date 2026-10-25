@@ -130,6 +130,8 @@ For the historical Improved arm, use a different output directory and replace th
 --model improved --architecture-version legacy_improved_v1
 ```
 
+Every new Improved run must state either `legacy_improved_v1` or `improved_context_v2`; the training CLI rejects an omitted version. Historical checkpoints that predate this field remain loadable as `legacy_improved_v1` only for compatibility, not as a default for new training.
+
 Do not enable augmentation for this historical comparison. Both arms must use the same manifest, geometry, optimizer settings, seed, number of epochs and selection rule. Training writes `experiment_config.json`, `history.json`, `training_summary.json`, validation-selected `best.pt` and `training_curves.png` beneath the chosen output directory.
 
 These commands reproduce the stored configuration through the current code. They do not guarantee bitwise identity with the historical GPU runtime.
@@ -149,7 +151,7 @@ python src/predict.py `
   --device cuda
 ```
 
-Prediction verifies the manifest hash and architecture metadata stored in the checkpoint. It writes `test_metrics.json`, per-case prediction tensors and failure panels. The test partition must not influence hyperparameters, checkpoint selection or acceptance thresholds. These five patients have been evaluated by historical models and are not an untouched external cohort.
+Prediction verifies the manifest hash and architecture metadata stored in the checkpoint. It writes `test_metrics.json`, per-case prediction tensors and failure panels. Each panel selects the axial, coronal and sagittal slice with the largest prostate-specific FP+FN count; if a case has no prostate error, it selects the centre of the reference prostate extent. The JSON records the selected case, slice indices and rule. The test partition must not influence hyperparameters, checkpoint selection or acceptance thresholds. These five patients have been evaluated by historical models and are not an untouched external cohort.
 
 ## 8. Original matched held-out results
 

@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import torch
 
-from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, prostate_diagnostics, run_overfit_preflight, run_training, select_validation_checkpoint
+from train import build_experiment_config, composite_3d_loss, create_argument_parser, evaluate_3d_batches, load_audited_pairs, model_configuration, prostate_diagnostics, run_overfit_preflight, run_training, select_validation_checkpoint
 
 
 def test_composite_3d_loss_accepts_final_and_auxiliary_logits():
@@ -164,6 +164,31 @@ def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
     assert args.train_patch_shape == [16, 16, 16]
     assert args.foreground_patch_probability == 0.75
     assert args.selection_metric == "mean_dice"
+
+
+def test_improved_training_requires_an_explicit_architecture_version():
+    """Catches accidental Context-v2 training labelled only as Improved."""
+
+    with pytest.raises(ValueError, match="architecture-version"):
+        model_configuration(Namespace(model="improved", base_channels=2), num_classes=6)
+
+    assert model_configuration(
+        Namespace(model="improved", architecture_version="legacy_improved_v1", base_channels=2),
+        num_classes=6,
+    )["architecture_version"] == "legacy_improved_v1"
+
+
+def test_experiment_metadata_does_not_silently_assign_an_improved_version(tmp_path: Path):
+    """Catches a second default that could bypass the explicit CLI contract."""
+
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"summary": {"labels": [0, 1]}}', encoding="utf-8")
+
+    config = build_experiment_config(
+        manifest, "improved", (16, 16, 16), 42, 1, "CSIRO label documentation"
+    )
+
+    assert "architecture_version" not in config
 
 
 def test_run_training_writes_reloadable_checkpoint_and_history(tmp_path: Path):

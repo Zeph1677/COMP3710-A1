@@ -10,7 +10,7 @@ import torch
 import pytest
 
 from modules import BaselineUNet3D, ImprovedUNet3D
-from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, render_case_views, run_prediction, sliding_window_logits
+from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, prostate_error_masks, prostate_error_slice_indices, render_case_views, run_prediction, sliding_window_logits
 
 
 class ConstantLogitModel(torch.nn.Module):
@@ -38,10 +38,33 @@ def test_render_case_views_writes_multiplane_panel(tmp_path: Path):
     prediction[3:5, 3:5, 3:5] = 1
     output = tmp_path / "case.png"
 
-    render_case_views(image, label, prediction, output, title="synthetic case")
+    render_case_views(image, label, prediction, output, title="synthetic case", prostate_label=1)
 
     assert output.is_file()
     assert output.stat().st_size > 0
+
+
+def test_prostate_error_masks_include_cross_organ_misclassifications():
+    """Catches the old background-only overlay that hid prostate-versus-organ errors."""
+
+    label = torch.tensor([[[5, 2], [0, 5]]])
+    prediction = torch.tensor([[[2, 5], [5, 5]]])
+
+    false_positive, false_negative = prostate_error_masks(label, prediction, prostate_label=5)
+
+    assert torch.equal(false_positive, torch.tensor([[[False, True], [True, False]]]))
+    assert torch.equal(false_negative, torch.tensor([[[True, False], [False, False]]]))
+
+
+def test_prostate_error_slice_indices_choose_the_highest_error_plane_not_volume_centre():
+    """Catches panels that always inspected the central, potentially easy, slice."""
+
+    label = torch.zeros(8, 8, 8, dtype=torch.long)
+    prediction = label.clone()
+    label[1, 2:6, 2:6] = 5
+    prediction[1, 2:6, 2:6] = 2
+
+    assert prostate_error_slice_indices(label, prediction, prostate_label=5) == (1, 2, 2)
 
 
 def test_patient_prostate_dice_is_computed_per_patient_before_mean():
@@ -149,6 +172,9 @@ def test_run_prediction_writes_test_only_metrics_and_ranked_failure_panel(tmp_pa
     assert saved["mean_patient_inference_seconds"] >= 0.0
     assert saved["overlap"] == [0.0, 0.0, 0.0]
     assert saved["logit_merge_method"] == "overlap_averaged_logits"
+    assert saved["failure_panel_selection"]["B003"]["case_id"] == "B003_Week0"
+    assert saved["failure_panel_selection"]["B003"]["rule"] == "max_prostate_fp_plus_fn_per_plane; prostate_extent_centre_fallback"
+    assert len(saved["failure_panel_selection"]["B003"]["slice_indices_dhw"]) == 3
     saved_prediction = torch.load(output / "predictions" / "B003_Week0.pt", map_location="cpu", weights_only=False)
     assert saved_prediction["case_id"] == "B003_Week0"
     assert saved_prediction["patient_id"] == "B003"

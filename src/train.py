@@ -1,4 +1,4 @@
-"""Training utilities for fair HipMRI 3D baseline-versus-improved experiments."""
+"""Train and validate HipMRI models; predict.py performs held-out testing explicitly."""
 
 from __future__ import annotations
 
@@ -16,17 +16,29 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader
 
 from dataset import HipMRI3DDataset, VolumePair, AugmentationConfig
-from modules import ImprovedUNet3D, build_model
+from modules import build_model
 from plot_training import render_training_curves, render_learning_rate_curve
 
 
 def model_configuration(args: argparse.Namespace, num_classes: int) -> dict[str, object]:
-    """Freeze architecture-affecting options; default new Improved training is v2."""
+    """Freeze an unambiguous architecture definition for every new run."""
+
+    model_name = getattr(args, "model", None)
     version = getattr(args, "architecture_version", None)
-    if version is None:
-        version = "improved_context_v2" if args.model == "improved" else "baseline_v1"
+    if model_name == "baseline":
+        if version not in (None, "baseline_v1"):
+            raise ValueError("baseline accepts only architecture-version baseline_v1")
+        version = "baseline_v1"
+    elif model_name == "improved":
+        if version not in ("legacy_improved_v1", "improved_context_v2"):
+            raise ValueError(
+                "improved training requires --architecture-version "
+                "legacy_improved_v1 or improved_context_v2"
+            )
+    else:
+        raise ValueError("model must be 'baseline' or 'improved'")
     return {
-        "model": args.model,
+        "model": model_name,
         "architecture_version": version,
         "num_classes": num_classes,
         "in_channels": 1,
@@ -70,8 +82,6 @@ def build_experiment_config(
         "manifest_path": str(path),
         "manifest_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
     }
-    if model_name == "improved":
-        config["architecture_version"] = ImprovedUNet3D.architecture_version
     return config
 
 
@@ -208,7 +218,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-root", required=True, type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/training"))
     parser.add_argument("--model", choices=("baseline", "improved"), default="baseline")
-    parser.add_argument("--architecture-version", choices=("legacy_improved_v1", "improved_context_v2"), help="Improved architecture; default is Context v2. Main historical experiment used legacy_improved_v1.")
+    parser.add_argument("--architecture-version", choices=("legacy_improved_v1", "improved_context_v2"), help="Required for --model improved. Main historical experiment used legacy_improved_v1.")
     parser.add_argument("--dropout-probability", type=float, default=0.3)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--batch-size", type=int, default=1)
