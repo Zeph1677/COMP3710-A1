@@ -10,14 +10,14 @@ import shutil
 import subprocess
 
 
-EVIDENCE_DOCUMENTS = {
-    "EXPERIMENT_EVIDENCE.md",
-    "REFERENCE_LEARNING.md",
-    "EXPERIMENT_ENVIRONMENT.md",
-    "HIPMRI_3D_HARD_EXECUTION_FLOW.md",
-    "context_v2_ablation_results_20261025.md",
-    "requirements-verified-local.txt",
-    "results_summary.json",
+DOCUMENTATION_PATHS = {
+    "docs/superpowers/plans/EXPERIMENT_EVIDENCE.md",
+    "docs/superpowers/plans/REFERENCE_LEARNING.md",
+    "docs/superpowers/plans/EXPERIMENT_ENVIRONMENT.md",
+    "docs/superpowers/plans/HIPMRI_3D_HARD_EXECUTION_FLOW.md",
+    "docs/superpowers/specs/context_v2_ablation_results_20261025.md",
+    "docs/requirements-verified-local.txt",
+    "docs/results_summary.json",
 }
 # Exact whitelist preserves the reviewed animation gallery, never raw tensors.
 CONTEXT_ASSETS = {
@@ -66,8 +66,8 @@ def should_export(path: Path) -> bool:
     ):
         return False
     if path.parts[0] == "docs":
-        if len(path.parts) == 2:
-            return path.name in EVIDENCE_DOCUMENTS
+        if path.as_posix() in DOCUMENTATION_PATHS:
+            return True
         if path.parts[1] != "assets":
             return False
         if "context_v2_ablation_692354" in path.parts:

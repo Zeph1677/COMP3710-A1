@@ -116,13 +116,13 @@ Five different-patient cases were selected using combined Baseline/Improved whol
 
 ![Same-slice Baseline and Improved comparison on M030_Week0](docs/assets/context_v2_ablation_692354/failure_M030_Week0.png)
 
-In **M030_Week0**, Improved increases FN from 324 to 523 while reducing FP from 137 to 99. In **S022_Week2**, it reduces FN from 336 to 284 but increases FP from 483 to 634. **N010_Week3** demonstrates why a visually better slice cannot substitute for whole-volume scoring. These cases require inspection of omitted tissue and neighbouring slices, rather than acceptance based on a smoother contour. The [full validation analysis](docs/context_v2_ablation_results_20261025.md) retains all five paired panels and selection details.
+In **M030_Week0**, Improved increases FN from 324 to 523 while reducing FP from 137 to 99. In **S022_Week2**, it reduces FN from 336 to 284 but increases FP from 483 to 634. **N010_Week3** demonstrates why a visually better slice cannot substitute for whole-volume scoring. These cases require inspection of omitted tissue and neighbouring slices, rather than acceptance based on a smoother contour. The [full validation analysis](docs/superpowers/specs/context_v2_ablation_results_20261025.md) retains all five paired panels and selection details.
 
 ## Engineering assessment
 
 The intended use is specialist-reviewed prostate contour drafting. The recorded GPU memory and training time make this resized-volume workflow feasible on the retained A100 hardware, but resampling, six validation patients and one seed limit the evidence. Clinical contour-editing time and physical-distance accuracy were not measured. Keep Baseline as the lower-memory comparator and Improved as the accuracy-leading validation candidate; the failed memory gate and patient-specific regressions prevent an automatic replacement decision.
 
-No held-out score is reported for this Improved checkpoint. Historical tested models have different checkpoint identities and remain in the [experiment evidence record](docs/EXPERIMENT_EVIDENCE.md); their test scores must not be assigned to this model. Other configurations are documented in the [ablation record](docs/context_v2_ablation_results_20261025.md). Job 692354 is confirmed `COMPLETED|0:0` (01:42:37); see the [final accounting](evidence/692354_sacct_final.txt). Historical environment-freeze limitations remain documented in the [environment record](docs/EXPERIMENT_ENVIRONMENT.md).
+No held-out score is reported for this Improved checkpoint. Historical tested models have different checkpoint identities and remain in the [experiment evidence record](docs/superpowers/plans/EXPERIMENT_EVIDENCE.md); their test scores must not be assigned to this model. Other configurations are documented in the [ablation record](docs/superpowers/specs/context_v2_ablation_results_20261025.md). Job 692354 is confirmed `COMPLETED|0:0` (01:42:37); see the [final accounting](evidence/692354_sacct_final.txt). Historical environment-freeze limitations remain documented in the [environment record](docs/superpowers/plans/EXPERIMENT_ENVIRONMENT.md).
 
 ## References
 
