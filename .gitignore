@@ -10,7 +10,7 @@ checkpoints/
 *.ckpt
 slurm-*.out
 slurm-*.err
-tmp/
+Temp/
 local/
 .vscode/
 *.bkp
