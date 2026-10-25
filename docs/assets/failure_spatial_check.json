@@ -1,0 +1,67 @@
+[
+  {
+    "case_id": "B037_Week0",
+    "nifti_axis_codes": [
+      "L",
+      "P",
+      "S"
+    ],
+    "tensor_depth_axis": "S",
+    "gt_inferior_slice": 42,
+    "gt_superior_slice": 79,
+    "displayed_slice": 70,
+    "relative_position": 0.7568
+  },
+  {
+    "case_id": "L011_Week2",
+    "nifti_axis_codes": [
+      "L",
+      "P",
+      "S"
+    ],
+    "tensor_depth_axis": "S",
+    "gt_inferior_slice": 62,
+    "gt_superior_slice": 88,
+    "displayed_slice": 70,
+    "relative_position": 0.3077
+  },
+  {
+    "case_id": "L011_Week7",
+    "nifti_axis_codes": [
+      "L",
+      "P",
+      "S"
+    ],
+    "tensor_depth_axis": "S",
+    "gt_inferior_slice": 50,
+    "gt_superior_slice": 73,
+    "displayed_slice": 62,
+    "relative_position": 0.5217
+  },
+  {
+    "case_id": "K042_Week0",
+    "nifti_axis_codes": [
+      "L",
+      "P",
+      "S"
+    ],
+    "tensor_depth_axis": "S",
+    "gt_inferior_slice": 51,
+    "gt_superior_slice": 82,
+    "displayed_slice": 72,
+    "relative_position": 0.6774
+  },
+  {
+    "case_id": "L011_Week0",
+    "nifti_axis_codes": [
+      "L",
+      "P",
+      "S"
+    ],
+    "tensor_depth_axis": "S",
+    "gt_inferior_slice": 55,
+    "gt_superior_slice": 78,
+    "displayed_slice": 62,
+    "relative_position": 0.3043
+  }
+]

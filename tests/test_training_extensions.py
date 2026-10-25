@@ -33,7 +33,7 @@ def test_dataset_blocks_validation_augmentation(tmp_path):
     with pytest.raises(ValueError, match='only for train'):
         HipMRI3DDataset([],tmp_path,set(),2,augmentation_config=AugmentationConfig(),split='validation')
 
-def test_cosine_training_records_used_lr_and_validation_gifs(tmp_path):
+def test_cosine_training_records_used_lr_and_validation_gifs(tmp_path, monkeypatch):
     import json
     from argparse import Namespace
     import numpy as np
@@ -52,6 +52,16 @@ def test_cosine_training_records_used_lr_and_validation_gifs(tmp_path):
         cases.append(dict(case_id=patient,patient_id=patient,image_path=image_path,mask_path=mask_path,shape=[16]*3,spacing=[1]*3,orientation=['R','A','S'],labels=[0,1],split=split))
     manifest=tmp_path/'manifest.json'; manifest.write_text(json.dumps({'summary':{'labels':[0,1]},'cases':cases}))
     args=Namespace(manifest=manifest,data_root=tmp_path,output_dir=tmp_path/'run',model='improved',architecture_version='improved_context_v2',epochs=2,batch_size=1,learning_rate=0.001,base_channels=2,target_shape=(16,16,16),seed=42,device='cpu',prostate_label=1,prostate_label_source='synthetic fixture',augmentation=True,scheduler='cosine',eta_min=0.00001,validation_gifs=True,selection_metric='prostate_dice')
+    import train
+    original_train_epoch = train._train_epoch
+    observed_epochs = []
+    def observe_epoch(*positional, **keywords):
+        if observed_epochs:
+            assert (args.output_dir / 'training_curves.png').is_file()
+            assert (args.output_dir / 'learning_rate_schedule.png').is_file()
+        observed_epochs.append(len(observed_epochs) + 1)
+        return original_train_epoch(*positional, **keywords)
+    monkeypatch.setattr(train, '_train_epoch', observe_epoch)
     result=run_training(args)
     assert [r['learning_rate'] for r in result['history']]==pytest.approx([0.001,0.000505])
     output=args.output_dir

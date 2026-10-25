@@ -1,0 +1,1484 @@
+{
+  "analysis_date": "2026-10-26",
+  "experiment_commit": "4232e0d91d8aa6cf8c1de38883b213c07cc62d10",
+  "method": "Post-hoc analysis of retained predictions only. Inferior/superior bands are first/last ceil(0.2*N) axial slices of GT prostate extent. Full in-plane FP/FN included. Panels maximize summed paired FP+FN within each band; largest slice index breaks ties. 26-connected components, no component filtering.",
+  "cases": [
+    {
+      "case_id": "B037_Week0",
+      "patient_id": "B037",
+      "inferior": 42,
+      "superior": 79,
+      "band_slices": 8,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\B037_Week0.pt": "6bba6523ef9810f2dc19416a7e2ea9d86d251f5c2a2869f7b83f132897185dd8",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\B037_Week0.pt": "da9f90c057097967984bd17759ede76ce6beef9753345474d780c3169d4765b6"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 4031,
+            "fp": 393,
+            "fn": 2495,
+            "dice": 0.7362557077625571,
+            "recall": 0.6176831136990499
+          },
+          "inferior": {
+            "tp": 562,
+            "fp": 222,
+            "fn": 10,
+            "dice": 0.8289085545722714,
+            "recall": 0.9825174825174825
+          },
+          "superior": {
+            "tp": 160,
+            "fp": 0,
+            "fn": 271,
+            "dice": 0.5414551607445008,
+            "recall": 0.37122969837587005
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 75,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 3403,
+            "fp": 166,
+            "fn": 3123,
+            "dice": 0.6741951461119366,
+            "recall": 0.5214526509347226
+          },
+          "inferior": {
+            "tp": 547,
+            "fp": 77,
+            "fn": 25,
+            "dice": 0.9147157190635451,
+            "recall": 0.9562937062937062
+          },
+          "superior": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 431,
+            "dice": 0.0,
+            "recall": 0.0
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 13,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ],
+      "panel": "boundary_b037_week0.png",
+      "displayed_slices": [
+        {
+          "region": "Inferior",
+          "slice": 46
+        },
+        {
+          "region": "Superior",
+          "slice": 73
+        }
+      ]
+    },
+    {
+      "case_id": "H007_Week0",
+      "patient_id": "H007",
+      "inferior": 47,
+      "superior": 72,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\H007_Week0.pt": "90f8e65bffd3454c97ab2ba7ba17a019ac949bfa959952f5feb5513048ef28c2",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\H007_Week0.pt": "349675e2c713a3fdad0ef9053a8c2d9f484f09ddbc08f08497b9b8abaa2615b6"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1049,
+            "fp": 432,
+            "fn": 155,
+            "dice": 0.7813780260707635,
+            "recall": 0.8712624584717608
+          },
+          "inferior": {
+            "tp": 36,
+            "fp": 14,
+            "fn": 55,
+            "dice": 0.5106382978723404,
+            "recall": 0.3956043956043956
+          },
+          "superior": {
+            "tp": 248,
+            "fp": 99,
+            "fn": 79,
+            "dice": 0.7359050445103857,
+            "recall": 0.7584097859327217
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 8,
+          "prostate_on_bladder_voxels": 35,
+          "prostate_on_rectum_voxels": 9
+        },
+        "improved": {
+          "whole": {
+            "tp": 959,
+            "fp": 121,
+            "fn": 245,
+            "dice": 0.839754816112084,
+            "recall": 0.7965116279069767
+          },
+          "inferior": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 90,
+            "dice": 0.021739130434782608,
+            "recall": 0.01098901098901099
+          },
+          "superior": {
+            "tp": 234,
+            "fp": 53,
+            "fn": 93,
+            "dice": 0.762214983713355,
+            "recall": 0.7155963302752294
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 2,
+          "prostate_on_rectum_voxels": 3
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "K042_Week0",
+      "patient_id": "K042",
+      "inferior": 51,
+      "superior": 82,
+      "band_slices": 7,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\K042_Week0.pt": "5e67117e9c980427a66058e72373642a3c2ccff8bf92701f4d35abe1a97bbfa4",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\K042_Week0.pt": "30963d0d1bc8175a2794c5464aafecb6d9708ba8d8b159da517ce0ca728097dd"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 3419,
+            "fp": 432,
+            "fn": 439,
+            "dice": 0.8870151770657673,
+            "recall": 0.8862104717470192
+          },
+          "inferior": {
+            "tp": 205,
+            "fp": 20,
+            "fn": 90,
+            "dice": 0.7884615384615384,
+            "recall": 0.6949152542372882
+          },
+          "superior": {
+            "tp": 622,
+            "fp": 171,
+            "fn": 56,
+            "dice": 0.8456832087015635,
+            "recall": 0.9174041297935103
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 31,
+          "prostate_on_bladder_voxels": 22,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 3185,
+            "fp": 208,
+            "fn": 673,
+            "dice": 0.8784995173079575,
+            "recall": 0.8255572835666148
+          },
+          "inferior": {
+            "tp": 161,
+            "fp": 11,
+            "fn": 134,
+            "dice": 0.6895074946466809,
+            "recall": 0.5457627118644067
+          },
+          "superior": {
+            "tp": 624,
+            "fp": 122,
+            "fn": 54,
+            "dice": 0.8764044943820225,
+            "recall": 0.9203539823008849
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 15,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ],
+      "panel": "boundary_k042_week0.png",
+      "displayed_slices": [
+        {
+          "region": "Inferior",
+          "slice": 51
+        },
+        {
+          "region": "Superior",
+          "slice": 76
+        }
+      ]
+    },
+    {
+      "case_id": "L011_Week0",
+      "patient_id": "L011",
+      "inferior": 55,
+      "superior": 78,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week0.pt": "ad0655a6e3a9916bf85ce6c03ff15a3dd63de7a58e7a2fbb817e18e36be7b2e8",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week0.pt": "15bb214285a390ca22a897c0a7cbd7810ae1330565e6420e8b0c14142aa0960d"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1765,
+            "fp": 803,
+            "fn": 109,
+            "dice": 0.7946870778928411,
+            "recall": 0.9418356456776947
+          },
+          "inferior": {
+            "tp": 147,
+            "fp": 192,
+            "fn": 0,
+            "dice": 0.6049382716049383,
+            "recall": 1.0
+          },
+          "superior": {
+            "tp": 316,
+            "fp": 7,
+            "fn": 100,
+            "dice": 0.8552097428958051,
+            "recall": 0.7596153846153846
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 122,
+          "prostate_on_bladder_voxels": 14,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1704,
+            "fp": 579,
+            "fn": 170,
+            "dice": 0.8198219870098629,
+            "recall": 0.9092849519743863
+          },
+          "inferior": {
+            "tp": 135,
+            "fp": 126,
+            "fn": 12,
+            "dice": 0.6617647058823529,
+            "recall": 0.9183673469387755
+          },
+          "superior": {
+            "tp": 284,
+            "fp": 19,
+            "fn": 132,
+            "dice": 0.7899860917941586,
+            "recall": 0.6826923076923077
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 34,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week1",
+      "patient_id": "L011",
+      "inferior": 47,
+      "superior": 73,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week1.pt": "8c07a81d99ef9837d7c1a321d82a2473a36ea9475830c4ce61877ea2c16abb87",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week1.pt": "78133aa472b1e8acc1725953e4bcd6c06f307347e547bfff10c274320495febc"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1612,
+            "fp": 633,
+            "fn": 27,
+            "dice": 0.8300720906282183,
+            "recall": 0.9835265405735204
+          },
+          "inferior": {
+            "tp": 172,
+            "fp": 80,
+            "fn": 8,
+            "dice": 0.7962962962962963,
+            "recall": 0.9555555555555556
+          },
+          "superior": {
+            "tp": 255,
+            "fp": 51,
+            "fn": 17,
+            "dice": 0.8823529411764706,
+            "recall": 0.9375
+          },
+          "components_26": 2,
+          "outside_largest_voxels": 4,
+          "outside_largest_fp": 4,
+          "outside_reference_extent_fp": 21,
+          "prostate_on_bladder_voxels": 6,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1510,
+            "fp": 490,
+            "fn": 129,
+            "dice": 0.8298983237153064,
+            "recall": 0.9212934716290421
+          },
+          "inferior": {
+            "tp": 133,
+            "fp": 70,
+            "fn": 47,
+            "dice": 0.6945169712793734,
+            "recall": 0.7388888888888889
+          },
+          "superior": {
+            "tp": 199,
+            "fp": 16,
+            "fn": 73,
+            "dice": 0.8172484599589322,
+            "recall": 0.7316176470588235
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week2",
+      "patient_id": "L011",
+      "inferior": 62,
+      "superior": 88,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week2.pt": "c5d5ef271d3747527414eaae9949dbf4e9ef410938f73f540b7ecc69245b8c60",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week2.pt": "691b2a9df16bd950742e053db6aadea7d0e548926914cac96438768226126612"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1433,
+            "fp": 894,
+            "fn": 68,
+            "dice": 0.7486938349007315,
+            "recall": 0.9546968687541639
+          },
+          "inferior": {
+            "tp": 154,
+            "fp": 235,
+            "fn": 0,
+            "dice": 0.567219152854512,
+            "recall": 1.0
+          },
+          "superior": {
+            "tp": 98,
+            "fp": 18,
+            "fn": 57,
+            "dice": 0.7232472324723247,
+            "recall": 0.632258064516129
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 61,
+          "prostate_on_bladder_voxels": 5,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1342,
+            "fp": 738,
+            "fn": 159,
+            "dice": 0.7495113096900308,
+            "recall": 0.894070619586942
+          },
+          "inferior": {
+            "tp": 151,
+            "fp": 213,
+            "fn": 3,
+            "dice": 0.583011583011583,
+            "recall": 0.9805194805194806
+          },
+          "superior": {
+            "tp": 50,
+            "fp": 19,
+            "fn": 105,
+            "dice": 0.44642857142857145,
+            "recall": 0.3225806451612903
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 66,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ],
+      "panel": "boundary_l011_week2.png",
+      "displayed_slices": [
+        {
+          "region": "Inferior",
+          "slice": 66
+        },
+        {
+          "region": "Superior",
+          "slice": 84
+        }
+      ]
+    },
+    {
+      "case_id": "L011_Week3",
+      "patient_id": "L011",
+      "inferior": 62,
+      "superior": 88,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week3.pt": "4bbd852d936f2bde21a05c43630945318a8360acfc88aa4d2928f7666d7947e7",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week3.pt": "29e8e902993477d73cefee69b234dfe3ecef3334235a888201380f32f44e33b6"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1493,
+            "fp": 655,
+            "fn": 61,
+            "dice": 0.8065910318746623,
+            "recall": 0.9607464607464608
+          },
+          "inferior": {
+            "tp": 168,
+            "fp": 150,
+            "fn": 2,
+            "dice": 0.6885245901639344,
+            "recall": 0.9882352941176471
+          },
+          "superior": {
+            "tp": 98,
+            "fp": 37,
+            "fn": 43,
+            "dice": 0.7101449275362319,
+            "recall": 0.6950354609929078
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 32,
+          "prostate_on_bladder_voxels": 5,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1427,
+            "fp": 665,
+            "fn": 127,
+            "dice": 0.7827756445419638,
+            "recall": 0.9182754182754183
+          },
+          "inferior": {
+            "tp": 156,
+            "fp": 150,
+            "fn": 14,
+            "dice": 0.6554621848739496,
+            "recall": 0.9176470588235294
+          },
+          "superior": {
+            "tp": 75,
+            "fp": 50,
+            "fn": 66,
+            "dice": 0.5639097744360902,
+            "recall": 0.5319148936170213
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 30,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week4",
+      "patient_id": "L011",
+      "inferior": 62,
+      "superior": 84,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week4.pt": "f6f6f44f7b0dcb279a130fbd85354b0a887431b1d7f76f045e29750e0d86252d",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week4.pt": "088800a934f2abf71b6a2c4c2ac320b42be665a69ccb69d18d2c3a88045e0671"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1471,
+            "fp": 768,
+            "fn": 46,
+            "dice": 0.7832800851970181,
+            "recall": 0.969676994067238
+          },
+          "inferior": {
+            "tp": 128,
+            "fp": 147,
+            "fn": 0,
+            "dice": 0.6352357320099256,
+            "recall": 1.0
+          },
+          "superior": {
+            "tp": 303,
+            "fp": 43,
+            "fn": 46,
+            "dice": 0.8719424460431655,
+            "recall": 0.8681948424068768
+          },
+          "components_26": 4,
+          "outside_largest_voxels": 14,
+          "outside_largest_fp": 14,
+          "outside_reference_extent_fp": 101,
+          "prostate_on_bladder_voxels": 10,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1380,
+            "fp": 644,
+            "fn": 137,
+            "dice": 0.7794408359220559,
+            "recall": 0.9096901779828609
+          },
+          "inferior": {
+            "tp": 124,
+            "fp": 113,
+            "fn": 4,
+            "dice": 0.6794520547945205,
+            "recall": 0.96875
+          },
+          "superior": {
+            "tp": 268,
+            "fp": 56,
+            "fn": 81,
+            "dice": 0.7964338781575037,
+            "recall": 0.7679083094555874
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 59,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week5",
+      "patient_id": "L011",
+      "inferior": 57,
+      "superior": 80,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week5.pt": "a592531380f91dbf285e00bbc4e7ab00c27e37fe263f1f54728904d78ba928a5",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week5.pt": "44b262fa358a53254a78957049216ff13c0a5e025573a42fd5f13e4886a70398"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1344,
+            "fp": 794,
+            "fn": 55,
+            "dice": 0.7599660729431722,
+            "recall": 0.9606862044317369
+          },
+          "inferior": {
+            "tp": 162,
+            "fp": 146,
+            "fn": 1,
+            "dice": 0.6878980891719745,
+            "recall": 0.9938650306748467
+          },
+          "superior": {
+            "tp": 93,
+            "fp": 88,
+            "fn": 40,
+            "dice": 0.5923566878980892,
+            "recall": 0.6992481203007519
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 101,
+          "prostate_on_bladder_voxels": 17,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1300,
+            "fp": 525,
+            "fn": 99,
+            "dice": 0.8064516129032258,
+            "recall": 0.9292351679771265
+          },
+          "inferior": {
+            "tp": 149,
+            "fp": 108,
+            "fn": 14,
+            "dice": 0.7095238095238096,
+            "recall": 0.9141104294478528
+          },
+          "superior": {
+            "tp": 70,
+            "fp": 53,
+            "fn": 63,
+            "dice": 0.546875,
+            "recall": 0.5263157894736842
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 48,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week6",
+      "patient_id": "L011",
+      "inferior": 59,
+      "superior": 84,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week6.pt": "4acbdd6023b0e0800d6dc81b54ebdd8f5a526cd3c498d64ec1e34494a449e6a5",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week6.pt": "c96b44f943389dd2f95edee315c9f603addaa9842745c246082e986e89825c3b"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1466,
+            "fp": 744,
+            "fn": 67,
+            "dice": 0.7833288805770772,
+            "recall": 0.9562948467058056
+          },
+          "inferior": {
+            "tp": 176,
+            "fp": 135,
+            "fn": 1,
+            "dice": 0.7213114754098361,
+            "recall": 0.9943502824858758
+          },
+          "superior": {
+            "tp": 135,
+            "fp": 84,
+            "fn": 61,
+            "dice": 0.6506024096385542,
+            "recall": 0.6887755102040817
+          },
+          "components_26": 3,
+          "outside_largest_voxels": 11,
+          "outside_largest_fp": 11,
+          "outside_reference_extent_fp": 50,
+          "prostate_on_bladder_voxels": 8,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1400,
+            "fp": 427,
+            "fn": 133,
+            "dice": 0.8333333333333334,
+            "recall": 0.91324200913242
+          },
+          "inferior": {
+            "tp": 168,
+            "fp": 80,
+            "fn": 9,
+            "dice": 0.7905882352941176,
+            "recall": 0.9491525423728814
+          },
+          "superior": {
+            "tp": 108,
+            "fp": 32,
+            "fn": 88,
+            "dice": 0.6428571428571429,
+            "recall": 0.5510204081632653
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 15,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "L011_Week7",
+      "patient_id": "L011",
+      "inferior": 50,
+      "superior": 73,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\L011_Week7.pt": "661751233b2c0b49d8cb3b3caf9972a404d164f25a69e364b391e95368620a8f",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\L011_Week7.pt": "42432d33b45ebea402a037b60abbc322582f49e8d84379c33d58499dd1f2fa64"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1368,
+            "fp": 868,
+            "fn": 81,
+            "dice": 0.7424694708276798,
+            "recall": 0.9440993788819876
+          },
+          "inferior": {
+            "tp": 145,
+            "fp": 148,
+            "fn": 0,
+            "dice": 0.6621004566210046,
+            "recall": 1.0
+          },
+          "superior": {
+            "tp": 163,
+            "fp": 48,
+            "fn": 68,
+            "dice": 0.7375565610859729,
+            "recall": 0.7056277056277056
+          },
+          "components_26": 2,
+          "outside_largest_voxels": 21,
+          "outside_largest_fp": 21,
+          "outside_reference_extent_fp": 117,
+          "prostate_on_bladder_voxels": 1,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1302,
+            "fp": 661,
+            "fn": 147,
+            "dice": 0.7631887456037515,
+            "recall": 0.8985507246376812
+          },
+          "inferior": {
+            "tp": 134,
+            "fp": 128,
+            "fn": 11,
+            "dice": 0.6584766584766585,
+            "recall": 0.9241379310344827
+          },
+          "superior": {
+            "tp": 130,
+            "fp": 55,
+            "fn": 101,
+            "dice": 0.625,
+            "recall": 0.5627705627705628
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 56,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 6
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week0",
+      "patient_id": "M013",
+      "inferior": 46,
+      "superior": 69,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week0.pt": "9f3ea9776496f8a3853077618d75ebb26bb12f4c6fedca137ac826725a6a3ca3",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week0.pt": "9276df4d3bd6739cd4ad674be9d223ca74d7044fd61d7a0cdfbf1aace9ef42c9"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 2121,
+            "fp": 581,
+            "fn": 85,
+            "dice": 0.8643031784841075,
+            "recall": 0.9614687216681777
+          },
+          "inferior": {
+            "tp": 170,
+            "fp": 52,
+            "fn": 8,
+            "dice": 0.85,
+            "recall": 0.9550561797752809
+          },
+          "superior": {
+            "tp": 391,
+            "fp": 96,
+            "fn": 29,
+            "dice": 0.8621830209481808,
+            "recall": 0.930952380952381
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 130,
+          "prostate_on_bladder_voxels": 35,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 2035,
+            "fp": 407,
+            "fn": 171,
+            "dice": 0.8756454388984509,
+            "recall": 0.9224841341795105
+          },
+          "inferior": {
+            "tp": 166,
+            "fp": 36,
+            "fn": 12,
+            "dice": 0.8736842105263158,
+            "recall": 0.9325842696629213
+          },
+          "superior": {
+            "tp": 370,
+            "fp": 132,
+            "fn": 50,
+            "dice": 0.8026030368763557,
+            "recall": 0.8809523809523809
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 75,
+          "prostate_on_bladder_voxels": 1,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week1",
+      "patient_id": "M013",
+      "inferior": 61,
+      "superior": 87,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week1.pt": "21c7c2cc70b886e193d80eae943a62a96a26ad6c9269fe6961cff46ff0c09f9d",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week1.pt": "241cf68bc5a72fe67099c6c6cdcab2a65bd468326c1045b6009205b0ae08e7b2"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 2507,
+            "fp": 338,
+            "fn": 104,
+            "dice": 0.9189882697947214,
+            "recall": 0.9601685178092685
+          },
+          "inferior": {
+            "tp": 282,
+            "fp": 46,
+            "fn": 17,
+            "dice": 0.8995215311004785,
+            "recall": 0.9431438127090301
+          },
+          "superior": {
+            "tp": 363,
+            "fp": 52,
+            "fn": 31,
+            "dice": 0.8974042027194067,
+            "recall": 0.9213197969543148
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 20,
+          "prostate_on_bladder_voxels": 9,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 2407,
+            "fp": 443,
+            "fn": 204,
+            "dice": 0.8815235304889214,
+            "recall": 0.9218690157027959
+          },
+          "inferior": {
+            "tp": 284,
+            "fp": 56,
+            "fn": 15,
+            "dice": 0.8888888888888888,
+            "recall": 0.9498327759197325
+          },
+          "superior": {
+            "tp": 305,
+            "fp": 122,
+            "fn": 89,
+            "dice": 0.7429963459196103,
+            "recall": 0.7741116751269036
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 34,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week2",
+      "patient_id": "M013",
+      "inferior": 44,
+      "superior": 73,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week2.pt": "30d5186e03aa0705439a8b957d1e9a451c1aa624d7735e81c1106df49a6812cc",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week2.pt": "f9d2e0bb467921bfee8258dfd9d305c8c69b3c0beae58fb319d0b4f808ce1dd4"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 2253,
+            "fp": 526,
+            "fn": 158,
+            "dice": 0.8682080924855491,
+            "recall": 0.9344670261302365
+          },
+          "inferior": {
+            "tp": 110,
+            "fp": 8,
+            "fn": 77,
+            "dice": 0.7213114754098361,
+            "recall": 0.5882352941176471
+          },
+          "superior": {
+            "tp": 362,
+            "fp": 174,
+            "fn": 0,
+            "dice": 0.8062360801781737,
+            "recall": 1.0
+          },
+          "components_26": 2,
+          "outside_largest_voxels": 1,
+          "outside_largest_fp": 1,
+          "outside_reference_extent_fp": 62,
+          "prostate_on_bladder_voxels": 20,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 2266,
+            "fp": 361,
+            "fn": 145,
+            "dice": 0.8995633187772926,
+            "recall": 0.9398589796764828
+          },
+          "inferior": {
+            "tp": 120,
+            "fp": 2,
+            "fn": 67,
+            "dice": 0.7766990291262136,
+            "recall": 0.6417112299465241
+          },
+          "superior": {
+            "tp": 348,
+            "fp": 160,
+            "fn": 14,
+            "dice": 0.8,
+            "recall": 0.9613259668508287
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 25,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week3",
+      "patient_id": "M013",
+      "inferior": 56,
+      "superior": 81,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week3.pt": "fa4567fb3186f327aadd98fe0b3c905712484aaa3b78264201b6a19b9c6f088e",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week3.pt": "a56f514aca5de4847189af653ecb48a12dc3b5f5c3962a8e0553d91144767458"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1807,
+            "fp": 368,
+            "fn": 96,
+            "dice": 0.8862187346738597,
+            "recall": 0.9495533368365738
+          },
+          "inferior": {
+            "tp": 167,
+            "fp": 34,
+            "fn": 17,
+            "dice": 0.8675324675324675,
+            "recall": 0.907608695652174
+          },
+          "superior": {
+            "tp": 377,
+            "fp": 82,
+            "fn": 24,
+            "dice": 0.8767441860465116,
+            "recall": 0.940149625935162
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 37,
+          "prostate_on_bladder_voxels": 39,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1764,
+            "fp": 272,
+            "fn": 139,
+            "dice": 0.8956587966488957,
+            "recall": 0.9269574356279559
+          },
+          "inferior": {
+            "tp": 164,
+            "fp": 22,
+            "fn": 20,
+            "dice": 0.8864864864864865,
+            "recall": 0.8913043478260869
+          },
+          "superior": {
+            "tp": 346,
+            "fp": 79,
+            "fn": 55,
+            "dice": 0.837772397094431,
+            "recall": 0.8628428927680798
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 12,
+          "prostate_on_bladder_voxels": 9,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week4",
+      "patient_id": "M013",
+      "inferior": 49,
+      "superior": 79,
+      "band_slices": 7,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week4.pt": "7bf5cf6dac68a8cf48fc172abbe8eddf15534334a8e6b79bdfe94f759981e33e",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week4.pt": "697bcd33c553e572b2e846a9877157862401399575d6f78a27faaf979c32f2aa"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1639,
+            "fp": 408,
+            "fn": 133,
+            "dice": 0.8583398795496203,
+            "recall": 0.9249435665914221
+          },
+          "inferior": {
+            "tp": 64,
+            "fp": 3,
+            "fn": 80,
+            "dice": 0.6066350710900474,
+            "recall": 0.4444444444444444
+          },
+          "superior": {
+            "tp": 284,
+            "fp": 130,
+            "fn": 27,
+            "dice": 0.783448275862069,
+            "recall": 0.9131832797427653
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 1,
+          "prostate_on_bladder_voxels": 5,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1521,
+            "fp": 231,
+            "fn": 251,
+            "dice": 0.8632236095346197,
+            "recall": 0.858352144469526
+          },
+          "inferior": {
+            "tp": 65,
+            "fp": 3,
+            "fn": 79,
+            "dice": 0.6132075471698113,
+            "recall": 0.4513888888888889
+          },
+          "superior": {
+            "tp": 226,
+            "fp": 81,
+            "fn": 85,
+            "dice": 0.7313915857605178,
+            "recall": 0.7266881028938906
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week5",
+      "patient_id": "M013",
+      "inferior": 58,
+      "superior": 82,
+      "band_slices": 5,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week5.pt": "55d5e86dd796a9efa143b274a5b55771ab47b77096ead1cb2a55f602a41dd4bf",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week5.pt": "782e28c698d83ea683796f0fd4230a381f4310fa055424327bc4a3512b85be0a"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1538,
+            "fp": 468,
+            "fn": 68,
+            "dice": 0.8516057585825028,
+            "recall": 0.9576587795765878
+          },
+          "inferior": {
+            "tp": 152,
+            "fp": 23,
+            "fn": 15,
+            "dice": 0.8888888888888888,
+            "recall": 0.9101796407185628
+          },
+          "superior": {
+            "tp": 214,
+            "fp": 96,
+            "fn": 0,
+            "dice": 0.816793893129771,
+            "recall": 1.0
+          },
+          "components_26": 2,
+          "outside_largest_voxels": 85,
+          "outside_largest_fp": 85,
+          "outside_reference_extent_fp": 112,
+          "prostate_on_bladder_voxels": 10,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1447,
+            "fp": 234,
+            "fn": 159,
+            "dice": 0.8804380894432613,
+            "recall": 0.9009962640099627
+          },
+          "inferior": {
+            "tp": 139,
+            "fp": 11,
+            "fn": 28,
+            "dice": 0.8769716088328076,
+            "recall": 0.8323353293413174
+          },
+          "superior": {
+            "tp": 186,
+            "fp": 69,
+            "fn": 28,
+            "dice": 0.7931769722814499,
+            "recall": 0.8691588785046729
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 5,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week6",
+      "patient_id": "M013",
+      "inferior": 29,
+      "superior": 55,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week6.pt": "48d051f05ca2dfa7f2f9fcc8d17f9234d86c8737561cf1ac304a7cf3144381e9",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week6.pt": "20b418f49f228efebd5477789f8d73daf8a09fe87f71fe125d28bccc462ba74d"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1489,
+            "fp": 300,
+            "fn": 78,
+            "dice": 0.8873659117997617,
+            "recall": 0.95022335673261
+          },
+          "inferior": {
+            "tp": 137,
+            "fp": 40,
+            "fn": 15,
+            "dice": 0.8328267477203647,
+            "recall": 0.9013157894736842
+          },
+          "superior": {
+            "tp": 203,
+            "fp": 63,
+            "fn": 34,
+            "dice": 0.8071570576540755,
+            "recall": 0.8565400843881856
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 2,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1433,
+            "fp": 205,
+            "fn": 134,
+            "dice": 0.8942277691107644,
+            "recall": 0.9144862795149968
+          },
+          "inferior": {
+            "tp": 126,
+            "fp": 20,
+            "fn": 26,
+            "dice": 0.8456375838926175,
+            "recall": 0.8289473684210527
+          },
+          "superior": {
+            "tp": 168,
+            "fp": 41,
+            "fn": 69,
+            "dice": 0.7533632286995515,
+            "recall": 0.7088607594936709
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 0,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    },
+    {
+      "case_id": "M013_Week7",
+      "patient_id": "M013",
+      "inferior": 50,
+      "superior": 76,
+      "band_slices": 6,
+      "source_sha256": {
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683675_formal_baseline\\predictions\\M013_Week7.pt": "1c69e73f22f9726b5c114e8f55270708ce8e6d3803639c2264120a1108993c24",
+        "artifacts\\2026-10-23\\final_rangpur_evidence_20261023\\predictions\\683676_formal_improved\\predictions\\M013_Week7.pt": "6d38e53c33b5c6fe903676da8939a80dbf3247d8c3928fa1ea1ab172347bab6d"
+      },
+      "arms": {
+        "baseline": {
+          "whole": {
+            "tp": 1432,
+            "fp": 489,
+            "fn": 54,
+            "dice": 0.8406222483122983,
+            "recall": 0.9636608344549125
+          },
+          "inferior": {
+            "tp": 157,
+            "fp": 63,
+            "fn": 8,
+            "dice": 0.8155844155844156,
+            "recall": 0.9515151515151515
+          },
+          "superior": {
+            "tp": 154,
+            "fp": 84,
+            "fn": 24,
+            "dice": 0.7403846153846154,
+            "recall": 0.8651685393258427
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 7,
+          "prostate_on_bladder_voxels": 29,
+          "prostate_on_rectum_voxels": 0
+        },
+        "improved": {
+          "whole": {
+            "tp": 1323,
+            "fp": 307,
+            "fn": 163,
+            "dice": 0.8491655969191271,
+            "recall": 0.8903095558546433
+          },
+          "inferior": {
+            "tp": 125,
+            "fp": 18,
+            "fn": 40,
+            "dice": 0.8116883116883117,
+            "recall": 0.7575757575757576
+          },
+          "superior": {
+            "tp": 146,
+            "fp": 42,
+            "fn": 32,
+            "dice": 0.7978142076502732,
+            "recall": 0.8202247191011236
+          },
+          "components_26": 1,
+          "outside_largest_voxels": 0,
+          "outside_largest_fp": 0,
+          "outside_reference_extent_fp": 0,
+          "prostate_on_bladder_voxels": 1,
+          "prostate_on_rectum_voxels": 0
+        }
+      },
+      "nifti_axis_codes": [
+        "L",
+        "P",
+        "S"
+      ]
+    }
+  ]
+}

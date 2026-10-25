@@ -424,6 +424,8 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
             render_validation_gif(model, validation_data, visual_index, device, args.prostate_label, output / f"validation_epoch_{epoch}.gif", epoch)
         history.append(row)
         _write_json(output / "history.json", history)
+        render_training_curves({args.model: history}, output / "training_curves.png", selection_metric)
+        render_learning_rate_curve({args.model: history}, output / "learning_rate_schedule.png")
         if scheduler is not None:
             scheduler.step()
         if select_validation_checkpoint(history, selection_metric)["epoch"] == row["epoch"]:
@@ -440,8 +442,6 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
         "history": history,
     }
     _write_json(output / "training_summary.json", summary)
-    render_training_curves({args.model: history}, output / "training_curves.png", selection_metric)
-    render_learning_rate_curve({args.model: history}, output / "learning_rate_schedule.png")
     if getattr(args, "validation_gifs", False):
         from validation_visuals import render_validation_gif
         checkpoint = torch.load(output / "best.pt", map_location=device, weights_only=False)

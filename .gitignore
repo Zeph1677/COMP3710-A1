@@ -38,6 +38,9 @@ docs/*
 docs/assets/*
 !docs/assets/model_architecture.drawio
 !docs/assets/model_architecture.drawio.png
+!docs/assets/training_curves.png
+!docs/assets/failure_selection.json
+!docs/assets/submission/
 !docs/requirements-verified-local.txt
 !docs/results_summary.json
 
@@ -47,3 +50,27 @@ evidence/*
 !evidence/sources/
 evidence/sources/*
 !evidence/sources/csiro-brief-data-description.txt
+
+!docs/assets/failure_spatial_check.json
+!docs/README.pdf
+!docs/feasibility_review.pdf
+
+# Portable validation illustrations used by the report.
+!docs/assets/context_v2_ablation_692354/
+docs/assets/context_v2_ablation_692354/*
+!docs/assets/context_v2_ablation_692354/B_progress.gif
+!docs/assets/context_v2_ablation_692354/best_ABCD.gif
+!docs/assets/context_v2_ablation_692354/B_progress_preview.png
+!docs/assets/context_v2_ablation_692354/best_ABCD_preview.png
+!docs/assets/context_v2_ablation_692354/A_validation_epoch_1.gif
+!docs/assets/context_v2_ablation_692354/A_validation_epoch_5.gif
+!docs/assets/context_v2_ablation_692354/A_validation_best_epoch.gif
+!docs/assets/context_v2_ablation_692354/B_validation_epoch_1.gif
+!docs/assets/context_v2_ablation_692354/B_validation_epoch_5.gif
+!docs/assets/context_v2_ablation_692354/B_validation_best_epoch.gif
+!docs/assets/context_v2_ablation_692354/C_validation_epoch_1.gif
+!docs/assets/context_v2_ablation_692354/C_validation_epoch_5.gif
+!docs/assets/context_v2_ablation_692354/C_validation_best_epoch.gif
+!docs/assets/context_v2_ablation_692354/D_validation_epoch_1.gif
+!docs/assets/context_v2_ablation_692354/D_validation_epoch_5.gif
+!docs/assets/context_v2_ablation_692354/D_validation_best_epoch.gif
