@@ -1,11 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
   <diagram id="hipmri-model-architecture" name="Model architecture">
-    <mxGraphModel dx="2300" dy="1183" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2300" dy="1183" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="b-title" value="Baseline 3D U-Net" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="710" y="25" width="400" height="30" as="geometry" />
+          <mxGeometry x="160" y="25" width="1500" height="30" as="geometry" />
         </mxCell>
         <mxCell id="b-note" value="Three downsampling stages, bottleneck, three decoder stages, and skip concatenations" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#425466;" vertex="1" parent="1">
           <mxGeometry x="550" y="520" width="720" height="25" as="geometry" />
@@ -25,20 +26,20 @@
         <mxCell id="b-bottleneck" value="Bottleneck&lt;br&gt;Conv block" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="870" y="390" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="b-d3" value="Decoder 3&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="b-d3" value="Decoder 3&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1080" y="320" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="b-d2" value="Decoder 2&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="b-d2" value="Decoder 2&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1290" y="250" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="b-d1" value="Decoder 1&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="b-d1" value="Decoder 1&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCEEFF;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1500" y="180" width="180" height="95" as="geometry" />
         </mxCell>
         <mxCell id="b-output" value="Final 1x1x1 logits only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1710" y="180" width="190" height="95" as="geometry" />
         </mxCell>
-        <mxCell id="i-title" value="Improved 3D U-Net" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="710" y="565" width="400" height="30" as="geometry" />
+        <mxCell id="i-title" value="Historical Improved (legacy_improved_v1; 4232e0d)" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="565" width="1500" height="30" as="geometry" />
         </mxCell>
         <mxCell id="i-note" value="Three downsampling stages, bottleneck, three decoder stages, and skip concatenations" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#425466;" vertex="1" parent="1">
           <mxGeometry x="490" y="1050" width="720" height="25" as="geometry" />
@@ -58,16 +59,16 @@
         <mxCell id="i-bottleneck" value="Bottleneck&lt;br&gt;Residual block" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="870" y="930" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="i-d3" value="Decoder 3&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="i-d3" value="Decoder 3&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1080" y="860" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="i-d2" value="Decoder 2&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="i-d2" value="Decoder 2&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1290" y="790" width="180" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="i-d1" value="Decoder 1&lt;br&gt;upsample + concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="i-d1" value="Decoder 1&lt;br&gt;ConvTranspose3d x2&lt;br&gt;+ skip concat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F7E5;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1500" y="720" width="180" height="95" as="geometry" />
         </mxCell>
-        <mxCell id="i-output" value="Final 1x1x1 logits&lt;br&gt;inference only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
+        <mxCell id="i-output" value="Final 1x1x1 logits&lt;br&gt;train + inference; no fusion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="1710" y="720" width="190" height="95" as="geometry" />
         </mxCell>
         <mxCell id="i-aux3" value="Auxiliary head 1&lt;br&gt;training only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4D6;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" parent="1" vertex="1">
@@ -148,7 +149,7 @@
         <mxCell id="i-a2" style="edgeStyle=none;html=1;endArrow=block;endFill=1;strokeColor=#425466;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;" parent="1" source="i-d2" target="i-aux2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-      </root>
+      <mxCell id="historical-note" value="Historical decoder: ConvTranspose3d x2 -&gt; skip concatenation -&gt; Conv/Residual block. Auxiliary heads add training losses only; no inference logits fusion." style="text;html=1;fontSize=16;align=center;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry as="geometry" x="70" y="1160" width="1770" height="60" /></mxCell></root>
     </mxGraphModel>
   </diagram>
 </mxfile>

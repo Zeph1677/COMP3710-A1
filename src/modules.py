@@ -142,3 +142,44 @@ class ImprovedUNet3D(nn.Module):
         if self.training:
             return final, (auxiliary_3, auxiliary_2)
         return final
+
+
+# Parameterised layers and forward computations preserved from commit 4232e0d;
+# current input-size validation is retained.
+class LegacyImprovedUNet3D(_UNet3D):
+    """Hard-tier 3D U-Net with residual blocks and decoder deep supervision."""
+
+    architecture_version = "legacy_improved_v1"
+
+    def __init__(self, in_channels: int = 1, num_classes: int = 2, base_channels: int = 16) -> None:
+        super().__init__(ResidualBlock3D, in_channels, num_classes, base_channels, deep_supervision=True)
+
+
+def build_model(config: dict[str, object]) -> nn.Module:
+    """Construct the saved architecture; missing Improved version means historical v1.
+
+    Current training writes an explicit version. This compatibility default is for
+    historical configs, never an instruction to reinterpret incompatible weights.
+    Checkpoint callers must still use strict state-dict loading.
+    """
+    model_name = config.get("model")
+    dimensions = {}
+    for field, default in (("in_channels", 1), ("num_classes", None), ("base_channels", None)):
+        value = config.get(field, default)
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            raise ValueError(f"{field} must be a positive integer")
+        dimensions[field] = value
+    version = config.get("architecture_version")
+    if model_name == "baseline":
+        if version not in (None, "baseline_v1"):
+            raise ValueError(f"unsupported baseline architecture version: {version}")
+        return BaselineUNet3D(**dimensions)
+    if model_name != "improved":
+        raise ValueError(f"unsupported model: {model_name}")
+    if version in (None, LegacyImprovedUNet3D.architecture_version):
+        return LegacyImprovedUNet3D(**dimensions)
+    if version == ImprovedUNet3D.architecture_version:
+        return ImprovedUNet3D(
+            **dimensions, dropout_probability=config.get("dropout_probability", 0.3)
+        )
+    raise ValueError(f"unsupported improved architecture version: {version}")

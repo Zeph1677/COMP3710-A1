@@ -240,6 +240,11 @@ def test_preflight_summary_has_complete_contract_and_consistent_prostate_counts(
 
     saved = json.loads((output / "preflight_summary.json").read_text(encoding="utf-8"))
     assert saved == summary
+    assert saved["architecture_version"] == "baseline_v1"
+    assert saved["base_channels"] == 2
+    assert saved["in_channels"] == 1
+    assert saved["num_classes"] == 2
+    assert saved["dropout_probability"] == 0.3
     assert {"preflight_only", "case_id", "patient_id", "manifest_sha256", "prostate_label_source", "target_shape", "train_patch_shape", "foreground_patch_probability", "prostate_ce_weight", "prostate_dice_weight"} <= set(saved)
     assert saved["true_positive_voxels"] + saved["false_negative_voxels"] == saved["reference_prostate_voxels"]
     assert saved["true_positive_voxels"] + saved["false_positive_voxels"] == saved["predicted_prostate_voxels"]

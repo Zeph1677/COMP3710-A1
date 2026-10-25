@@ -76,13 +76,13 @@ def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
     assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
 
 
-def test_checkpoint_loader_rejects_legacy_improved_checkpoint_without_architecture_version(tmp_path: Path):
-    """Legacy Improved weights cannot be safely interpreted as the revised architecture."""
+def test_checkpoint_loader_rejects_context_weights_mislabeled_as_legacy(tmp_path: Path):
+    """Missing version means legacy; Context weights must fail strict loading there."""
     original = ImprovedUNet3D(num_classes=2, base_channels=2)
     checkpoint_path = tmp_path / "legacy-improved.pt"
     torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "num_classes": 2, "base_channels": 2}}, checkpoint_path)
 
-    with pytest.raises(ValueError, match="architecture version"):
+    with pytest.raises(RuntimeError):
         load_checkpoint_model(checkpoint_path, torch.device("cpu"))
 
 

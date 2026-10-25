@@ -20,7 +20,7 @@ The final Rangpur accounting query recorded `COMPLETED|0:0` for 683675, 683676, 
 
 Editable source: [model_architecture.drawio](docs/assets/model_architecture.drawio).
 
-`src/modules.py` implements the same 3D U-Net skeleton for both models: three encoder reductions, a bottleneck, three decoder expansions, and skip concatenations. The baseline uses convolution blocks. The Improved U-Net replaces them with residual blocks and adds two decoder auxiliary heads for deep supervision during training. It has **no attention gate**. At inference, `predict.py` reads only final `1x1x1` logits.
+The primary experiment uses `BaselineUNet3D` and historical `LegacyImprovedUNet3D` (`legacy_improved_v1`) in `src/modules.py`, with the same 3D U-Net skeleton: three encoder reductions, a bottleneck, three decoder expansions, and skip concatenations. The baseline uses convolution blocks. The Improved U-Net replaces them with residual blocks and adds two decoder auxiliary heads for deep supervision during training. It has **no attention gate**. At inference, `predict.py` reads only final `1x1x1` logits.
 
 For normalized MRI volumes, input is `[B, 1, D, H, W]`, final logits are `[B, 6, D, H, W]`, and target is `[B, D, H, W]`. `dataset.py` validates paired NIfTI geometry, preserves patient separation, standardizes each source volume, then resamples MRI intensity with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses weighted cross-entropy plus soft Dice. The Improved model adds the same objective for two downsampled auxiliary decoder outputs, each weighted by 0.25. Foreground sampling chooses a prostate voxel as a crop anchor with probability 0.50 when that branch is taken; validation and test scoring use complete reconstructed volumes.
 
@@ -44,7 +44,7 @@ $$
 L_{improved}=L_{final}+0.25L_{aux3}+0.25L_{aux2}.
 $$
 
-The auxiliary heads exist only while `ImprovedUNet3D.training` is true. Evaluation and `predict.py` use final `1x1x1` logits only. The test prostate Dice for a reconstructed patient is hard-label Dice, $D_p=2|P_p\cap G_p|/(|P_p|+|G_p|)$. When a patient has multiple study volumes, `predict.py` first averages that patient's volume Dice values; the reported headline is the arithmetic mean of the five patient values, $\bar D=\frac{1}{5}\sum_p D_p$. The three L011 weekly scans are repeated volumes of one patient, not three independent patients.
+For the historical Improved architecture, auxiliary outputs are returned only in training mode. Evaluation and `predict.py` use final `1x1x1` logits only. The test prostate Dice for a reconstructed patient is hard-label Dice, $D_p=2|P_p\cap G_p|/(|P_p|+|G_p|)$. When a patient has multiple study volumes, `predict.py` first averages that patient's volume Dice values; the reported headline is the arithmetic mean of the five patient values, $\bar D=\frac{1}{5}\sum_p D_p$. The three L011 weekly scans are repeated volumes of one patient, not three independent patients.
 
 ## Data, preprocessing and split
 
@@ -63,15 +63,15 @@ python -m pytest -q
 
 ## Feasibility review
 
-| Requirement             | Evidence and decision                                                                                                                                                                                                   |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User need and scope     | Draft a multi-class 3D pelvic segmentation for specialist inspection and editing; do not issue treatment decisions.                                                                                                     |
-| Acceptance criteria     | Patient-disjoint split; cited `5=Prostate`; patient-level test prostate Dice at least 0.70; non-background Dice/IoU; peak VRAM and per-patient inference time; 3–5 held-out failure cases.                           |
-| Model choice            | Plain 3D U-Net is the baseline. The Improved variant tests residual blocks and training-time deep supervision while retaining the same geometry and evaluation code.                                                    |
-| Preliminary feasibility | Local synthetic tests and retained Rangpur smoke/preflight records validated loading, forward/backward, checkpoint restoration and whole-volume evaluation. These are engineering checks, not final performance claims. |
-| Risks and fallback      | The small main gain and negative Wide20 result show configuration sensitivity. Retain the baseline comparator, use human review, and stop selection before test evaluation.                                             |
+This is a retrospective engineering review of the retained prototype and experiments. It is intended to support the author's dated feasibility discussion; it does not establish that a midpoint consultation or tutor check-off occurred. The intended user is a radiotherapy contouring specialist reviewing a proposed pelvic segmentation, with particular attention to prostate omission and outward extension. The input is a paired, geometry-audited 3D MRI NIfTI volume; during development its manual semantic mask supplies the reference. The output is a six-class draft mask reconstructed over the resized volume, together with patient-level metrics and diagnostic panels. The specialist must inspect and edit the draft against the MRI. Neither treatment decisions nor an automated acceptance decision are in scope.
 
-The written review is included as required documentation. A local file does not prove that a tutor feasibility consultation/check-off occurred.
+A 3D encoder-decoder can use adjacent slices and skip features to combine spatial context with local detail. This motivates the volumetric design but does not prove superiority to a 2D alternative, which was not tested here. Resampling to `128³` and training on `96³` crops make the experiment practical within the retained memory budget; they also discard spatial detail and limit claims about physical boundaries. The dataset has 211 scans from 38 patients, with repeated weekly scans. The frozen 27/6/5-patient train/validation/test split prevents patient overlap, but five test patients and one split/seed give weak evidence about unfamiliar populations. Weekly scans must not be counted as independent patients, and Dice on resized masks does not demonstrate millimetre-level contour accuracy.
+
+The plain 3D U-Net is the feasible fallback and the reference for the more complex architecture. The primary `4232e0d` comparison changes the model package to residual blocks and training-time auxiliary supervision while holding the stated data and inference protocol fixed. On the retained A100 runs, Baseline uses 1,400,646 parameters and 977.641 MiB peak training memory; historical Improved uses 1,423,106 parameters and 1,193.384 MiB. Their recorded mean patient inference times are approximately 0.231 and 0.247 seconds respectively, excluding an unmeasured clinical review workflow. These measurements demonstrate that this downsampled experimental workflow ran on the recorded hardware; they do not specify a complete end-to-end time budget, portability to a clinical workstation, or time saved in contour editing. No prospective training-time allocation or clinical editing study was retained.
+
+The project acceptance checks are a patient-disjoint manifest, authoritative `5=Prostate` mapping, held-out patient prostate Dice of at least 0.70, reporting of non-background class Dice/IoU, resource measurements, and three to five held-out failure cases. Both primary models exceed the prostate threshold (0.811548 and 0.813587), but the threshold is a project criterion rather than a clinical safety guarantee. The +0.002038 Improved mean gain is small, and B037 shows increased omission. Five paired static panels expose FP/FN trade-offs and repeated-scan inconsistency. Possible effects of downsampling, local ambiguity, or capacity remain hypotheses; the experiments do not isolate their causes. Calibration, surface distances, anatomical base/apex verification, specialist editing time and prospective clinical review remain unmeasured.
+
+The engineering decision is to retain Baseline as the lower-complexity operational comparator and use either model only for supervised research review. The supplementary matched Wide20 pair is negative (-0.024150 prostate Dice), and Context v2's validation-leading arm exceeds its unchanged 1.35× training-memory gate. Neither result supports replacing the baseline. Further work should use separately specified resources and evaluation rules, preserve validation-only checkpoint selection, and prioritize omission and inter-slice consistency. The already viewed held-out cohort must not drive another configuration-selection cycle. This review records a supported prototype decision; tutor approval and clinical suitability need their own evidence.
 
 ## Reproducible commands and example I/O
 
@@ -106,6 +106,8 @@ $predictArgs = @(
 )
 # Do not run $predictArgs for configuration selection after looking at the retained test results.
 ```
+
+Architecture selection is explicit: a new `--model improved` run defaults to `improved_context_v2`, which is not the primary tested architecture. To specify the historical primary Improved arm in a new output directory, use `--model improved --architecture-version legacy_improved_v1 --base-channels 16` with the remaining primary-protocol arguments above. Prediction reconstructs the model from the saved checkpoint configuration; a historical Improved configuration without a version maps to the legacy architecture. Historical Improved uses transposed-convolution upsampling and final-head inference, whereas Context v2 uses interpolation and multi-scale logit fusion. Loading compatibility alone does not reproduce a historical score.
 
 The formal checkpoints are Git-ignored and are not distributed by this repository. The three distinct uses are: train a new preregistered run; evaluate an already validation-selected checkpoint once; or plot an existing `training_summary.json` without training or inference. The commands above are documentation examples, not an instruction to submit a Rangpur job.
 
@@ -230,7 +232,7 @@ This is the independent development repository. The course contribution must res
 
 ## Environment and evidence index
 
-`requirements.txt` provides development dependency ranges. [docs/requirements-verified-local.txt](docs/requirements-verified-local.txt) records exact locally import-verified versions used for current tests and tracked figures; it is not a portable lockfile. Formal artifacts were produced on Rangpur Linux with PyTorch `2.13.0+cu130`, CUDA `13.0`, and an NVIDIA A100-PCIE-40GB; see [docs/EXPERIMENT_ENVIRONMENT.md](docs/EXPERIMENT_ENVIRONMENT.md). Do not assign the local Windows package snapshot to formal runs.
+`requirements.txt` provides development dependency ranges. [docs/requirements-verified-local.txt](docs/requirements-verified-local.txt) records the historical local import and plotting snapshot dated 23 October 2026; it is not evidence for the current verification environment or a portable lockfile. Current verification is recorded separately. Formal artifacts were produced on Rangpur Linux with PyTorch `2.13.0+cu130`, CUDA `13.0`, and an NVIDIA A100-PCIE-40GB; see [docs/EXPERIMENT_ENVIRONMENT.md](docs/EXPERIMENT_ENVIRONMENT.md). Do not assign the local Windows package snapshot to formal runs.
 
 - [Experiment evidence index](docs/EXPERIMENT_EVIDENCE.md)
 - [Generated result summary and source hashes](docs/results_summary.json)
@@ -239,70 +241,14 @@ This is the independent development repository. The course contribution must res
 - [Frozen label and source evidence](evidence/SOURCES.md)
 - [Asset-generation command](scripts/generate_readme_assets.py)
 
-### Context v2 validation candidate and new ablation workflow (24 October 2026)
+## Context v2 validation follow-up
 
-Job `691652` completed with exit code `0:0` in `00:29:12`. Its only retained candidate is `candidate_00_control` (`improved_context_v2`, base channels 16). Validation patient prostate Dice selected epoch 15: **0.818697**, worst validation patient **0.783926**, validation FN **15,516**, FP **17,185**. This candidate has no held-out test metrics. These figures describe validation selection and do not establish superiority over Baseline. Historical Improved test results belong to their historical architecture and checkpoints.
+In job `692354`, Context v2 arm B (augmentation, fixed LR) has the highest validation mean patient prostate Dice (0.829472), but its 1.486× peak training memory exceeds the predeclared 1.35× limit. No arm qualifies for test review, and these validation results supply no new held-out conclusion. The [independent ablation record](docs/context_v2_ablation_results_20261025.md) retains the A/B/C/D results, paired validation diagnoses and local archive provenance; [reference learning notes](docs/REFERENCE_LEARNING.md) distinguish the local reference implementation from this project's historical and Context architectures.
 
-The checkpoint identity is recorded by SHA-256 in `artifacts/2026-10-24/context_v2_followup/frozen_context_v2_checkpoint.json`; recording its hash does not make the file read-only. Its bytes are preserved. The historical validation-only comparison plot is regenerated from the saved histories, not from test metrics. Missing historical learning-rate fields are not invented.
+### Validation animations
 
-![Context v2 architecture](docs/assets/model_architecture_context_v2.png)
+![B on fixed validation G021_Week0: epochs 1, 5 and selected 19](docs/assets/context_v2_ablation_692354/B_progress.gif)
 
-The editable source is [Context v2 draw.io](docs/assets/model_architecture_context_v2.drawio). `scripts/generate_context_architecture.py` generates both files from the same graph specification. Context blocks use affine `InstanceNorm3d`, `LeakyReLU`, residual shortcuts and `Dropout3d(0.3)` throughout encoder, bottleneck and decoder. Each decoder uses trilinear upsampling followed by convolution, and concatenates its encoder skip. Two auxiliary heads contribute resized logits to the final sum during both training and inference; their additional supervision losses apply during training.
-
-`--augmentation` enables training only: LR/AP flips (0.5 each, mapped through each NIfTI orientation), MRI Gaussian noise (0.5; normalized standard deviation uniform 0–0.1), separable Gaussian blur (0.25; sigma uniform 0.5–1.0 voxels), and range-preserving gamma (0.25; exponent uniform 0.7–1.5). Augmentation runs after resampling/cropping. Mask values remain integer classes. Dataset construction rejects augmentation for validation/test. These ranges are initial engineering choices, not a claim of clinical validity.
-
-`--scheduler cosine --eta-min 0.00001` retains Adam and steps `CosineAnnealingLR(T_max=epochs)` after every epoch. Each history row records the learning rate actually used in that epoch. All enabled probabilities/ranges and scheduler settings are saved in `experiment_config.json`; checkpoints include scheduler state. `--validation-gifs` renders epoch 1, epoch 5 and the validation-selected best epoch for the lexicographically first validation patient/case. No missing historical epoch predictions are reconstructed.
-
-The A/B/C/D runner preserves the audited manifest, seed 42, `128³` target, `96³` training crop, base channels 16, 20 epochs, batch size 1, LR 0.001, foreground sampling 0.5, loss weights 4/4 and patient-level prostate-Dice selection:
-
-| Arm | Model | Augmentation | Scheduler |
-| --- | --- | --- | --- |
-| A | Context v2 | Off | Fixed LR |
-| B | Context v2 | On | Fixed LR |
-| C | Context v2 | On | Cosine |
-| D | Baseline | Off | Fixed LR |
-
-```bash
-python src/run_validation_ablation.py --data-root data/HipMRI_Study_open --output-root artifacts/2026-10-24/context_v2_ablation_local --device cuda
-# For Rangpur: sbatch scripts/run_hipmri_context_ablation.slurm
-python src/validation_ablation_report.py --run-root artifacts/2026-10-24/context_v2_ablation_local
-```
-
-The earlier local run was launched on 24 October; its status must be read from its own `history.json` / `training_summary.json`. The completed Rangpur A/B/C/D results from job `692354` are recorded below and are a separate run. Never rerun into a non-empty arm directory. The report requires all four complete, matched runs and creates validation comparison/LR curves plus checkpoint hashes. Screening criteria are declared in `validation_ablation_report.py` before B/C results: mean gain at least 0.01, worst-patient drop at most 0.02, FN increase at most 10%, training VRAM at most 1.35× Baseline, and validation inference time at most 2× Baseline. They are operational criteria, not statistical significance or course thresholds. A single-seed result needs cautious interpretation.
-
-`validation_diagnostics.py` generates five worst validation-patient panels using prostate-specific FP/FN and the highest-error slice inside the reference prostate extent. These support validation diagnosis; they do not replace the course-required independent-test failure analysis. No command in the ablation runner launches a test. Before any new held-out evaluation, review completed validation gates, the actual failure panels and resource costs, then freeze the chosen checkpoint. Do not choose a new epoch using test outcomes.
-
-## Context v2 A/B/C/D validation results (25 October 2026)
-
-**B (Context v2 + augmentation + fixed LR) has the highest validation mean patient prostate Dice, but fails the predeclared training-memory gate. No arm qualifies for test review under the current rules.** These are validation results from job `692354`, not new held-out test evidence. See the [full English ablation record](docs/context_v2_ablation_results_20261025.md) for matched settings, source artifacts, checkpoint identity, error counts, resource screening and limitations.
-
-| Arm | Configuration | Selected epoch | Validation mean patient prostate Dice | Worst patient Dice | Peak training MiB |
-| --- | --- | --- | --- | --- | --- |
-| B | Context v2, augmentation, fixed LR | 19 | **0.829472** | **0.778456** | 1,455.8 |
-| A | Context v2, no augmentation, fixed LR | 19 | 0.818156 | 0.772367 | 1,455.8 |
-| D | Baseline, no augmentation, fixed LR | 17 | 0.810463 | 0.722912 | 979.6 |
-| C | Context v2, augmentation, cosine | 13 | 0.785744 | 0.752366 | 1,455.8 |
-
-All four arms use the same audited manifest, seed 42, 20-epoch budget and patient-level prostate-Dice selection protocol. B minus A is +0.011316 mean Dice; C minus B is -0.043727. This supports augmentation and disfavors the tested cosine schedule within this split, seed and budget. B minus D is +0.019009 mean Dice (+2.35%), with 645 fewer FN and 1,891 fewer FP. The higher cohort minimum does not mean every patient improves: B improves four of six patients versus D.
-
-B requires **1.486 times** D's peak training memory (+48.6%), exceeding the **1.35** limit; `eligible_for_test_review` and `automatic_test_permitted` are both `false`. B remains the validation-first candidate requiring resource review, rather than a replacement for the formal tested model. A later budget change would be a documented post-result policy revision. No held-out evaluation was run for this update, and historical test conclusions remain unchanged. User-reported job completion is distinct from independently archived scheduler accounting; final `sacct -X` evidence remains to be retained with the package.
-
-### Validation visual evidence and failure review
-
-The retained job supplies 12 original GIFs (four arms, each at epoch 1, epoch 5 and its selected best epoch). The [local visual gallery](docs/assets/context_v2_ablation_692354/gallery.html) and [full ablation record](docs/context_v2_ablation_results_20261025.md#curves-patient-comparison-and-validation-animations) collect all animations, source hashes and five paired B/D failure diagnoses.
-
-![A/B/C/D actual training and validation histories](docs/assets/context_v2_ablation_692354/training_loss_and_validation_dice.png)
-
-![Recorded optimizer LR](docs/assets/context_v2_ablation_692354/learning_rate_schedule.png)
-
-![Validation patient comparison](docs/assets/context_v2_ablation_692354/patient_validation_dice.png)
-
-![B at epoch 1, epoch 5 and selected epoch 19](docs/assets/context_v2_ablation_692354/B_progress.gif)
-
-The GIF rows compare B's training checkpoints on the fixed validation scan `G021_Week0`. Frames sweep the same sampled spatial slices, not training epochs; red is prostate FP and cyan is FN. The [four-arm synchronized GIF](docs/assets/context_v2_ablation_692354/best_ABCD.gif) shows each arm's validation-selected checkpoint and labels the differing epochs. The source volumes are resampled validation volumes, and no test patients appear.
-
-The additional local reconstruction covers all 46 validation scans for frozen B and D. Five distinct-patient cases were selected by combined B/D whole-volume FP+FN, followed by the highest-error slice inside GT prostate extent. The [full record](docs/context_v2_ablation_results_20261025.md#paired-validation-failure-analysis-d-versus-b) shows N010_Week3, S022_Week2, W012_Week0, G021_Week6 and M030_Week0, using identical MRI/GT/slices for both models. B improves two of these selected scans and declines on three; this count is selection-dependent and does not replace the cohort metric. In M030_Week0, FN rises from 324 to 523 despite reduced FP, lowering case Dice from 0.875641 to 0.820749. N010_Week3 looks better on the displayed slice but has worse full-volume Dice. These examples prevent a favorable single-image comparison from being mistaken for universal improvement.
-
-The validation image review is complete for this selected five-case set, but the failed memory gate and missing archived final scheduler accounting remain unresolved. Keep B as a validation candidate; the new plots/GIFs do not authorize a new test or alter historical test conclusions. Regenerate with `python scripts/publish_context_validation_assets.py --device cuda`; source data and retained checkpoint files are required.
+The three rows compare B at epochs 1, 5 and selected epoch 19. Frames sweep the same spatial slices, not training epochs; red is prostate FP and cyan is FN. These resampled validation images do not show test patients. The [four-arm selected-checkpoint animation](docs/assets/context_v2_ablation_692354/best_ABCD.gif) labels the differing selected epochs, and the [local gallery](docs/assets/context_v2_ablation_692354/gallery.html) retains all 12 original GIFs and five paired validation cases. Open the HTML locally in a browser; its source may be shown by GitHub. Animations illustrate the measured errors and do not override the failed memory gate.
 
 ## Artificial Intelligence Usage Disclosure

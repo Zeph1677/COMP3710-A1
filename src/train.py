@@ -16,8 +16,23 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader
 
 from dataset import HipMRI3DDataset, VolumePair, AugmentationConfig
-from modules import BaselineUNet3D, ImprovedUNet3D
+from modules import ImprovedUNet3D, build_model
 from plot_training import render_training_curves, render_learning_rate_curve
+
+
+def model_configuration(args: argparse.Namespace, num_classes: int) -> dict[str, object]:
+    """Freeze architecture-affecting options; default new Improved training is v2."""
+    version = getattr(args, "architecture_version", None)
+    if version is None:
+        version = "improved_context_v2" if args.model == "improved" else "baseline_v1"
+    return {
+        "model": args.model,
+        "architecture_version": version,
+        "num_classes": num_classes,
+        "in_channels": 1,
+        "base_channels": args.base_channels,
+        "dropout_probability": getattr(args, "dropout_probability", 0.3),
+    }
 
 
 def build_experiment_config(
@@ -193,6 +208,8 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-root", required=True, type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/training"))
     parser.add_argument("--model", choices=("baseline", "improved"), default="baseline")
+    parser.add_argument("--architecture-version", choices=("legacy_improved_v1", "improved_context_v2"), help="Improved architecture; default is Context v2. Main historical experiment used legacy_improved_v1.")
+    parser.add_argument("--dropout-probability", type=float, default=0.3)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-3)
@@ -309,8 +326,7 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     assessment_data = HipMRI3DDataset([pair], args.data_root, {patient_id}, num_classes, target_shape)
     loader = DataLoader(data, batch_size=args.batch_size, shuffle=True)
     assessment_loader = DataLoader(assessment_data, batch_size=1, shuffle=False)
-    model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
-    model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
+    model = build_model(model_configuration(args, num_classes)).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     output.mkdir(parents=True, exist_ok=True)
     history: list[dict[str, float]] = []
@@ -326,6 +342,7 @@ def run_overfit_preflight(args: argparse.Namespace) -> dict[str, object]:
     prediction = logits.argmax(1).cpu()[0]
     diagnostics = prostate_diagnostics(prediction, target, args.prostate_label)
     summary = {"preflight_only": True, "patient_id": patient_id, "case_id": pair.case_id, "epochs": args.epochs, "optimizer_updates": updates, "evaluation_interval_updates": evaluation_interval, "history": history, "final_train_case_prostate_dice": diagnostics["prostate_dice"], "prostate_label": args.prostate_label, "prostate_label_source": args.prostate_label_source, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "model": args.model, "seed": args.seed, "target_shape": list(target_shape), "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(), **diagnostics}
+    summary.update(model_configuration(args, num_classes))
     _write_json(output / "preflight_summary.json", summary)
     return summary
 
@@ -355,8 +372,8 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     validation_data = HipMRI3DDataset(pairs, args.data_root, split_ids["validation"], num_classes, target_shape)
     train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
     validation_loader = DataLoader(validation_data, batch_size=args.batch_size, shuffle=False)
-    model_type = BaselineUNet3D if args.model == "baseline" else ImprovedUNet3D
-    model = model_type(num_classes=num_classes, base_channels=args.base_channels).to(device)
+    config.update(model_configuration(args, num_classes))
+    model = build_model(config).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs, eta_min=eta_min) if scheduler_name == "cosine" else None
     output.mkdir(parents=True, exist_ok=True)

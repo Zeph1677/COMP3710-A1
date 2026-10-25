@@ -4,7 +4,7 @@
 
 ## Evidence and matched protocol
 
-This record describes Rangpur job `692354`. The retained [generated validation report](../artifacts/2026-10-25/692354_context_v2_ablation/context_v2_ablation_692354/runs/validation_report.md) and [structured comparison](../artifacts/2026-10-25/692354_context_v2_ablation/context_v2_ablation_692354/runs/validation_comparison.json) are the numerical sources. Raw artifacts remain in the local, Git-ignored artifact tree; these relative links require the retained package and do not distribute checkpoints.
+This record describes Rangpur job `692354`. The retained `runs/validation_report.md` and `runs/validation_comparison.json` are the numerical sources. Raw artifacts remain in the local, Git-ignored artifact tree; these are local source paths within `artifacts/2026-10-25/692354_context_v2_ablation/context_v2_ablation_692354/`, not clone-accessible links.
 
 | Arm | Model | Training augmentation | Learning-rate schedule | Controlled contrast |
 | --- | --- | --- | --- | --- |
@@ -55,38 +55,19 @@ Record B as the validation-first candidate requiring explicit resource review, r
 
 Before any separately authorized test, review validation failure panels, freeze the checkpoint and complete configuration, and preserve the evaluation protocol. B's selected checkpoint is epoch 19 with SHA-256 `477244b5009d1b941af9f2e94ed8dbc67ac369771227faafd780eeb7fceb46fc`. Do not switch arms or epochs after inspecting test scores. The existing held-out cohort has already been viewed in historical experiments; a later reuse would not be an independent blind test.
 
-## Curves, patient comparison and validation animations
+## Compact validation visual evidence
 
-The following assets are generated from this project's saved histories and predictions. They do not use another student's GIFs, plots or results. The [local HTML gallery](assets/context_v2_ablation_692354/gallery.html) contains all 12 original animations, two synchronized composites and the paired diagnostic panels. An HTML file should be opened locally in a browser; GitHub may display its source rather than execute it.
+This record retains static comparisons, 12 original validation GIFs, two synchronized composites, curves and a local HTML gallery from this project's own outputs. No reference-project GIF, plot or result is copied. Raw training histories/checkpoints remain local evidence; distributed animation frames sweep spatial slices rather than training epochs.
 
-![A/B/C/D training and validation curves](assets/context_v2_ablation_692354/training_loss_and_validation_dice.png)
+![Validation-selected A/B/C/D static comparison](assets/context_v2_ablation_692354/best_ABCD_preview.png)
 
-Selected checkpoints are identified in the legend, not selected by minimum training loss. B continues to improve its selected validation score until epoch 19. C's observed validation maximum is at epoch 13; reducing LR did not yield a better candidate in this budget. The curves compare model-specific composite training objectives: auxiliary supervision and augmentation affect loss difficulty, so lower raw training loss across architectures is not itself evidence of superiority.
-
-![Actual recorded learning rates](assets/context_v2_ablation_692354/learning_rate_schedule.png)
-
-A, B and D have coincident fixed rates of 0.001; C follows the saved cosine values. The plot records LR used for each epoch. The last trained epoch uses a rate above `eta_min` because the scheduler steps after the epoch; it reaches its configured minimum after the final update.
-
-![Patient-level validation comparison](assets/context_v2_ablation_692354/patient_validation_dice.png)
-
-The patient chart uses the original selected-epoch metrics, with the truncated vertical axis explicitly labeled. B improves G021, H017, N010 and W012 versus D, but declines on M030 and S022. These six patients, not 46 scans treated as independent patients, define the cohort mean.
-
-![B training checkpoints on fixed validation case](assets/context_v2_ablation_692354/B_progress.gif)
-
-**How to read the animations:** every animation uses validation `G021_Week0`, fixed by the manifest's lexicographic patient/case rule. Within each GIF, frames sweep depth slices; they are not consecutive training epochs. The three rows above compare epoch 1, epoch 5 and selected epoch 19 at the same slice. Red means prostate FP and cyan means prostate FN. No anatomical base/apex label or physical-distance accuracy is inferred from the frame sequence. The volume is the resampled `128³` validation geometry; 26 sampled depth slices are displayed rather than every slice.
-
-The [A/B/C/D selected-checkpoint comparison](assets/context_v2_ablation_692354/best_ABCD.gif) synchronizes identical slices across the four arms. Their selected epochs differ (A/B 19, C 13, D 17); this is a comparison of validation-selected checkpoints, not an equal-epoch comparison. Selection remains validation-only.
-
-| Arm | Epoch 1 | Epoch 5 | Selected checkpoint |
-| --- | --- | --- | --- |
-| A | [GIF](assets/context_v2_ablation_692354/A_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/A_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/A_validation_best_epoch.gif) |
-| B | [GIF](assets/context_v2_ablation_692354/B_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/B_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/B_validation_best_epoch.gif) |
-| C | [GIF](assets/context_v2_ablation_692354/C_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/C_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/C_validation_best_epoch.gif) |
-| D | [GIF](assets/context_v2_ablation_692354/D_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/D_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/D_validation_best_epoch.gif) |
+The four arms show the same sampled slice of `G021_Week0`, chosen by the manifest's lexicographic patient/case rule. Selected epochs differ (A/B 19, C 13, D 17). Red denotes prostate FP and cyan FN. A single selected image cannot establish overall superiority, and the resampled geometry does not establish anatomical base/apex or physical-distance accuracy. The complete archived curves record coincident LR 0.001 for A/B/D and C's cosine schedule; its scheduler steps after the epoch, so the final trained epoch uses LR above `eta_min`. Cross-architecture composite training losses include different supervision/augmentation and cannot rank model quality.
 
 ## Paired validation failure analysis: D versus B
 
-Both frozen checkpoints were rerun on the same 46 validation scans only, without augmentation or test-image access. Local inference is diagnostic and does not replace the original A100 selection metrics or resource measurements. A/B/C/D histories and original checkpoints remain unchanged. Full voxel counts and the selection rule are retained in [paired_validation_diagnostics.json](assets/context_v2_ablation_692354/paired_validation_diagnostics.json).
+The numerical diagnoses below preserve the full five-case review; only the representative M030 static panel is distributed. References to the other selected slices describe panels in the local pre-convergence archive.
+
+Both frozen checkpoints were rerun on the same 46 validation scans only, without augmentation or test-image access. Local inference is diagnostic and does not replace the original A100 selection metrics or resource measurements. A/B/C/D histories and original checkpoints remain unchanged. Full voxel counts and the selection rule are retained in `docs/assets/context_v2_ablation_692354/paired_validation_diagnostics.json` in the local pre-convergence archive.
 
 Case selection is deterministic: rank all cases by the mean of B and D's full-volume FP+FN counts, break ties by patient ID/case ID, and retain at most one case from each of five distinct patients. For each case, show the depth slice with the largest combined B/D prostate error inside the reference prostate extent. This count-based rule emphasizes larger-volume errors; it is not a ranking by worst normalized Dice and does not represent the distribution of all cases. It can select a scan that declines even when its patient's average improves. Each figure uses the same MRI, reference, slice and color convention for both models.
 
@@ -100,19 +81,11 @@ Case selection is deterministic: rank all cases by the mean of B and D's full-vo
 
 **N010_Week3 — local coverage does not guarantee whole-volume improvement.** B covers more of the reference on the displayed slice than D, yet its complete-volume FN increases from 1,076 to 1,143 and FP from 589 to 783, lowering case Dice from 0.829248 to 0.805021. This directly shows why one visually improved slice cannot establish whole-volume benefit. Review neighboring slices before interpreting the shape change; no specific anatomical or pathological cause is established.
 
-![Paired validation N010_Week3](assets/context_v2_ablation_692354/failure_N010_Week3.png)
-
 **S022_Week2 — reduced omission with increased outward extension.** The displayed contour has adjacent FP and FN regions in both predictions. Across the volume, B reduces FN from 336 to 284 but increases FP from 483 to 634; Dice declines from 0.761155 to 0.747247. Investigate sensitivity to boundary placement and consistency across repeat scans. The observed trade-off does not prove a label error or a particular augmentation is responsible.
-
-![Paired validation S022_Week2](assets/context_v2_ablation_692354/failure_S022_Week2.png)
 
 **W012_Week0 — outward error decreases but persists.** Both models extend beyond the reference on the selected slice. B reduces full-volume FP from 928 to 697, while FN rises from 6 to 50; case Dice improves from 0.782081 to 0.813762. Retain the gain while documenting the remaining outward contour discrepancy; a higher Dice does not establish accurate physical surface distances.
 
-![Paired validation W012_Week0](assets/context_v2_ablation_692354/failure_W012_Week0.png)
-
 **G021_Week6 — partial improvement with residual boundary error.** B reduces both full-volume FN (139 to 123) and FP (590 to 445), raising case Dice from 0.741214 to 0.788690. The panel still contains an outward error region. This supports a narrower statement of reduced error on this scan, not complete correction or uniform benefit over the patient's other weeks.
-
-![Paired validation G021_Week6](assets/context_v2_ablation_692354/failure_G021_Week6.png)
 
 **M030_Week0 — fewer outward voxels at the cost of substantially more omission.** B reduces FP from 137 to 99 but increases FN from 324 to 523; Dice falls from 0.875641 to 0.820749. The displayed cyan region is consistent with omitted reference contour. Prioritize this type of under-segmentation during any future review; a smaller or smoother prediction cannot be accepted solely for appearance.
 
@@ -122,16 +95,43 @@ Across all 46 locally reconstructed validation cases, the minimum case prostate 
 
 **Engineering recommendation after image review.** Retain B as the accuracy-leading validation candidate and D as the lower-memory comparator. The paired panels expose both gains and regressions, particularly omission in M030_Week0 and mixed boundary errors in S022_Week2; they do not justify autonomous contour acceptance. Do not promote C, revise epochs using test cases, or silently relax the memory gate. A follow-up experiment would need a separately documented resource budget and evaluation plan. These are five validation diagnoses, not a replacement for the historical held-out failure analysis required by the report.
 
+## Retained animation gallery
+
+The [local gallery](assets/context_v2_ablation_692354/gallery.html) contains all original validation animations and paired panels. All animations use fixed validation `G021_Week0`; each frame sweeps depth slices rather than advancing the training epoch. The GIFs show 26 sampled slices from the resampled volume. Raw training checkpoints and MRI are not redistributed.
+
+![B: epoch 1, epoch 5 and selected epoch 19](assets/context_v2_ablation_692354/B_progress.gif)
+
+[Compare the four selected checkpoints at synchronized slices](assets/context_v2_ablation_692354/best_ABCD.gif): A/B select epoch 19, C epoch 13 and D epoch 17. This compares validation-selected checkpoints, not equal training epochs.
+
+| Arm | Epoch 1 | Epoch 5 | Selected checkpoint |
+| --- | --- | --- | --- |
+| A | [GIF](assets/context_v2_ablation_692354/A_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/A_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/A_validation_best_epoch.gif) |
+| B | [GIF](assets/context_v2_ablation_692354/B_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/B_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/B_validation_best_epoch.gif) |
+| C | [GIF](assets/context_v2_ablation_692354/C_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/C_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/C_validation_best_epoch.gif) |
+| D | [GIF](assets/context_v2_ablation_692354/D_validation_epoch_1.gif) | [GIF](assets/context_v2_ablation_692354/D_validation_epoch_5.gif) | [GIF](assets/context_v2_ablation_692354/D_validation_best_epoch.gif) |
+
+![Recorded training and validation history](assets/context_v2_ablation_692354/training_loss_and_validation_dice.png)
+
+![Actual LR used at each epoch](assets/context_v2_ablation_692354/learning_rate_schedule.png)
+
+![Patient-level validation scores at selected checkpoints](assets/context_v2_ablation_692354/patient_validation_dice.png)
+
+The [asset provenance](assets/context_v2_ablation_692354/asset_provenance.json) records original file hashes and frame counts. [Paired diagnostics](assets/context_v2_ablation_692354/paired_validation_diagnostics.json) retain the case-selection rule and voxel counts for the five-case analysis above. These are validation-only artifacts; no new held-out conclusion follows from their appearance.
+
 ## Reproduction and provenance
 
+Publish the two retained static panels from an existing local presentation archive with:
+
 ```bash
-python scripts/publish_context_validation_assets.py --device cuda
+python scripts/publish_context_validation_assets.py --publish-compact --output local/context_v2_ablation_692354
 ```
 
-The script verifies all 20 epochs, checkpoint-selected epoch/configuration identity, manifest hashes, validation-case access and source GIF frame counts before publishing. It copies original GIFs byte-for-byte, constructs aligned composites from those frames, and evaluates frozen B/D checkpoints only on manifest validation records. [Asset provenance](assets/context_v2_ablation_692354/asset_provenance.json) records source SHA-256 values, checkpoint identities, original GIF dimensions/frame counts, diagnostic device and accounting limits. It is reproducible presentation code; it neither trains new models nor runs held-out evaluation.
+Compact mode copies only the two PNG files and does not load MRI data or checkpoints. Full regeneration is a separate explicit command (`python scripts/publish_context_validation_assets.py --output local/context_v2_ablation_692354` without `--publish-compact`), which requires the ignored raw histories, frozen checkpoints and source MRI and may reconstruct validation predictions. Its default full-output directory is ignored `local/`; neither mode trains or launches held-out evaluation. A fresh clone supplies the reviewed images, GIFs and gallery, but not the local raw checkpoints or MRI package. The original publication verified epoch/configuration identity, manifest hashes and validation access.
+
+The complete pre-convergence presentation set is preserved in local `local/project-convergence-20261025/before_convergence.zip`, verified during the convergence backup step. Original numerical sources remain in local `artifacts/2026-10-25/692354_context_v2_ablation/context_v2_ablation_692354/runs/`. The archive's `docs/assets/context_v2_ablation_692354/asset_provenance.json` records source SHA-256 values, checkpoint identities, GIF frame counts and diagnostic device; `paired_validation_diagnostics.json` records all 46 validation reconstructions and five-case selection. The reviewed GIFs, HTML gallery, curves, provenance and paired panels are retained in the repository and the course export under an exact asset whitelist, following the author's request to preserve animation display. These local paths describe provenance and do not imply that a submission package contains raw artifacts.
 
 ## Artifact and accounting limits
 
-The synchronized package contains 54 files, including four checkpoints, complete histories, configuration and learning-rate records, curves, epoch-1/epoch-5/best-epoch validation GIFs, manifest and environment records. No new `test_metrics.json`, test predictions or test failure panels were found in this package. A separate local validation-only B/D reconstruction and five-case paired image review have now been completed as documented above. They do not supply new held-out failure evidence.
+The original local synchronized run package contained 54 files, including four checkpoints, complete histories, configuration and learning-rate records, curves, epoch-1/epoch-5/best-epoch validation GIFs, manifest and environment records. No new `test_metrics.json`, test predictions or test failure panels were found in this package. A separate local validation-only B/D reconstruction and five-case paired image review have now been completed as documented above. They do not supply new held-out failure evidence.
 
 The user reports final Rangpur `COMPLETED` status. The synchronized package does not contain an independently retained `sacct_final.txt`; archive the final `sacct -X` job-state and exit-code output for accounting evidence. Local histories and summaries support the numerical record but do not independently verify scheduler accounting. Historical formal and supplementary test conclusions remain unchanged.
