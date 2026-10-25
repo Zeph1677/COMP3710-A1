@@ -21,6 +21,7 @@ EVIDENCE_DOCUMENTS = {
 }
 # Exact whitelist preserves the reviewed animation gallery, never raw tensors.
 CONTEXT_ASSETS = {
+    "baseline_vs_improved_training.png",
     'A_validation_best_epoch.gif',
     'A_validation_epoch_1.gif',
     'A_validation_epoch_5.gif',

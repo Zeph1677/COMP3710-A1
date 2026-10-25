@@ -70,3 +70,5 @@ docs/assets/context_v2_ablation_692354/*
 !docs/assets/context_v2_ablation_692354/training_loss_and_validation_dice.png
 
 .ruff_cache/
+
+!docs/assets/context_v2_ablation_692354/baseline_vs_improved_training.png
