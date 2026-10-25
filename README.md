@@ -122,7 +122,7 @@ In **M030_Week0**, Improved increases FN from 324 to 523 while reducing FP from 
 
 The intended use is specialist-reviewed prostate contour drafting. The recorded GPU memory and training time make this resized-volume workflow feasible on the retained A100 hardware, but resampling, six validation patients and one seed limit the evidence. Clinical contour-editing time and physical-distance accuracy were not measured. Keep Baseline as the lower-memory comparator and Improved as the accuracy-leading validation candidate; the failed memory gate and patient-specific regressions prevent an automatic replacement decision.
 
-No held-out score is reported for this Improved checkpoint. Historical tested models have different checkpoint identities and remain in the [experiment evidence record](docs/EXPERIMENT_EVIDENCE.md); their test scores must not be assigned to this model. Other configurations are documented in the [ablation record](docs/context_v2_ablation_results_20261025.md). Missing final scheduler accounting and incomplete remote package freezing are stated in the [environment](docs/EXPERIMENT_ENVIRONMENT.md) and evidence records.
+No held-out score is reported for this Improved checkpoint. Historical tested models have different checkpoint identities and remain in the [experiment evidence record](docs/EXPERIMENT_EVIDENCE.md); their test scores must not be assigned to this model. Other configurations are documented in the [ablation record](docs/context_v2_ablation_results_20261025.md). Job 692354 is confirmed `COMPLETED|0:0` (01:42:37); see the [final accounting](evidence/692354_sacct_final.txt). Historical environment-freeze limitations remain documented in the [environment record](docs/EXPERIMENT_ENVIRONMENT.md).
 
 ## References
 
@@ -131,3 +131,6 @@ No held-out score is reported for this Improved checkpoint. Historical tested mo
 - Dataset label provenance and retained reference identities: [SOURCES.md](evidence/SOURCES.md).
 
 ## Artificial Intelligence Usage Disclosure
+
+
+Validation continuation job **695600** was submitted on 25 October (initial status: `PENDING`, Priority). It reuses A/B/D, adds the missing Baseline + augmentation arm, profiles a fixed resource protocol and conditionally runs narrower Improved / paired seeds. [Registered protocol](configs/validation_completion_protocol.json) · [Submission record](evidence/validation_completion_695600_submission.json). This is a submission record, not completed experimental evidence; no held-out test was submitted.

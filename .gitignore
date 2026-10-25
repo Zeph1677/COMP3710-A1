@@ -72,3 +72,5 @@ docs/assets/context_v2_ablation_692354/*
 .ruff_cache/
 
 !docs/assets/context_v2_ablation_692354/baseline_vs_improved_training.png
+
+!docs/VALIDATION_EXPERIMENT_QUEUE.md

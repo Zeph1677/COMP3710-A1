@@ -1,0 +1,17 @@
+{
+  "snapshot_id": "f1d11ab3dc29",
+  "archive": "E:\\vscode\\COMP3710-A1\\local\\validation-completion-20261025\\validation_completion_f1d11ab3dc29.tar.gz",
+  "archive_sha256": "9c7dc95d5bb21a7edf7e097a2d9bb3556eff4b04103cd40ad176f4082c2bcb16",
+  "remote_directory": "/home/Student/s4910970/hipmri_validation_completion_20261025_f1d11ab3dc29",
+  "files": 95,
+  "job_id": "695600",
+  "state_at_submission": "PENDING",
+  "reason": "Priority",
+  "gpu": "1 x A100",
+  "cpus": 4,
+  "time_limit": "03:00:00",
+  "local_tests": "108 passed",
+  "remote_tests": "107 passed, 1 deselected",
+  "held_out_test_submitted": false,
+  "github_pushed": false
+}
