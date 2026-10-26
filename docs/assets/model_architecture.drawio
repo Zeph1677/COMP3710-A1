@@ -38,7 +38,7 @@
         <mxCell id="b-output" value="Final 1x1x1 logits only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#233044;strokeWidth=2;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1710" y="180" width="190" height="95" as="geometry" />
         </mxCell>
-        <mxCell id="i-title" value="Historical Improved (legacy_improved_v1; 4232e0d)" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="i-title" value="Historical Improved (improved_v1; 4232e0d)" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="160" y="565" width="1500" height="30" as="geometry" />
         </mxCell>
         <mxCell id="i-note" value="Three downsampling stages, bottleneck, three decoder stages, and skip concatenations" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#425466;" vertex="1" parent="1">

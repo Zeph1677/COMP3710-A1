@@ -30,10 +30,10 @@ def model_configuration(args: argparse.Namespace, num_classes: int) -> dict[str,
             raise ValueError("baseline accepts only architecture-version baseline_v1")
         version = "baseline_v1"
     elif model_name == "improved":
-        if version not in ("legacy_improved_v1", "improved_context_v2"):
+        if version not in ("improved_v1", "improved_context_v2"):
             raise ValueError(
                 "improved training requires --architecture-version "
-                "legacy_improved_v1 or improved_context_v2"
+                "improved_v1 or improved_context_v2"
             )
     else:
         raise ValueError("model must be 'baseline' or 'improved'")
@@ -218,7 +218,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-root", required=True, type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/training"))
     parser.add_argument("--model", choices=("baseline", "improved"), default="baseline")
-    parser.add_argument("--architecture-version", choices=("legacy_improved_v1", "improved_context_v2"), help="Required for --model improved. Main historical experiment used legacy_improved_v1.")
+    parser.add_argument("--architecture-version", choices=("improved_v1", "improved_context_v2"), help="Required for --model improved. Main historical experiment uses improved_v1.")
     parser.add_argument("--dropout-probability", type=float, default=0.3)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--batch-size", type=int, default=1)

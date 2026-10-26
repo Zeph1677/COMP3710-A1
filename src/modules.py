@@ -149,7 +149,7 @@ class ContextImprovedUNet3D(nn.Module):
 class ImprovedUNet3D(_UNet3D):
     """Report Improved model with residual blocks and deep supervision."""
 
-    architecture_version = "legacy_improved_v1"
+    architecture_version = "improved_v1"
 
     def __init__(self, in_channels: int = 1, num_classes: int = 2, base_channels: int = 16) -> None:
         super().__init__(ResidualBlock3D, in_channels, num_classes, base_channels, deep_supervision=True)
@@ -176,7 +176,7 @@ def build_model(config: dict[str, object]) -> nn.Module:
         return BaselineUNet3D(**dimensions)
     if model_name != "improved":
         raise ValueError(f"unsupported model: {model_name}")
-    if version in (None, ImprovedUNet3D.architecture_version):
+    if version in (None, ImprovedUNet3D.architecture_version, "legacy_improved_v1"):
         return ImprovedUNet3D(**dimensions)
     if version == ContextImprovedUNet3D.architecture_version:
         return ContextImprovedUNet3D(

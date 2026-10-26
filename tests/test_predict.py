@@ -99,10 +99,10 @@ def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
     assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
 
 
-def test_checkpoint_loader_rejects_context_weights_mislabeled_as_legacy(tmp_path: Path):
-    """Missing version means legacy; Context weights must fail strict loading there."""
+def test_checkpoint_loader_rejects_context_weights_mislabeled_as_improved_v1(tmp_path: Path):
+    """Missing version means Improved v1; Context weights must fail strict loading there."""
     original = ContextImprovedUNet3D(num_classes=2, base_channels=2)
-    checkpoint_path = tmp_path / "legacy-improved.pt"
+    checkpoint_path = tmp_path / "improved-v1.pt"
     torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "num_classes": 2, "base_channels": 2}}, checkpoint_path)
 
     with pytest.raises(RuntimeError):

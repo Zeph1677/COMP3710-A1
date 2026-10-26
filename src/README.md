@@ -4,7 +4,7 @@ COMP3710 Pattern Recognition and Analysis · s4910970 · Hard difficulty
 
 This project compares a Baseline 3D U-Net with a residual, deep-supervised Improved 3D U-Net for six-class pelvic MRI segmentation: Background, Body, Bones, Bladder, Rectum and Prostate. The dataset is CSIRO's [Labelled weekly MR images of the male pelvis](https://data.csiro.au/collection/csiro%3A51392), referred to as **HipMRI** in this project. The intended use is research on contour drafting with human review, not autonomous treatment planning.
 
-**Main result.** Under the matched held-out protocol, Baseline reached patient-mean prostate Dice **0.811548** and Improved reached **0.813587**, a difference of only **+0.002038**. Improved also reduced the worst patient's score by **0.062061**. The evidence therefore supports retaining Baseline as the conservative reference; it does not establish a reliable benefit from the added complexity.
+**Main result.** Under the matched historical held-out protocol, Baseline reached patient-mean prostate Dice **0.811548** and Improved reached **0.813587**, a difference of only **+0.002038**. Improved also reduced the worst patient's score by **0.062061**. A separately frozen Context-v2 B candidate was subsequently evaluated once on the same five held-out patients in Rangpur job `699109`; it reached **0.795699**, which is **0.015849 below Baseline**. The evidence therefore supports retaining Baseline as the conservative reference; neither added-complexity candidate establishes a reliable benefit.
 
 ## Dataset
 
@@ -35,7 +35,7 @@ The frozen manifest used in the reported experiment contains 211 scans from 38 p
 
 ## 3D Improved UNet
 
-The submission compares two models. `BaselineUNet3D` uses ordinary double-convolution blocks. `ImprovedUNet3D` adds residual projections and two training-only auxiliary heads. Both use channels 16/32/64/128, three downsampling stages and encoder skip connections. Improved inference uses final logits only. Its internal compatibility identifier is `legacy_improved_v1`.
+The submission compares two models. `BaselineUNet3D` uses ordinary double-convolution blocks. `ImprovedUNet3D` adds residual projections and two training-only auxiliary heads. Both use channels 16/32/64/128, three downsampling stages and encoder skip connections. Improved inference uses final logits only. Its architecture identifier is `improved_v1`.
 
 MRI intensities are z-score normalized. Images are resized with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses 96×96×96 crops with a 0.5 probability of choosing a prostate-containing crop. Validation and test use deterministic full resized volumes. Raw logits enter cross entropy; softmax is applied within soft Dice.
 
@@ -52,7 +52,7 @@ The implementation is a compact residual, deep-supervised adaptation of 3D U-Net
 | Decoder upsampling   | Transposed 3D convolution                              | Transposed 3D convolution                                  |
 | Deep supervision     | None                                                   | Two decoder auxiliary heads during training                |
 | Inference output     | Final head logits                                      | Final head logits                                          |
-| Internal architecture identifier | `baseline_v1` | `legacy_improved_v1` |
+| Internal architecture identifier | `baseline_v1` | `improved_v1` |
 
 ### Modules
 
@@ -76,14 +76,14 @@ The decoder reconstructs resolutions of 24³, 48³ and 96³. Argmax over the six
 
 ### Architecture Identifiers and Evidence
 
-`baseline_v1` and `legacy_improved_v1` are **project-defined compatibility identifiers**, not additional model names and not names assigned by the course specification, CSIRO or either paper. The report presents only Baseline and Improved; these identifiers ensure that saved experiments reconstruct the correct implementation.
+`baseline_v1` and `improved_v1` are **project-defined architecture identifiers**, not additional model names and not names assigned by the course specification, CSIRO or either paper. The report presents only Baseline and Improved; these identifiers ensure that saved experiments reconstruct the correct implementation.
 
 | Identifier | Definition in this submission | Evidence and loading behaviour |
 | ---------- | ----------------------------- | ------------------------------ |
 | `baseline_v1` | Plain `BaselineUNet3D`, without residual blocks or auxiliary heads | [train.py](train.py), `model_configuration()`, writes this identifier for new Baseline runs; [modules.py](modules.py), `build_model()`, accepts it or an absent historical field. The Baseline class itself does not declare an `architecture_version` attribute. |
-| `legacy_improved_v1` | `ImprovedUNet3D`, with residual blocks and training-only deep supervision | Declared on the class in [modules.py](modules.py). `build_model()` routes this identifier, or an absent version in an earlier Improved config, to that class. |
+| `improved_v1` | `ImprovedUNet3D`, with residual blocks and training-only deep supervision | Declared on the class in [modules.py](modules.py). `build_model()` routes this identifier, the former compatibility identifier, or an absent version in an earlier Improved config to that class. |
 
-The primary experiment used code revision `4232e0d91d8aa6cf8c1de38883b213c07cc62d10` (Baseline job `683675`, Improved job `683676`). At that revision, `ImprovedUNet3D` had no version identifier. The maintained class preserves its parameterized layers and forward computation; current input-size validation additionally rejects dimensions below 16. Thus `legacy_improved_v1` is a retrospective compatibility label, not a claim that the original run stored that string or a third model name.
+The primary experiment used code revision `4232e0d91d8aa6cf8c1de38883b213c07cc62d10` (Baseline job `683675`, Improved job `683676`). At that revision, `ImprovedUNet3D` had no version identifier. The maintained class preserves its parameterized layers and forward computation; current input-size validation additionally rejects dimensions below 16. Thus `improved_v1` is the maintained name for that architecture, not a claim that the original run stored that string or a third model name.
 
 In the original project checkout, the historical definition can be inspected with:
 
@@ -160,10 +160,10 @@ python train.py \
 For the Improved arm, use a different output directory and replace the model arguments with:
 
 ```text
---model improved --architecture-version legacy_improved_v1
+--model improved --architecture-version improved_v1
 ```
 
-For the two-model experiment reported here, every new Improved run must state `legacy_improved_v1`; the training CLI rejects an omitted version. Earlier checkpoints that predate this field remain loadable through the same identifier for compatibility.
+For the two-model experiment reported here, every new Improved run must state `improved_v1`; the training CLI rejects an omitted version. Earlier checkpoints that predate this field, or that stored the former identifier, remain loadable through the compatibility loader.
 
 Do not enable augmentation for this historical comparison. Both arms must use the same manifest, geometry, optimizer settings, seed, number of epochs and selection rule. At every completed epoch, training refreshes the loss/validation-Dice curve and recorded-learning-rate plot from the available history. This is epoch-level monitoring. Training writes `experiment_config.json`, `history.json`, `training_summary.json`, validation-selected `best.pt` and `training_curves.png` beneath the chosen output directory.
 
@@ -233,6 +233,23 @@ Patient time sums inference over that patient's weekly scans, whereas the forwar
 
 The `+0.002038` mean difference is below the project's predeclared `+0.01` meaningful-upgrade target. Improved helped three patients and regressed on two; B037 deteriorated materially. Five repeatedly inspected patients and one seed do not support statistical-significance or clinical-generalization claims.
 
+#### Frozen Context-v2 B held-out evaluation
+
+Context-v2 B was selected and frozen using validation evidence before held-out evaluation. Its source validation job was `692354`; no held-out score was used to choose its checkpoint or configuration. Rangpur inference job `699109` completed on 26 October 2026 with Slurm state `COMPLETED`, exit code `0:0` and a recorded elapsed time of `00:07:15`. The downloaded evidence contains the checkpoint/configuration snapshot, re-audited manifest, environment records, five failure panels, 20 full-volume prediction tensors and `test_metrics.json`. All 45 downloaded files matched the remote paths, sizes and SHA-256 hashes.
+
+| Test patient | Baseline | Improved | Context-v2 B | Context-v2 B minus Baseline |
+| ------------ | -------: | -------: | -----------: | --------------------------: |
+| B037         | 0.736256 | 0.674195 |     0.732719 |                   -0.003537 |
+| H007         | 0.781378 | 0.839755 |     0.738632 |                   -0.042746 |
+| K042         | 0.887015 | 0.878500 |     0.865469 |                   -0.021546 |
+| L011         | 0.781136 | 0.795553 |     0.784114 |                   +0.002978 |
+| M013         | 0.871957 | 0.879931 |     0.857561 |                   -0.014396 |
+| **Mean**     | **0.811548** | **0.813587** | **0.795699** | **-0.015849** |
+
+The headline Context-v2 B value is the equal-patient mean of prostate Dice. Its scan-aggregated class-5 Dice is `0.814222`; that different aggregation must not replace `0.795699` in patient-level model comparisons. The run recorded `1304.29 MB` peak inference VRAM and `0.2152 s` mean cumulative model-inference time per patient under its own timing scope. These resource values are retained as evidence but are not presented as a strictly matched resource comparison with the historical jobs.
+
+Context-v2 B failed the declared upgrade rule: it did not exceed Baseline by `0.01`, and H007 and K042 each regressed by more than `0.02`. Baseline therefore remains preferred. R0, R1, R2, P1, P2 and P3 will not be evaluated on the held-out set after observing job `699109`; doing so would turn the test set into a model-selection instrument. A same-environment Baseline recovery inference is optional only if teaching staff explicitly require a same-job or same-environment resource comparison, and it must reuse the frozen Baseline checkpoint without retraining.
+
 ### Failure Case Autopsy
 
 Five cases were selected to cover all five held-out patients. Scans were ranked by the mean whole-volume prostate FP+FN across both arms, and only the highest-ranked scan from each patient was retained. Each panel compares the same MRI, GT and slice for Baseline and Improved; the displayed slice maximizes paired error within the GT prostate extent. Patient ID and case ID resolve ties. The resulting [selection manifest](assets/failure_selection.json) records the rule, repository base revision, indices and counts. White indicates prostate FP and red indicates prostate FN.
@@ -300,7 +317,7 @@ Each paired panel displays one inferior and one superior slice, chosen by the hi
 
 ## Feasibility Review
 
-[One-page review with supporting appendices](assets/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
+[One-page review with supporting appendices](../docs/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
 
 **User need and scope.** A radiotherapy contouring specialist needs reviewable prostate and organ-at-risk drafts. Compare a plain 3D U-Net against a residual, deep-supervised 3D Improved U-Net on downsampled HipMRI volumes (Hard option). Investigate whether added complexity improves boundary coverage enough to justify its memory and runtime cost. This comparison does not isolate 3D versus 2D.
 
@@ -310,15 +327,15 @@ Each paired panel displays one inferior and one superior slice, chosen by the hi
 
 **Preliminary evidence.** At the midpoint, synthetic-NIfTI checks covered pairing, missing-pair rejection, shape/affine validation, deterministic patient separation, finite forward/backward computation and auxiliary outputs. They established software feasibility, not real-data accuracy. Completed formal results and the present boundary audit are reported separately in Results.
 
-**Risks, budget and next experiment.** Memory demand, small end slices, downsampling, orientation mistakes, I/O and interrupted jobs are the principal technical risks. The retained 20-epoch histories sum training plus validation to 1,427.77 s for Baseline and 1,408.68 s for Improved: **0.788 GPU-hours combined**, excluding queueing, startup, test inference and other unrecorded work. The 26 October planning allowance is **2 GPU-hours for one matched two-arm repeat**, plus **0.25 GPU-hours for a validation-only smoke check**; this is a proposed allowance, not a measured job total or an approved allocation. A validation-only smoke check is the prerequisite for a matched repeat, and candidates above the memory limit are ineligible. Historical peak training allocation was 977.6/1,193.4 MiB; memory reservation and device-wide peaks were not measured.
+**Risks, budget and experiment boundary.** Memory demand, small end slices, downsampling, orientation mistakes, I/O and interrupted jobs are the principal technical risks. The retained 20-epoch histories sum training plus validation to 1,427.77 s for Baseline and 1,408.68 s for Improved: **0.788 GPU-hours combined**, excluding queueing, startup, test inference and other unrecorded work. Context-v2 B has now received its single frozen held-out evaluation in job `699109`; no other validation candidate should be tested in response to that score. A future multi-seed study would require a new predeclared protocol, independent training for every seed and validation-only checkpoint selection before one uniform test phase. It is not required to repair the present result record. Historical peak training allocation was 977.6/1,193.4 MiB; memory reservation and device-wide peaks were not measured.
 
-**Fallback and decision.** The plain 3D U-Net remains the fallback when the candidate misses acceptance criteria. All outputs remain human-reviewed drafts, particularly at superior/inferior extents and adjacent-organ boundaries. The historical mean gain of 0.002038 and B037 regression of 0.062061 support retaining Baseline. Clinical time savings and safety are not established by the available evidence. Tutor confirmation remains an external requirement for consultation completion and the proposed resource allowance.
+**Fallback and decision.** The plain 3D U-Net remains the selected fallback because both added-complexity candidates miss the declared upgrade rule. All outputs remain human-reviewed drafts, particularly at superior/inferior extents and adjacent-organ boundaries. The historical Improved mean gain of `0.002038`, its B037 regression of `0.062061`, and Context-v2 B's mean deficit of `0.015849` support retaining Baseline. Clinical time savings and safety are not established by the available evidence. Tutor confirmation remains an external requirement for consultation completion.
 
 ## Engineering Recommendation and Limitations
 
-Baseline is the conservative tested reference, and every proposed contour remains subject to human correction. The Improved package passed aggregate overlap targets, but its small mean change and severe B037 regression do not justify a stronger operational claim.
+Baseline is the conservative tested reference, and every proposed contour remains subject to human correction. The Improved package passed aggregate overlap targets, but its small mean change and severe B037 regression do not justify a stronger operational claim. Context-v2 B also passed the minimum `0.70` patient-mean threshold but scored below Baseline overall and exceeded the allowed `0.02` patient regression for H007 and K042.
 
-The evidence does not establish clinician time savings, treatment safety, external-cohort generalization, native-resolution boundary accuracy, HD95 performance or superiority of 3D over 2D. A defensible future comparison depends on a frozen protocol, paired seeds, preserved validation/resource evidence and held-out evaluation restricted to candidates that pass every declared gate.
+The evidence does not establish clinician time savings, treatment safety, external-cohort generalization, native-resolution boundary accuracy, HD95 performance or superiority of 3D over 2D. No further candidate will be selected using these held-out results. A defensible future comparison requires a new frozen protocol, paired seeds, preserved validation/resource evidence and a single uniform held-out evaluation after validation-only selection.
 
 ## References
 

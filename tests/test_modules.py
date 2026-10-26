@@ -41,7 +41,7 @@ def test_improved_3d_unet_rejects_divisible_but_too_small_volume_before_normaliz
     with pytest.raises(ValueError, match="at least 16"):
         model(torch.randn(1, 1, 8, 8, 8))
 
-@pytest.mark.parametrize('version', [None, 'legacy_improved_v1', 'improved_context_v2'])
+@pytest.mark.parametrize('version', [None, 'improved_v1', 'legacy_improved_v1', 'improved_context_v2'])
 def test_versioned_improved_round_trip_preserves_logits(tmp_path, version):
     from modules import build_model
     from predict import load_checkpoint_model
@@ -69,9 +69,9 @@ def test_versioned_improved_round_trip_preserves_logits(tmp_path, version):
     assert final.shape == expected.shape and len(auxiliary) == 2
 
 
-def test_legacy_parameter_count_matches_main_experiment():
+def test_improved_v1_parameter_count_matches_main_experiment():
     from modules import build_model
-    model = build_model({'model':'improved','num_classes':6,'base_channels':16})
+    model = build_model({'model':'improved','architecture_version':'improved_v1','num_classes':6,'base_channels':16})
     assert sum(p.numel() for p in model.parameters()) == 1423106
 
 

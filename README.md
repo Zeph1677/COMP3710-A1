@@ -92,7 +92,7 @@ The hashes must match before claiming an exact split reproduction. A mismatch re
 
 ## 3D Improved U-Net
 
-Both report models use channels 16/32/64/128, three downsampling stages and encoder skip connections. Baseline uses ordinary double-convolution blocks. The report's Improved model is `LegacyImprovedUNet3D` with architecture version `legacy_improved_v1`; it adds residual projections and two training-only auxiliary heads. Inference uses final logits only. The later `improved_context_v2` model is a separate validation experiment and its result is not substituted for the historical Improved test result.
+Both report models use channels 16/32/64/128, three downsampling stages and encoder skip connections. Baseline uses ordinary double-convolution blocks. The report's Improved model is `ImprovedUNet3D` with architecture version `improved_v1`; it adds residual projections and two training-only auxiliary heads. Inference uses final logits only. The later `improved_context_v2` model is a separate validation experiment and its result is not substituted for the historical Improved test result.
 
 MRI intensities are z-score normalized. Images are resized with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses 96×96×96 crops with a 0.5 probability of choosing a prostate-containing crop. Validation and test use deterministic full resized volumes. Raw logits enter cross entropy; softmax is applied within soft Dice.
 
@@ -107,9 +107,9 @@ The implementation is a compact residual, deep-supervised adaptation of 3D U-Net
 | Decoder upsampling   | Transposed 3D convolution                              | Transposed 3D convolution                                  |
 | Deep supervision     | None                                                   | Two decoder auxiliary heads during training                |
 | Inference output     | Final head logits                                      | Final head logits                                          |
-| Architecture version | `baseline_v1`                                        | `legacy_improved_v1`                                     |
+| Architecture version | `baseline_v1`                                        | `improved_v1`                                            |
 
-`ConvBlock3D` extracts local volumetric features. `ResidualBlock3D` adds a shortcut so features can be refined through residual corrections. `_UNet3D` combines encoder and decoder features through skip concatenations. The two auxiliary heads in `LegacyImprovedUNet3D` provide segmentation gradients at intermediate resolutions. These model components depend on PyTorch and do not use NumPy.
+`ConvBlock3D` extracts local volumetric features. `ResidualBlock3D` adds a shortcut so features can be refined through residual corrections. `_UNet3D` combines encoder and decoder features through skip concatenations. The two auxiliary heads in `ImprovedUNet3D` provide segmentation gradients at intermediate resolutions. These model components depend on PyTorch and do not use NumPy.
 
 The training objective is weighted cross entropy plus weighted soft Dice. In the main experiment, prostate has weight 4 in both terms and the remaining classes have weight 1. Each Improved auxiliary head adds 0.25 times the same objective, with nearest-neighbour downsampled labels. The later Context-v2 model introduces Dropout3D, interpolation-convolution upsampling and inference-time logit fusion; these features must not be attributed to the historical model's test results.
 
@@ -161,10 +161,10 @@ python src/train.py `
 For the historical Improved arm, use a different output directory and replace the model arguments with:
 
 ```text
---model improved --architecture-version legacy_improved_v1
+--model improved --architecture-version improved_v1
 ```
 
-Every new Improved run must state either `legacy_improved_v1` or `improved_context_v2`; the training CLI rejects an omitted version. Historical checkpoints that predate this field remain loadable as `legacy_improved_v1` only for compatibility, not as a default for new training.
+Every new Improved run must state either `improved_v1` or `improved_context_v2`; the training CLI rejects an omitted version. Historical checkpoints that predate this field, or that stored the former identifier, remain loadable as `improved_v1` through the compatibility loader, not as a default for new training.
 
 Do not enable augmentation for this historical comparison. Both arms must use the same manifest, geometry, optimizer settings, seed, number of epochs and selection rule. At every completed epoch, training refreshes the loss/validation-Dice curve and recorded-learning-rate plot from the available history. This is epoch-level monitoring. Training writes `experiment_config.json`, `history.json`, `training_summary.json`, validation-selected `best.pt` and `training_curves.png` beneath the chosen output directory.
 

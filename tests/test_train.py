@@ -173,9 +173,9 @@ def test_improved_training_requires_an_explicit_architecture_version():
         model_configuration(Namespace(model="improved", base_channels=2), num_classes=6)
 
     assert model_configuration(
-        Namespace(model="improved", architecture_version="legacy_improved_v1", base_channels=2),
+        Namespace(model="improved", architecture_version="improved_v1", base_channels=2),
         num_classes=6,
-    )["architecture_version"] == "legacy_improved_v1"
+    )["architecture_version"] == "improved_v1"
 
 
 def test_experiment_metadata_does_not_silently_assign_an_improved_version(tmp_path: Path):
