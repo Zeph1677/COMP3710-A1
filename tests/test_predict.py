@@ -9,7 +9,7 @@ import torch
 
 import pytest
 
-from modules import BaselineUNet3D, ImprovedUNet3D
+from modules import BaselineUNet3D, ContextImprovedUNet3D, ImprovedUNet3D
 from predict import build_test_metrics, load_checkpoint_model, mean_patient_prostate_dice, patient_prostate_dice, prostate_error_masks, prostate_error_slice_indices, render_case_views, run_prediction, sliding_window_logits
 
 
@@ -101,7 +101,7 @@ def test_checkpoint_loader_restores_declared_baseline_model(tmp_path: Path):
 
 def test_checkpoint_loader_rejects_context_weights_mislabeled_as_legacy(tmp_path: Path):
     """Missing version means legacy; Context weights must fail strict loading there."""
-    original = ImprovedUNet3D(num_classes=2, base_channels=2)
+    original = ContextImprovedUNet3D(num_classes=2, base_channels=2)
     checkpoint_path = tmp_path / "legacy-improved.pt"
     torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "num_classes": 2, "base_channels": 2}}, checkpoint_path)
 
@@ -111,14 +111,14 @@ def test_checkpoint_loader_rejects_context_weights_mislabeled_as_legacy(tmp_path
 
 def test_checkpoint_loader_restores_versioned_improved_checkpoint(tmp_path: Path):
     """A revised Improved checkpoint records and restores its exact architecture."""
-    original = ImprovedUNet3D(num_classes=2, base_channels=2)
+    original = ContextImprovedUNet3D(num_classes=2, base_channels=2)
     checkpoint_path = tmp_path / "improved-v2.pt"
-    torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "architecture_version": ImprovedUNet3D.architecture_version, "num_classes": 2, "base_channels": 2}}, checkpoint_path)
+    torch.save({"model_state_dict": original.state_dict(), "config": {"model": "improved", "architecture_version": ContextImprovedUNet3D.architecture_version, "num_classes": 2, "base_channels": 2}}, checkpoint_path)
 
     restored, config = load_checkpoint_model(checkpoint_path, torch.device("cpu"))
 
-    assert isinstance(restored, ImprovedUNet3D)
-    assert config["architecture_version"] == ImprovedUNet3D.architecture_version
+    assert isinstance(restored, ContextImprovedUNet3D)
+    assert config["architecture_version"] == ContextImprovedUNet3D.architecture_version
     assert all(torch.equal(left, right) for left, right in zip(original.parameters(), restored.parameters(), strict=True))
 
 

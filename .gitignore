@@ -12,6 +12,7 @@ artifacts/
 checkpoints/
 formal_results/
 Temp/
+tmp/
 local/
 *.log
 *.out

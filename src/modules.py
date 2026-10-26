@@ -102,7 +102,7 @@ class UpsampleConv3D(nn.Module):
         return self.convolution(F.interpolate(value, scale_factor=2, mode="trilinear", align_corners=False))
 
 
-class ImprovedUNet3D(nn.Module):
+class ContextImprovedUNet3D(nn.Module):
     """Residual, regularised 3D U-Net with decoder-logit fusion and deep supervision.
 
     The public contract intentionally matches the previous Improved model: training
@@ -146,8 +146,8 @@ class ImprovedUNet3D(nn.Module):
 
 # Parameterised layers and forward computations preserved from commit 4232e0d;
 # current input-size validation is retained.
-class LegacyImprovedUNet3D(_UNet3D):
-    """Hard-tier 3D U-Net with residual blocks and decoder deep supervision."""
+class ImprovedUNet3D(_UNet3D):
+    """Report Improved model with residual blocks and deep supervision."""
 
     architecture_version = "legacy_improved_v1"
 
@@ -176,10 +176,10 @@ def build_model(config: dict[str, object]) -> nn.Module:
         return BaselineUNet3D(**dimensions)
     if model_name != "improved":
         raise ValueError(f"unsupported model: {model_name}")
-    if version in (None, LegacyImprovedUNet3D.architecture_version):
-        return LegacyImprovedUNet3D(**dimensions)
-    if version == ImprovedUNet3D.architecture_version:
-        return ImprovedUNet3D(
+    if version in (None, ImprovedUNet3D.architecture_version):
+        return ImprovedUNet3D(**dimensions)
+    if version == ContextImprovedUNet3D.architecture_version:
+        return ContextImprovedUNet3D(
             **dimensions, dropout_probability=config.get("dropout_probability", 0.3)
         )
     raise ValueError(f"unsupported improved architecture version: {version}")

@@ -1,0 +1,92 @@
+{
+  "git_sha": "1bbab0260022813f5ff49427019486e0e1db7560",
+  "rule": "rank scans by mean whole-volume prostate FP+FN across baseline and improved; retain the highest-ranked scan per patient; patient_id then case_id tie break; highest-error slice inside GT prostate extent",
+  "rule_version": 2,
+  "selected_cases": [
+    {
+      "baseline": {
+        "false_negative_voxels": 2495,
+        "false_positive_voxels": 393,
+        "true_positive_voxels": 4031
+      },
+      "case_id": "B037_Week0",
+      "error_score": 3088.5,
+      "improved": {
+        "false_negative_voxels": 3123,
+        "false_positive_voxels": 166,
+        "true_positive_voxels": 3403
+      },
+      "panel": "comparison_panels/B037__B037_Week0.png",
+      "patient_id": "B037",
+      "slice_index": 70
+    },
+    {
+      "baseline": {
+        "false_negative_voxels": 68,
+        "false_positive_voxels": 894,
+        "true_positive_voxels": 1433
+      },
+      "case_id": "L011_Week2",
+      "error_score": 929.5,
+      "improved": {
+        "false_negative_voxels": 159,
+        "false_positive_voxels": 738,
+        "true_positive_voxels": 1342
+      },
+      "panel": "comparison_panels/L011__L011_Week2.png",
+      "patient_id": "L011",
+      "slice_index": 70
+    },
+    {
+      "baseline": {
+        "false_negative_voxels": 439,
+        "false_positive_voxels": 432,
+        "true_positive_voxels": 3419
+      },
+      "case_id": "K042_Week0",
+      "error_score": 876.0,
+      "improved": {
+        "false_negative_voxels": 673,
+        "false_positive_voxels": 208,
+        "true_positive_voxels": 3185
+      },
+      "panel": "comparison_panels/K042__K042_Week0.png",
+      "patient_id": "K042",
+      "slice_index": 72
+    },
+    {
+      "baseline": {
+        "false_negative_voxels": 85,
+        "false_positive_voxels": 581,
+        "true_positive_voxels": 2121
+      },
+      "case_id": "M013_Week0",
+      "error_score": 622.0,
+      "improved": {
+        "false_negative_voxels": 171,
+        "false_positive_voxels": 407,
+        "true_positive_voxels": 2035
+      },
+      "panel": "comparison_panels/M013__M013_Week0.png",
+      "patient_id": "M013",
+      "slice_index": 65
+    },
+    {
+      "baseline": {
+        "false_negative_voxels": 155,
+        "false_positive_voxels": 432,
+        "true_positive_voxels": 1049
+      },
+      "case_id": "H007_Week0",
+      "error_score": 476.5,
+      "improved": {
+        "false_negative_voxels": 245,
+        "false_positive_voxels": 121,
+        "true_positive_voxels": 959
+      },
+      "panel": "comparison_panels/H007__H007_Week0.png",
+      "patient_id": "H007",
+      "slice_index": 72
+    }
+  ]
+}

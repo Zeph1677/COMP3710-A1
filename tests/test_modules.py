@@ -1,7 +1,7 @@
 import torch
 import pytest
 
-from modules import BaselineUNet3D, ImprovedUNet3D
+from modules import BaselineUNet3D, ContextImprovedUNet3D, ImprovedUNet3D
 
 
 def test_baseline_3d_unet_preserves_volume_shape_and_backpropagates():
@@ -29,21 +29,21 @@ def test_improved_3d_unet_returns_deep_supervision_only_when_training():
 
 def test_improved_3d_unet_uses_dropout_and_interpolation_upsampling():
     """The revised Improved arm regularises context blocks without transposed convolutions."""
-    model = ImprovedUNet3D(in_channels=1, num_classes=2, base_channels=4)
+    model = ContextImprovedUNet3D(in_channels=1, num_classes=2, base_channels=4)
     assert any(isinstance(module, torch.nn.Dropout3d) for module in model.modules())
     assert not any(isinstance(module, torch.nn.ConvTranspose3d) for module in model.modules())
 
 
 def test_improved_3d_unet_rejects_divisible_but_too_small_volume_before_normalization():
     """A 1-voxel bottleneck is invalid for instance normalization at batch size one."""
-    model = ImprovedUNet3D(in_channels=1, num_classes=2, base_channels=4)
+    model = ContextImprovedUNet3D(in_channels=1, num_classes=2, base_channels=4)
 
     with pytest.raises(ValueError, match="at least 16"):
         model(torch.randn(1, 1, 8, 8, 8))
 
 @pytest.mark.parametrize('version', [None, 'legacy_improved_v1', 'improved_context_v2'])
 def test_versioned_improved_round_trip_preserves_logits(tmp_path, version):
-    from modules import build_model, LegacyImprovedUNet3D
+    from modules import build_model
     from predict import load_checkpoint_model
     config = {'model': 'improved', 'num_classes': 3, 'base_channels': 2, 'dropout_probability': 0.47}
     if version is not None:
@@ -51,8 +51,9 @@ def test_versioned_improved_round_trip_preserves_logits(tmp_path, version):
     torch.manual_seed(7)
     original = build_model(config).eval()
     if version != 'improved_context_v2':
-        assert isinstance(original, LegacyImprovedUNet3D)
+        assert isinstance(original, ImprovedUNet3D)
     else:
+        assert isinstance(original, ContextImprovedUNet3D)
         assert all(m.p == 0.47 for m in original.modules() if isinstance(m, torch.nn.Dropout3d))
     value = torch.randn(1, 1, 16, 16, 16)
     with torch.no_grad():
