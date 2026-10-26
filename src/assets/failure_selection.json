@@ -16,7 +16,7 @@
         "false_positive_voxels": 166,
         "true_positive_voxels": 3403
       },
-      "panel": "comparison_panels/B037__B037_Week0.png",
+      "panel": "assets/failure_case_b037_week0.png",
       "patient_id": "B037",
       "slice_index": 70
     },
@@ -33,7 +33,7 @@
         "false_positive_voxels": 738,
         "true_positive_voxels": 1342
       },
-      "panel": "comparison_panels/L011__L011_Week2.png",
+      "panel": "assets/failure_case_l011_week2.png",
       "patient_id": "L011",
       "slice_index": 70
     },
@@ -50,7 +50,7 @@
         "false_positive_voxels": 208,
         "true_positive_voxels": 3185
       },
-      "panel": "comparison_panels/K042__K042_Week0.png",
+      "panel": "assets/failure_case_k042_week0.png",
       "patient_id": "K042",
       "slice_index": 72
     },
@@ -67,7 +67,7 @@
         "false_positive_voxels": 407,
         "true_positive_voxels": 2035
       },
-      "panel": "comparison_panels/M013__M013_Week0.png",
+      "panel": "assets/failure_case_m013_week0.png",
       "patient_id": "M013",
       "slice_index": 65
     },
@@ -84,7 +84,7 @@
         "false_positive_voxels": 121,
         "true_positive_voxels": 959
       },
-      "panel": "comparison_panels/H007__H007_Week0.png",
+      "panel": "assets/failure_case_h007_week0.png",
       "patient_id": "H007",
       "slice_index": 72
     }

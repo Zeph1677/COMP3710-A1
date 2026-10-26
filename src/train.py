@@ -226,7 +226,6 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--augmentation", action="store_true", help="Enable train-only augmentation")
     parser.add_argument("--scheduler", choices=("none", "cosine"), default="none")
     parser.add_argument("--eta-min", type=float, default=1e-5)
-    parser.add_argument("--validation-gifs", action="store_true")
     parser.add_argument("--base-channels", type=int, default=16)
     parser.add_argument("--target-shape", type=int, nargs=3, default=(128, 128, 128))
     parser.add_argument("--seed", type=int, default=42)
@@ -388,12 +387,8 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs, eta_min=eta_min) if scheduler_name == "cosine" else None
     output.mkdir(parents=True, exist_ok=True)
     config.update({"device": str(device), "epochs": args.epochs, "batch_size": args.batch_size, "learning_rate": args.learning_rate, "base_channels": args.base_channels, "prostate_ce_weight": getattr(args, "prostate_ce_weight", 8.0), "prostate_dice_weight": getattr(args, "prostate_dice_weight", 8.0), "train_patch_shape": list(training_patch_shape) if training_patch_shape else None, "foreground_patch_probability": foreground_probability, "selection_metric": selection_metric})
-    config.update({"augmentation_config": asdict(augmentation) if augmentation else None, "validation_augmentation": False, "test_augmentation": False, "scheduler": scheduler_name, "eta_min": eta_min, "scheduler_t_max": args.epochs, "lr_recording": "rate used for this epoch, scheduler steps after epoch", "validation_gifs": getattr(args, "validation_gifs", False)})
+    config.update({"augmentation_config": asdict(augmentation) if augmentation else None, "validation_augmentation": False, "test_augmentation": False, "scheduler": scheduler_name, "eta_min": eta_min, "scheduler_t_max": args.epochs, "lr_recording": "rate used for this epoch, scheduler steps after epoch"})
     _write_json(output / "experiment_config.json", config)
-    visual_index = min(range(len(validation_data.records)), key=lambda index: (validation_data.records[index].patient_id, validation_data.records[index].case_id))
-    visual_record = validation_data.records[visual_index]
-    if getattr(args, "validation_gifs", False):
-        _write_json(output / "validation_visualization.json", {"split": "validation", "patient_id": visual_record.patient_id, "case_id": visual_record.case_id, "epochs": [1,5], "also_render_best": True})
     history: list[dict[str, float]] = []
     started = time.perf_counter()
     for epoch in range(1, args.epochs + 1):
@@ -419,9 +414,6 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
             "validation_prostate_false_negative_voxels": float(validation["validation_prostate_false_negative_voxels"]),
             "validation_patient_prostate_dice_by_patient": validation["validation_patient_prostate_dice_by_patient"],
         }
-        if getattr(args, "validation_gifs", False) and epoch in {1,5}:
-            from validation_visuals import render_validation_gif
-            render_validation_gif(model, validation_data, visual_index, device, args.prostate_label, output / f"validation_epoch_{epoch}.gif", epoch)
         history.append(row)
         _write_json(output / "history.json", history)
         render_training_curves({args.model: history}, output / "training_curves.png", selection_metric)
@@ -442,11 +434,6 @@ def run_training(args: argparse.Namespace) -> dict[str, object]:
         "history": history,
     }
     _write_json(output / "training_summary.json", summary)
-    if getattr(args, "validation_gifs", False):
-        from validation_visuals import render_validation_gif
-        checkpoint = torch.load(output / "best.pt", map_location=device, weights_only=False)
-        model.load_state_dict(checkpoint["model_state_dict"])
-        render_validation_gif(model, validation_data, visual_index, device, args.prostate_label, output / "validation_best_epoch.gif", checkpoint["epoch"])
     return summary
 
 

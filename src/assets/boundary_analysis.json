@@ -2,6 +2,7 @@
   "analysis_date": "2026-10-26",
   "experiment_commit": "4232e0d91d8aa6cf8c1de38883b213c07cc62d10",
   "method": "Post-hoc analysis of retained predictions only. Inferior/superior bands are first/last ceil(0.2*N) axial slices of GT prostate extent. Full in-plane FP/FN included. Panels maximize summed paired FP+FN within each band; largest slice index breaks ties. 26-connected components, no component filtering.",
+  "source_artifact_path_note": "Entries under source_sha256 identify Git-ignored source prediction artifacts used for this audit. The prediction tensors are provenance records and are not distributed in the course submission; rendered panels are available through each case's panel field under assets/.",
   "cases": [
     {
       "case_id": "B037_Week0",

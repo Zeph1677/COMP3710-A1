@@ -105,7 +105,7 @@ Run all commands from the directory containing this README, including after movi
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS; Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install torch==2.11.0 numpy==2.4.2 nibabel==5.4.2 matplotlib==3.10.8 Pillow==12.1.1
+python -m pip install torch==2.11.0 numpy==2.4.2 nibabel==5.4.2 matplotlib==3.10.8
 ```
 
 The dependency versions below were import-verified on 26 October 2026 in the local verification record; this README edit did not repeat that environment audit. For the verified CUDA build, install PyTorch using `python -m pip install torch==2.11.0+cu128 --index-url https://download.pytorch.org/whl/cu128`. Historical formal runs used PyTorch `2.13.0+cu130`, CUDA `13.0` and an A100-PCIE-40GB. The verification environment is not a complete reconstruction of that historical runtime; bitwise reproduction is not claimed.
@@ -116,9 +116,7 @@ The dependency versions below were import-verified on 26 October 2026 in the loc
 | NumPy      | `2.4.2`                              | NIfTI arrays and visualisation     |
 | nibabel    | `5.4.2`                              | NIfTI loading and spatial metadata |
 | matplotlib | `3.10.8`                             | Curves and failure panels          |
-| Pillow     | `12.1.1`, checked on 26 October 2026 | Optional validation GIFs           |
-
-Pillow supports optional animation generation. No W&B account is required.
+No W&B account is required.
 
 ### Data Audit and Patient Separation
 
@@ -198,6 +196,22 @@ Main training used Adam, batch size 1, a constant learning rate of 0.001, 20 epo
 
 Improved's objective includes auxiliary losses, so loss magnitudes are not directly equivalent between arms. Similar training and validation curves alone do not prove the absence of overfitting.
 
+#### Validation Animation
+
+The animations below show the same fixed validation case (`G021_Week0`) at epochs 1, 5 and 19 of the later Context-v2 B validation run. Each frame moves through the full resized volume and displays MRI, reference prostate, predicted prostate, false positives in red and false negatives in cyan. They illustrate how the validation prediction changes during training; they are not held-out test evidence and are not used to select results after test evaluation.
+
+**Epoch 1**
+
+![Context-v2 B validation case at epoch 1](assets/validation_B_epoch_01.gif)
+
+**Epoch 5**
+
+![Context-v2 B validation case at epoch 5](assets/validation_B_epoch_05.gif)
+
+**Epoch 19 (validation-selected checkpoint)**
+
+![Context-v2 B validation case at epoch 19](assets/validation_B_epoch_19.gif)
+
 ### Testing
 
 Both formal jobs completed with exit status `0:0` at code revision `4232e0d`. The following tables report the retained matched comparison.
@@ -235,7 +249,7 @@ The `+0.002038` mean difference is below the project's predeclared `+0.01` meani
 
 #### Frozen Context-v2 B held-out evaluation
 
-Context-v2 B was selected and frozen using validation evidence before held-out evaluation. Its source validation job was `692354`; no held-out score was used to choose its checkpoint or configuration. Rangpur inference job `699109` completed on 26 October 2026 with Slurm state `COMPLETED`, exit code `0:0` and a recorded elapsed time of `00:07:15`. The downloaded evidence contains the checkpoint/configuration snapshot, re-audited manifest, environment records, five failure panels, 20 full-volume prediction tensors and `test_metrics.json`. All 45 downloaded files matched the remote paths, sizes and SHA-256 hashes.
+Context-v2 B was selected and frozen using validation evidence before held-out evaluation. Its source validation job was `692354`; no held-out score was used to choose its checkpoint or configuration. Rangpur inference job `699109` produced a successful process exit record and complete evaluation outputs on 26 October 2026. The retained `sacct_at_exit.txt` snapshot was captured while Slurm still reported `RUNNING|0:0|00:07:15`, so this package does not independently establish the terminal scheduler state. The downloaded evidence contains the checkpoint/configuration snapshot, re-audited manifest, environment records, five failure panels, 19 full-volume prediction tensors and `test_metrics.json`. Retained hashes verify the transferred archive, checkpoint, manifest and source files listed in `sha256_verified.txt`; a complete 45-file hash manifest is not retained.
 
 | Test patient | Baseline | Improved | Context-v2 B | Context-v2 B minus Baseline |
 | ------------ | -------: | -------: | -----------: | --------------------------: |
@@ -246,7 +260,7 @@ Context-v2 B was selected and frozen using validation evidence before held-out e
 | M013         | 0.871957 | 0.879931 |     0.857561 |                   -0.014396 |
 | **Mean**     | **0.811548** | **0.813587** | **0.795699** | **-0.015849** |
 
-The headline Context-v2 B value is the equal-patient mean of prostate Dice. Its scan-aggregated class-5 Dice is `0.814222`; that different aggregation must not replace `0.795699` in patient-level model comparisons. The run recorded `1304.29 MB` peak inference VRAM and `0.2152 s` mean cumulative model-inference time per patient under its own timing scope. These resource values are retained as evidence but are not presented as a strictly matched resource comparison with the historical jobs.
+The headline Context-v2 B value is the equal-patient mean of prostate Dice. Its scan-aggregated class-5 Dice is `0.814222`; that different aggregation must not replace `0.795699` in patient-level model comparisons. The run recorded `1304.29 MiB` peak inference VRAM and `0.2152 s` mean cumulative model-inference time per patient under its own timing scope. These resource values are retained as evidence but are not presented as a strictly matched resource comparison with the historical jobs.
 
 Context-v2 B failed the declared upgrade rule: it did not exceed Baseline by `0.01`, and H007 and K042 each regressed by more than `0.02`. Baseline therefore remains preferred. R0, R1, R2, P1, P2 and P3 will not be evaluated on the held-out set after observing job `699109`; doing so would turn the test set into a model-selection instrument. A same-environment Baseline recovery inference is optional only if teaching staff explicitly require a same-job or same-environment resource comparison, and it must reuse the frozen Baseline checkpoint without retraining.
 
@@ -317,7 +331,7 @@ Each paired panel displays one inferior and one superior slice, chosen by the hi
 
 ## Feasibility Review
 
-[One-page review with supporting appendices](../docs/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
+[One-page review with supporting appendices](assets/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
 
 **User need and scope.** A radiotherapy contouring specialist needs reviewable prostate and organ-at-risk drafts. Compare a plain 3D U-Net against a residual, deep-supervised 3D Improved U-Net on downsampled HipMRI volumes (Hard option). Investigate whether added complexity improves boundary coverage enough to justify its memory and runtime cost. This comparison does not isolate 3D versus 2D.
 

@@ -166,6 +166,19 @@ def test_training_cli_requires_cited_mapping_and_accepts_explicit_geometry():
     assert args.selection_metric == "mean_dice"
 
 
+def test_training_cli_does_not_advertise_unbundled_validation_gif_generation():
+    parser = create_argument_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args([
+            "--manifest", "manifest.json",
+            "--data-root", "data",
+            "--prostate-label", "5",
+            "--prostate-label-source", "CSIRO label documentation",
+            "--validation-gifs",
+        ])
+
+
 def test_improved_training_requires_an_explicit_architecture_version():
     """Catches accidental Context-v2 training labelled only as Improved."""
 
