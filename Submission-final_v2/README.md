@@ -1,7 +1,7 @@
 # COMP3710 Assignment 1 — 3D Improved U-Net Segmentation
 
-**Student:** s4910970
-**Option:** Hard option — Baseline versus Improved 3D U-Net
+**Student:** Haoyun Jiang(4910970)
+**Option:** Hard — 3D Improved U-Net
 
 ## 1. Project overview
 
@@ -16,7 +16,7 @@ The submission reports segmentation accuracy, computational cost, and prediction
 
 ![Baseline and Improved architecture](assets/model_architecture.png)
 
-## 2. Assignment objectives and feasibility
+## 2. Assignment objectives and feasibility review
 
 The project objectives are to:
 
@@ -26,7 +26,7 @@ The project objectives are to:
 4. report segmentation metrics, computational cost, and prediction errors; and
 5. meet the Hard-option patient-mean prostate Dice target of `0.70`.
 
-The midpoint feasibility review documented the proposed architecture, implementation tests, evaluation criteria, GPU planning, and engineering risks. The final work addresses these objectives through dataset auditing, matched formal runs, held-out evaluation, resource measurements, and visual error analysis. The review is available in [HipMRI Feasibility Review v5](assets/HipMRI_Feasibility_Review_v5.pdf).
+The midpoint feasibility review documented the proposed architecture, implementation tests, evaluation criteria, GPU planning, and engineering risks. The review was subsequently checked and accepted by the course tutor. The final work addresses these objectives through dataset auditing, matched formal runs, held-out evaluation, resource measurements, and visual error analysis. The review is available in [HipMRI Feasibility Review v5](https://chatgpt.com/c/assets/HipMRI_Feasibility_Review_v5.pdf).
 
 ## 3. Dataset and preprocessing
 
