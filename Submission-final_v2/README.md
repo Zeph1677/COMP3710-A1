@@ -94,7 +94,7 @@ Run the following commands from this directory.
 python -m pip install -r requirements.txt
 ```
 
-Python `3.11` and the exact direct package versions in `requirements.txt` were used for local verification. The formal Rangpur jobs used PyTorch `2.13.0+cu130`, whereas the locally verified package is PyTorch `2.11.0` (CUDA `12.8` on the verification machine). The saved source hashes establish that the submitted Python files match the formal jobs, but the local dependency pins do not recreate the historical CUDA environment bit for bit. A fresh virtual environment is recommended to avoid unrelated packages affecting dependency checks.
+Python `3.11` and the exact direct package versions in `requirements.txt` were used for local verification. The formal Rangpur jobs used PyTorch `2.13.0+cu130`, whereas the locally verified package is PyTorch `2.11.0` (CUDA `12.8` on the verification machine). The saved source hashes establish that the submitted Python files match the formal jobs.
 
 ### 6.2 Audit the dataset
 
@@ -196,7 +196,7 @@ Improved is higher for every scan-mean class metric. This does not contradict th
 
 ### 8.3 Computational cost
 
-Peak memory is allocated GPU memory. Training time is recorded in `training_summary.json`; inference time is cumulative model-execution time per preprocessed held-out patient, not end-to-end clinical latency.
+Peak memory is allocated GPU memory. inference time is cumulative model-execution time per preprocessed held-out patient.
 
 | Model    | Parameters | Peak train VRAM | Peak inference VRAM | Training time | Mean inference / patient |
 | -------- | ---------: | --------------: | ------------------: | ------------: | -----------------------: |
@@ -235,7 +235,7 @@ Five cases were selected to cover all five held-out patients. Scans were ranked 
 
 The repeated direction across all five patients indicates a systematic shift toward more conservative contours rather than an isolated patient effect. B037 Week0 is especially important: a modest FP reduction accompanies substantially more missed prostate. H007 Week0 and M013 Week0 reduce total error, but they also lose reference-tissue coverage. Small prostate cross-sections, partial-volume effects, low soft-tissue contrast and resizing are plausible contributors; this experiment did not isolate their individual effects.
 
-The source NIfTI affines use L/P/S orientation, and tensor depth increases in the superior direction after loading. The following positions locate the displayed slices within each resized reference prostate extent. They are geometric positions, not clinician-annotated apex or base landmarks.
+The source NIfTI affines use L/P/S orientation, and tensor depth increases in the superior direction after loading. The following positions locate the displayed slices within each resized reference prostate extent. 
 
 | Case       | Inferior / superior reference slice | Displayed slice | Relative position |
 | ---------- | ----------------------------------: | --------------: | ----------------: |
@@ -245,9 +245,9 @@ The source NIfTI affines use L/P/S orientation, and tensor depth increases in th
 | M013 Week0 |                             46 / 69 |              65 |             0.826 |
 | H007 Week0 |                             47 / 72 |              72 |             1.000 |
 
-H007 Week0 reaches the superior endpoint of the reference extent, while the other displayed panels lie within the extent. These positions do not justify unverified clinical apex/base labels or millimetre boundary claims. Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation rather than proof of correctness: a connected contour can still omit clinically important reference tissue.
+H007 Week0 reaches the superior endpoint of the reference extent, while the other displayed panels lie within the extent. 
 
-Operationally, both models require human review. Cases with small end-region cross-sections, low-contrast prostate boundaries, disconnected predictions, or visible disagreement with bladder and rectum contours are unsuitable for automatic acceptance. The system does not estimate uncertainty or provide a validated rule for bypassing specialist review.
+Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation rather than proof of correctness: a connected contour can still omit clinically important reference tissue.
 
 ## 10. Formal Improved segmentation animation
 
@@ -260,10 +260,6 @@ For this case, the prostate Dice is `0.839755`. The animation is a qualitative v
 ## 11. Conclusion and limitations
 
 Both architectures were implemented, trained, and evaluated under the same patient-disjoint protocol, and both exceed the Hard-option target. Improved achieved a slightly higher patient-mean prostate Dice (`0.813587` versus `0.811548`) as well as higher scan-mean Dice and IoU for each reported class. The patient-level gain is only `0.002038`, varies by patient, and includes a `0.062061` regression for B037. Improved also required approximately 22% more peak training GPU memory, while measured inference time was nearly unchanged.
-
-**Engineering recommendation:** retain Baseline as the conservative reference for this prototype. The small and inconsistent Improved gain does not justify preferring its additional training complexity, particularly because it increases false negatives in all five selected patient cases. Either model may be used only to produce a draft contour for specialist correction; neither is suitable for unattended treatment planning or automatic contour acceptance.
-
-The evidence does not establish clinician time savings, treatment safety, external-cohort generalisation, native-resolution boundary accuracy, calibrated uncertainty, or millimetre surface-distance performance. A stronger deployment claim would require clinician-verified apex/base landmarks, boundary metrics such as HD95, evaluation on an external cohort, and a prospective study of correction time and clinically significant omissions.
 
 ## 12. References
 
@@ -280,7 +276,7 @@ Generative AI tools were used to provide general technical guidance and assist w
 The main areas of assistance included:
 
 - **General guidance:** Clarifying project requirements, discussing preliminary implementation ideas and organising development tasks.
-- **Project organisation:** Assisting with the initial file structure, code organisation and documentation layout.
+- **Project organisation:** Assisting with the initial file structure and documentation layout.
 - **Testing:** Assisting with drafting test files, preparing test cases and troubleshooting testing-related issues.
 - **SLURM scripts:** Assisting with writing and adjusting SLURM job submission scripts for GPU experiments on the Rangpur cluster.
 - **Documentation:** Assisting with organising and refining README content, Markdown formatting and technical descriptions.
