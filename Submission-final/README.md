@@ -227,6 +227,14 @@ Five held-out cases, one per test patient, were selected using prostate false-po
 
 Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation, not proof of better segmentation by itself.
 
+## 10. Formal Improved segmentation animation
+
+The animation below visualises the formal Improved model (`improved_v1`, Rangpur job `701810`) on the held-out case `H007_Week0`. It moves through all 128 axial slices of the resized volume and shows the MRI, reference prostate, Improved prediction, and a prostate-specific error map. Green denotes reference or true-positive prostate voxels, yellow denotes the Improved prediction, red denotes false positives, and cyan denotes false negatives.
+
+![Formal Improved segmentation on H007 Week0](assets/improved_h007_week0.gif)
+
+For this case, the prostate Dice is `0.839755`. The animation is a qualitative view of one held-out case and complements the aggregate results and five-patient error analysis above.
+
 ## 11. Conclusion and limitations
 
 Both architectures were implemented, trained, and evaluated under the same patient-disjoint protocol, and both exceed the Hard-option target. Improved achieved a slightly higher patient-mean prostate Dice (`0.813587` versus `0.811548`) as well as higher scan-mean Dice and IoU for each reported class.
@@ -243,6 +251,16 @@ The patient-level improvement is small and varies by patient. Improved also requ
 
 **AI tools used:** OpenAI ChatGPT and Codex.
 
-Generative AI tools were used for general technical guidance and selected software-development and documentation tasks, including project organisation, testing support, SLURM-script drafting and adjustment, and README structuring and formatting. AI-generated suggestions and code were reviewed and adjusted as needed; relevant scripts and tests were checked through local execution or GPU-job outputs.
+Generative AI tools were used to provide general technical guidance and assist with selected software development and documentation tasks during this project.
 
-The implementation, experimental results, and final submission remain the responsibility of the author.
+The main areas of assistance included:
+
+- **General guidance:** Clarifying project requirements, discussing preliminary implementation ideas and organising development tasks.
+- **Project organisation:** Assisting with the initial file structure, code organisation and documentation layout.
+- **Testing:** Assisting with drafting test files, preparing test cases and troubleshooting testing-related issues.
+- **SLURM scripts:** Assisting with writing and adjusting SLURM job submission scripts for GPU experiments on the Rangpur cluster.
+- **Documentation:** Assisting with organising and refining README content, Markdown formatting and technical descriptions.
+
+AI-generated suggestions and code were reviewed and adjusted as needed. Relevant scripts and tests were checked through local execution or GPU job outputs.
+
+The project implementation, experimental results and final submission remain the responsibility of the author.
