@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping, Sequence
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
 
 History = list[dict[str, object]]
 

@@ -5,7 +5,7 @@
 
 ## 1. Project overview
 
-This project implements and compar es two six-class 3D U-Net architectures for pelvic MRI segmentation using the CSIRO HipMRI dataset:
+This project implements and compares two six-class 3D U-Net architectures for pelvic MRI segmentation using the CSIRO HipMRI dataset:
 
 - **Baseline:** a conventional 3D U-Net with double-convolution blocks.
 - **Improved:** a residual 3D U-Net with two training-only deep-supervision heads.
@@ -93,6 +93,8 @@ Run the following commands from this directory.
 ```bash
 python -m pip install -r requirements.txt
 ```
+
+Python `3.11` and the exact direct package versions in `requirements.txt` were used for local verification. The formal Rangpur jobs used PyTorch `2.13.0+cu130`, whereas the locally verified package is PyTorch `2.11.0` (CUDA `12.8` on the verification machine). The saved source hashes establish that the submitted Python files match the formal jobs, but the local dependency pins do not recreate the historical CUDA environment bit for bit. A fresh virtual environment is recommended to avoid unrelated packages affecting dependency checks.
 
 ### 6.2 Audit the dataset
 
@@ -205,15 +207,21 @@ Improved adds 22,460 parameters and uses approximately 22% more peak training me
 
 ## 9. Prediction and error analysis
 
-Five held-out cases, one per test patient, were selected using prostate false-positive plus false-negative error. Improved reduces false positives in all five examples but increases false negatives, producing more compact predictions while Baseline preserves more foreground coverage.
+Five cases were selected to cover all five held-out patients. Scans were ranked by the mean whole-volume prostate FP+FN across both models, and the highest-ranked scan from each patient was retained. Each panel compares the same MRI, reference mask and axial slice for Baseline and Improved. The displayed slice maximises paired error within the reference prostate extent. White denotes false-positive prostate voxels and red denotes false negatives.
 
-| Case       | Baseline FP / FN | Improved FP / FN | Comparison                              |
-| ---------- | ---------------: | ---------------: | --------------------------------------- |
-| B037 Week0 |      393 / 2,495 |      166 / 3,123 | Fewer FP, 628 additional FN             |
-| L011 Week2 |         894 / 68 |        738 / 159 | Less outward extension, lower coverage  |
-| K042 Week0 |        432 / 439 |        208 / 673 | More compact, additional missed tissue  |
-| M013 Week0 |         581 / 85 |        407 / 171 | Lower total error, moderate FN increase |
-| H007 Week0 |        432 / 155 |        121 / 245 | Large FP reduction, lower recall        |
+| Case       | Baseline FP / FN | Improved FP / FN |
+| ---------- | ---------------: | ---------------: |
+| B037 Week0 |      393 / 2,495 |      166 / 3,123 |
+| L011 Week2 |         894 / 68 |        738 / 159 |
+| K042 Week0 |        432 / 439 |        208 / 673 |
+| M013 Week0 |         581 / 85 |        407 / 171 |
+| H007 Week0 |        432 / 155 |        121 / 245 |
+
+- **B037 Week0:** Improved removes 227 FP but adds 628 FN. The severe loss of reference coverage makes this the clearest regression.
+- **L011 Week2:** Improved removes 156 FP but adds 91 FN. Reduced outward extension is accompanied by greater omission.
+- **K042 Week0:** Improved removes 224 FP but adds 234 FN. A cleaner contour is not a uniform accuracy improvement.
+- **M013 Week0:** Improved removes 174 FP and adds 86 FN. Total error falls, but reference-tissue coverage is less complete.
+- **H007 Week0:** Improved removes 311 FP and adds 90 FN. The strong reduction in excess contour comes with lower recall.
 
 ![B037 paired comparison](assets/failure_case_b037_week0.png)
 
@@ -225,7 +233,21 @@ Five held-out cases, one per test patient, were selected using prostate false-po
 
 ![M013 paired comparison](assets/failure_case_m013_week0.png)
 
-Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation, not proof of better segmentation by itself.
+The repeated direction across all five patients indicates a systematic shift toward more conservative contours rather than an isolated patient effect. B037 Week0 is especially important: a modest FP reduction accompanies substantially more missed prostate. H007 Week0 and M013 Week0 reduce total error, but they also lose reference-tissue coverage. Small prostate cross-sections, partial-volume effects, low soft-tissue contrast and resizing are plausible contributors; this experiment did not isolate their individual effects.
+
+The source NIfTI affines use L/P/S orientation, and tensor depth increases in the superior direction after loading. The following positions locate the displayed slices within each resized reference prostate extent. They are geometric positions, not clinician-annotated apex or base landmarks.
+
+| Case       | Inferior / superior reference slice | Displayed slice | Relative position |
+| ---------- | ----------------------------------: | --------------: | ----------------: |
+| B037 Week0 |                             42 / 79 |              70 |             0.757 |
+| L011 Week2 |                             62 / 88 |              70 |             0.308 |
+| K042 Week0 |                             51 / 82 |              72 |             0.677 |
+| M013 Week0 |                             46 / 69 |              65 |             0.826 |
+| H007 Week0 |                             47 / 72 |              72 |             1.000 |
+
+H007 Week0 reaches the superior endpoint of the reference extent, while the other displayed panels lie within the extent. These positions do not justify unverified clinical apex/base labels or millimetre boundary claims. Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation rather than proof of correctness: a connected contour can still omit clinically important reference tissue.
+
+Operationally, both models require human review. Cases with small end-region cross-sections, low-contrast prostate boundaries, disconnected predictions, or visible disagreement with bladder and rectum contours are unsuitable for automatic acceptance. The system does not estimate uncertainty or provide a validated rule for bypassing specialist review.
 
 ## 10. Formal Improved segmentation animation
 
@@ -237,9 +259,11 @@ For this case, the prostate Dice is `0.839755`. The animation is a qualitative v
 
 ## 11. Conclusion and limitations
 
-Both architectures were implemented, trained, and evaluated under the same patient-disjoint protocol, and both exceed the Hard-option target. Improved achieved a slightly higher patient-mean prostate Dice (`0.813587` versus `0.811548`) as well as higher scan-mean Dice and IoU for each reported class.
+Both architectures were implemented, trained, and evaluated under the same patient-disjoint protocol, and both exceed the Hard-option target. Improved achieved a slightly higher patient-mean prostate Dice (`0.813587` versus `0.811548`) as well as higher scan-mean Dice and IoU for each reported class. The patient-level gain is only `0.002038`, varies by patient, and includes a `0.062061` regression for B037. Improved also required approximately 22% more peak training GPU memory, while measured inference time was nearly unchanged.
 
-The patient-level improvement is small and varies by patient. Improved also required approximately 22% more peak training GPU memory, while measured inference time was nearly unchanged. Baseline is the more resource-efficient reference model; Improved demonstrates the effect of residual blocks and deep supervision on performance and training cost under the matched protocol.
+**Engineering recommendation:** retain Baseline as the conservative reference for this prototype. The small and inconsistent Improved gain does not justify preferring its additional training complexity, particularly because it increases false negatives in all five selected patient cases. Either model may be used only to produce a draft contour for specialist correction; neither is suitable for unattended treatment planning or automatic contour acceptance.
+
+The evidence does not establish clinician time savings, treatment safety, external-cohort generalisation, native-resolution boundary accuracy, calibrated uncertainty, or millimetre surface-distance performance. A stronger deployment claim would require clinician-verified apex/base landmarks, boundary metrics such as HD95, evaluation on an external cohort, and a prospective study of correction time and clinically significant omissions.
 
 ## 12. References
 
