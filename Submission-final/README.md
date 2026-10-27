@@ -1,32 +1,36 @@
-# COMP3710 Assignment 1 — 3D U-Net Segmentation
+# COMP3710 Assignment 1 — 3D Improved U-Net Segmentation
 
 **Student:** s4910970
 **Option:** Hard option — Baseline versus Improved 3D U-Net
 
-## Overview
+## 1. Project overview
 
-This submission implements and evaluates two six-class 3D segmentation networks on the HipMRI dataset:
+This project implements and compar es two six-class 3D U-Net architectures for pelvic MRI segmentation using the CSIRO HipMRI dataset:
 
 - **Baseline:** a conventional 3D U-Net with double-convolution blocks.
 - **Improved:** a residual 3D U-Net with two training-only deep-supervision heads.
 
-The assignment tests whether residual blocks and deep supervision improve segmentation enough to justify their additional cost. Both models use the same patient-disjoint split, preprocessing, loss, training budget and full-volume evaluation, so architecture is the main experimental variable.
+Both models were evaluated with the same patient-disjoint split and matched training and evaluation protocol. Baseline achieved a patient-mean prostate Dice of **0.811548** and Improved achieved **0.813587** across five held-out patients. Both exceed the Hard-option target of `0.70`.
+
+The submission reports segmentation accuracy, computational cost, and prediction errors, with reproducible data auditing, training, and evaluation procedures.
 
 ![Baseline and Improved architecture](assets/model_architecture.png)
 
-## Assignment objectives
+## 2. Assignment objectives and feasibility
 
-1. Build a reproducible 3D workflow: audit, preprocessing, training, validation and full-volume inference.
-2. Keep patients disjoint across training, validation and test data.
-3. Compare standard and Improved 3D U-Net architectures under matched settings.
-4. Report segmentation metrics, computational cost and representative prediction errors.
-5. Meet the Hard-option patient-mean prostate Dice target of `0.70`.
+The project objectives are to:
 
-This is a compact course implementation inspired by 3D U-Net literature, not a reproduction of a complete research system.
+1. implement a reproducible 3D workflow for data audit, preprocessing, training, validation, and full-volume inference;
+2. maintain patient-independent training, validation, and test partitions;
+3. compare Baseline and Improved 3D U-Net architectures under matched settings;
+4. report segmentation metrics, computational cost, and prediction errors; and
+5. meet the Hard-option patient-mean prostate Dice target of `0.70`.
 
-## Dataset and preprocessing
+The midpoint feasibility review documented the proposed architecture, implementation tests, evaluation criteria, GPU planning, and engineering risks. The final work addresses these objectives through dataset auditing, matched formal runs, held-out evaluation, resource measurements, and visual error analysis. The review is available in [HipMRI Feasibility Review v5](assets/HipMRI_Feasibility_Review_v5.pdf).
 
-The project uses the CSIRO [*Labelled weekly MR images of the male pelvis*](https://data.csiro.au/collection/csiro%3A51392) dataset. Raw data are not redistributed. After obtaining the dataset, use this layout:
+## 3. Dataset and preprocessing
+
+The project uses the CSIRO [*Labelled weekly MR images of the male pelvis*](https://data.csiro.au/collection/csiro%3A51392) dataset. Raw data are not redistributed. After obtaining the data, use the following layout:
 
 ```text
 data/
@@ -35,7 +39,7 @@ data/
     `-- semantic_labels_only/
 ```
 
-The audit pairs `_LFOV` images with `_SEMANTIC` masks. Seed `42` keeps every patient's scans in one partition:
+The audit pairs `_LFOV` images with `_SEMANTIC` masks. Seed `42` keeps every patient's scans in a single partition.
 
 | Split           |     Patients |         Scans |
 | --------------- | -----------: | ------------: |
@@ -50,53 +54,55 @@ Frozen manifest SHA-256:
 5457a611c5611f944a26d214a1f325b803dded66f70df5fda3fd009642751a07
 ```
 
-Images are z-score normalised and resized with trilinear interpolation to `128 x 128 x 128`; masks use nearest-neighbour resizing. Training uses `96 x 96 x 96` patches, with a `0.5` probability of sampling a prostate-containing patch. Validation and test use deterministic resized volumes.
+Images are z-score normalised and resized with trilinear interpolation to `128 x 128 x 128`; masks use nearest-neighbour resizing. Training uses `96 x 96 x 96` patches with a `0.5` probability of sampling a prostate-containing patch. Validation and testing use deterministic resized volumes.
 
-## Model design
+## 4. Model architecture
 
 Both models use three encoder stages, skip connections, channel widths `16 / 32 / 64 / 128`, and six output logits.
 
-| Component                    | Baseline 3D U-Net  | Improved 3D U-Net                  |
-| ---------------------------- | ------------------ | ---------------------------------- |
-| Main block                   | Double convolution | Residual convolution               |
-| Decoder supervision          | Final output only  | Final output + two auxiliary heads |
-| Auxiliary heads at inference | —                 | Disabled                           |
-| Output                       | Six-class logits   | Six-class logits                   |
+| Component                    | Baseline 3D U-Net  | Improved 3D U-Net                     |
+| ---------------------------- | ------------------ | ------------------------------------- |
+| Main block                   | Double convolution | Residual convolution                  |
+| Decoder supervision          | Final output only  | Final output plus two auxiliary heads |
+| Auxiliary heads at inference | —                 | Disabled                              |
+| Output                       | Six-class logits   | Six-class logits                      |
 
-Training combines weighted cross-entropy and soft Dice loss. The prostate class weight is `4`, and all other classes use `1`. Each Improved auxiliary head contributes `0.25` times the same objective during training.
+Training combines weighted cross-entropy and soft Dice loss. The prostate class weight is `4`; all other class weights are `1`. Each Improved auxiliary head contributes `0.25` times the same objective during training. Therefore, the models share the data, preprocessing, training budget, optimiser, and evaluation workflow, while the compared design differences are residual blocks and training-stage auxiliary supervision.
 
-## Repository structure
+## 5. Repository structure and environment
 
-| File                 | Purpose                                                  |
-| -------------------- | -------------------------------------------------------- |
-| `audit.py`         | Validates pairs and writes the patient-disjoint manifest |
-| `dataset.py`       | Loading, preprocessing, crop sampling and split access   |
-| `modules.py`       | Baseline and Improved model definitions                  |
-| `train.py`         | Training, validation, checkpoint selection and summaries |
-| `predict.py`       | Full-volume inference, metrics and visual panels         |
-| `plot_training.py` | Training-history plotting                                |
-| `requirements.txt` | Required Python packages                                 |
-| `assets/`          | Assignment figures, GIFs and evidence                    |
+| File                 | Purpose                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `audit.py`         | Validates pairs and writes the patient-disjoint manifest  |
+| `dataset.py`       | Loading, preprocessing, crop sampling, and split access   |
+| `modules.py`       | Baseline and Improved model definitions                   |
+| `train.py`         | Training, validation, checkpoint selection, and summaries |
+| `predict.py`       | Full-volume inference, metrics, and visual panels         |
+| `plot_training.py` | Training-history plotting                                 |
+| `requirements.txt` | Required Python packages                                  |
+| `assets/`          | Assignment figures, GIFs, and supporting evidence         |
 
-Generated datasets, manifests, checkpoints and outputs are excluded from version control.
+Generated datasets, manifests, checkpoints, and model outputs are excluded from version control.
 
-## Setup and reproduction
+## 6. Setup and reproduction
 
-Run commands from this directory. The dependency list is already supplied; download/install it with:
+Run the following commands from this directory.
+
+### 6.1 Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 1. Audit the dataset
+### 6.2 Audit the dataset
 
 ```bash
 python audit.py data/HipMRI_Study_open --output artifacts/dataset_manifest.json --seed 42
 ```
 
-The audit checks pairings, shape, affine consistency, finite values, integer labels and patient separation. Use the same unmodified manifest for both models.
+The audit checks image-mask pairings, shape and affine consistency, finite values, integer labels, and patient separation.
 
-### 2. Train Baseline
+### 6.3 Train Baseline
 
 ```bash
 python train.py \
@@ -121,17 +127,17 @@ python train.py \
   --scheduler none
 ```
 
-### 3. Train Improved
+### 6.4 Train Improved
 
-Use the same command with a separate output directory and:
+Use the Baseline command with a separate output directory and these additional options:
 
 ```text
 --output-dir artifacts/improved --model improved --architecture-version improved_v1
 ```
 
-The best checkpoint is selected using validation performance only; the held-out test split is not used for selection or tuning.
+The best checkpoint is selected with validation performance only; the held-out test split is not used for selection or tuning.
 
-### 4. Evaluate a selected checkpoint
+### 6.5 Evaluate a selected checkpoint
 
 ```bash
 python predict.py \
@@ -144,19 +150,19 @@ python predict.py \
   --device cuda
 ```
 
-Use a new output directory for each evaluation. `predict.py` reconstructs complete volumes with overlap-averaged logits, reports metrics and writes visual panels.
+Use a new output directory for each evaluation. `predict.py` reconstructs full volumes using overlap-averaged logits, reports metrics, and writes visual panels.
 
-## Experimental protocol
+## 7. Experimental protocol
 
-The formal runs used identical splits, preprocessing, seed, batch size, 20-epoch budget, optimiser, class-weighted loss and inference. Improved differs only through residual blocks and two auxiliary heads. Since auxiliary losses contribute to its training objective, raw total training losses are not directly comparable.
+The two formal runs used the frozen manifest, identical preprocessing, seed, batch size, 20-epoch budget, optimiser, class-weighted loss, and inference procedure. The final code in this submission matches the source records of Rangpur job `701809` (Baseline) and job `701810` (Improved); both completed successfully with Slurm state `COMPLETED` and exit code `0:0`.
 
-The final experiments ran on an NVIDIA A100-PCIE-40GB GPU. Baseline epoch 20 and Improved epoch 18 were selected by validation mean Dice before held-out evaluation.
+Checkpoints were selected by validation mean Dice before held-out evaluation: epoch 20 for Baseline and epoch 18 for Improved. The held-out test split was used only for final evaluation.
 
 ![Training loss and validation Dice](assets/training_curves.png)
 
-## Results
+## 8. Results
 
-### Patient-level prostate Dice
+### 8.1 Patient-level prostate Dice
 
 This primary metric averages prostate Dice across each patient's weekly scans, then weights the five held-out patients equally.
 
@@ -169,11 +175,11 @@ This primary metric averages prostate Dice across each patient's weekly scans, t
 | M013           |           0.871957 |           0.879931 |           +0.007974 |
 | **Mean** | **0.811548** | **0.813587** | **+0.002038** |
 
-Both models meet the `0.70` target. Improved is higher for three patients and lower for two; its mean advantage is small rather than consistent for every patient.
+Both models meet the `0.70` target. Improved is higher for three patients and lower for two; the mean advantage is small rather than consistent for every patient.
 
-### Per-class metrics
+### 8.2 Per-class Dice and IoU
 
-The following values are scan means across the 19 held-out volumes.
+The following values are scan means across the 19 held-out volumes. Labels 1–5 reproduce the reported test metrics. Background was independently recomputed from saved prediction tensors using the same per-scan averaging rule and is shown separately because its dominant score can obscure anatomical errors.
 
 | Class      | Baseline Dice | Baseline IoU | Improved Dice | Improved IoU |
 | ---------- | ------------: | -----------: | ------------: | -----------: |
@@ -184,20 +190,22 @@ The following values are scan means across the 19 held-out volumes.
 | Rectum     |      0.852767 |     0.747437 |      0.861629 |     0.758714 |
 | Prostate   |      0.822599 |     0.702348 |      0.831385 |     0.715546 |
 
-Improved is higher for every scan-mean class metric. This is compatible with the small patient-level difference because the two tables aggregate data differently.
+Improved is higher for every scan-mean class metric. This does not contradict the small patient-mean difference, because the two summaries use different aggregation rules.
 
-### Computational cost
+### 8.3 Computational cost
+
+Peak memory is allocated GPU memory. Training time is recorded in `training_summary.json`; inference time is cumulative model-execution time per preprocessed held-out patient, not end-to-end clinical latency.
 
 | Model    | Parameters | Peak train VRAM | Peak inference VRAM | Training time | Mean inference / patient |
 | -------- | ---------: | --------------: | ------------------: | ------------: | -----------------------: |
 | Baseline |  1,400,646 |       977.6 MiB |         1,047.4 MiB |     1,369.1 s |               0.248920 s |
 | Improved |  1,423,106 |     1,193.4 MiB |         1,047.5 MiB |     1,388.2 s |               0.249449 s |
 
-Improved adds 22,460 parameters and uses about 22% more peak training memory. Its inference memory and measured model-execution time are effectively unchanged.
+Improved adds 22,460 parameters and uses approximately 22% more peak training memory. Inference memory and measured model-execution time are effectively unchanged.
 
-## Prediction analysis
+## 9. Prediction and error analysis
 
-Five held-out cases were selected using prostate false-positive plus false-negative error. Improved reduces false positives in all five examples, but increases false negatives; it produces more compact predictions while Baseline preserves more foreground coverage.
+Five held-out cases, one per test patient, were selected using prostate false-positive plus false-negative error. Improved reduces false positives in all five examples but increases false negatives, producing more compact predictions while Baseline preserves more foreground coverage.
 
 | Case       | Baseline FP / FN | Improved FP / FN | Comparison                              |
 | ---------- | ---------------: | ---------------: | --------------------------------------- |
@@ -217,44 +225,24 @@ Five held-out cases were selected using prostate false-positive plus false-negat
 
 ![M013 paired comparison](assets/failure_case_m013_week0.png)
 
-Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation, not by itself proof of a better segmentation.
+Baseline produced multiple prostate components in `6/19` held-out scans; Improved produced one component in every scan. Connectivity is an observation, not proof of better segmentation by itself.
 
-## Training progression GIFs
+## 11. Conclusion and limitations
 
-This is the most appropriate place for the GIFs: they illustrate learning progress without interrupting the quantitative tables. 
+Both architectures were implemented, trained, and evaluated under the same patient-disjoint protocol, and both exceed the Hard-option target. Improved achieved a slightly higher patient-mean prostate Dice (`0.813587` versus `0.811548`) as well as higher scan-mean Dice and IoU for each reported class.
 
-| Epoch | Validation animation                                                 |
-| ----- | -------------------------------------------------------------------- |
-| 1     | ![Baseline validation at epoch 1](assets/validation_B_epoch_01.gif)  |
-| 5     | ![Baseline validation at epoch 5](assets/validation_B_epoch_05.gif)  |
-| 19    | ![Baseline validation at epoch 19](assets/validation_B_epoch_19.gif) |
+The patient-level improvement is small and varies by patient. Improved also required approximately 22% more peak training GPU memory, while measured inference time was nearly unchanged. Baseline is the more resource-efficient reference model; Improved demonstrates the effect of residual blocks and deep supervision on performance and training cost under the matched protocol.
 
-## Conclusion
-
-Both models were implemented, trained and evaluated successfully under the same patient-disjoint protocol, and both exceed the assignment target. Improved achieved the higher patient-mean prostate Dice (`0.813587` versus `0.811548`) and higher scan-mean class metrics, but the difference is small and varies by patient. Its main measured cost is approximately 22% greater peak training memory.
-
-Baseline remains the more resource-efficient reference for this experiment; Improved demonstrates that residual blocks and deep supervision are competitive under matched conditions. With five test patients and one random seed, this conclusion is specific to the assignment experiment.
-
-## References
+## 12. References
 
 1. Çiçek et al., [3D U-Net: Learning Dense Volumetric Segmentation from Sparse Annotation](https://arxiv.org/abs/1606.06650), 2016.
-2. Isensee et al., [Brain Tumor Segmentation and Radiomics Survival Prediction: Contribution to the BRATS 2017 Challenge](https://arxiv.org/abs/1802.10508), 2018.
+2. Isensee et al., [Brain Tumor Segmentation and Radiomics Survival Prediction: Contribution to the BRATS 2017 Challenge](https://arxiv.org/abs/1802.10508), 2018. Architectural inspiration only.
 3. CSIRO, [Labelled weekly MR images of the male pelvis](https://data.csiro.au/collection/csiro%3A51392), DOI [10.25919/45T8-P065](https://doi.org/10.25919/45T8-P065).
 
-## AI usage
+## 13. AI usage disclosure
 
 **AI tools used:** OpenAI ChatGPT and Codex.
 
-Generative AI tools were used to provide general technical guidance and assist with selected software development and documentation tasks during this project.
+Generative AI tools were used for general technical guidance and selected software-development and documentation tasks, including project organisation, testing support, SLURM-script drafting and adjustment, and README structuring and formatting. AI-generated suggestions and code were reviewed and adjusted as needed; relevant scripts and tests were checked through local execution or GPU-job outputs.
 
-The main areas of assistance included:
-
-- **General guidance:** Clarifying project requirements, discussing preliminary implementation ideas and organising development tasks.
-- **Project organisation:** Assisting with the initial file structure, code organisation and documentation layout.
-- **Testing:** Assisting with drafting test files, preparing test cases and troubleshooting testing-related issues.
-- **SLURM scripts:** Assisting with writing and adjusting SLURM job submission scripts for GPU experiments on the Rangpur cluster.
-- **Documentation:** Assisting with organising and refining README content, Markdown formatting and technical descriptions.
-
-AI-generated suggestions and code were reviewed and adjusted as needed. Relevant scripts and tests were checked through local execution or GPU job outputs.
-
-The project implementation, experimental results and final submission remain the responsibility of the author.
+The implementation, experimental results, and final submission remain the responsibility of the author.
