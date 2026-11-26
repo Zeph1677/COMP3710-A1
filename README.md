@@ -1,6 +1,6 @@
 # 3D Improved UNet Image Segmentation - Prostate Case Study
 
-[Original course submission and reviews](https://github.com/shakes76/PatternAnalysis-2026/pull/68) · [Final marking: 33/40, subject to approval](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515) · [Exact submitted project](docs/original-pr68/README.md)
+[Submitted project files](docs/original-pr68/) · [Original PR, reviews and final marking](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515)
 
 ## Project showcase and assessment
 
@@ -22,7 +22,7 @@ The original experiment uses five held-out patients (19 scans), one seed and a r
 
 - [Current source code](src/), [automated tests](tests/), and [experimental evidence](evidence/).
 - [Original 19-file PR snapshot](docs/original-pr68/) and [file-by-file Git blob manifest](evidence/pr68-manifest.json).
-- [Snapshot provenance and assessment notes](docs/PR68_PROVENANCE.md).
+- [Completeness audit: 19/19 files verified](docs/PR68_COMPLETENESS.md) and [snapshot provenance and assessment notes](docs/PR68_PROVENANCE.md).
 
 
 COMP3710 Pattern Recognition and Analysis · s4910970 · Hard difficulty
