@@ -1,6 +1,6 @@
 # 3D Improved UNet Image Segmentation - Prostate Case Study
 
-[Submitted files in original PR](https://github.com/shakes76/PatternAnalysis-2026/pull/68/files) · [Original PR, reviews and final marking](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515)
+[Submitted files in original PR](https://github.com/Zeph1677/PatternAnalysis-2026/tree/topic-recognition/recognition/HipMRI_3D_UNet_s4910970) · [Original PR, reviews and final marking](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515)
 
 ## Project showcase and assessment
 
