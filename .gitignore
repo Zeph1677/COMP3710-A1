@@ -75,3 +75,7 @@ docs/assets/context_v2_ablation_692354/*
 !docs/assets/context_v2_ablation_692354/D_validation_epoch_1.gif
 !docs/assets/context_v2_ablation_692354/D_validation_epoch_5.gif
 !docs/assets/context_v2_ablation_692354/D_validation_best_epoch.gif
+# Original public course submission and provenance.
+!docs/original-pr68/
+!docs/PR68_PROVENANCE.md
+!evidence/pr68-manifest.json

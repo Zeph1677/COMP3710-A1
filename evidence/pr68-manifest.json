@@ -1,0 +1,86 @@
+{
+  "source_pr": "https://github.com/shakes76/PatternAnalysis-2026/pull/68",
+  "source_repository": "Zeph1677/PatternAnalysis-2026",
+  "source_commit": "6bc9a99a781aa3333cb3d0adb6ed9e36dcb33025",
+  "source_directory": "recognition/HipMRI_3D_UNet_s4910970",
+  "verified_on": "2026-11-26",
+  "file_count": 19,
+  "files": [
+    {
+      "path": ".gitignore",
+      "git_blob": "d90621a6eed125243b5ba6552e17d4e3741c91a4"
+    },
+    {
+      "path": "README.md",
+      "git_blob": "0e98179a682a0e0df0839f9b17527e0b5f45b455"
+    },
+    {
+      "path": "assets/HipMRI_Feasibility_Review_v5.pdf",
+      "git_blob": "0aa53e892537b8948bcc7d1366dd68a29249c239"
+    },
+    {
+      "path": "assets/failure_case_b037_week0.png",
+      "git_blob": "f4baee775d6f72b165acf1bcc57b05fc698ffe4d"
+    },
+    {
+      "path": "assets/failure_case_h007_week0.png",
+      "git_blob": "6afabd1887e7ef2c237f0d9e2d744052f0681ae2"
+    },
+    {
+      "path": "assets/failure_case_k042_week0.png",
+      "git_blob": "9298623d261fab73782a79d759381a9bb5b1c8d6"
+    },
+    {
+      "path": "assets/failure_case_l011_week2.png",
+      "git_blob": "2425515a2bf546a5efc9dd21924bcd451c809514"
+    },
+    {
+      "path": "assets/failure_case_m013_week0.png",
+      "git_blob": "9d9499f9fd92dfed556aea51614554d19f3e82c4"
+    },
+    {
+      "path": "assets/improved_h007_week0.gif",
+      "git_blob": "596edb8063d1edc26acdcd40e0a63442291ce8dc"
+    },
+    {
+      "path": "assets/model_architecture.png",
+      "git_blob": "d6ddbef5de87c791989a46f08bc36e30a2fa85e9"
+    },
+    {
+      "path": "assets/training_curves.png",
+      "git_blob": "b092f61e915fad1aa5d3ef2c8c411bdb40b8a469"
+    },
+    {
+      "path": "audit.py",
+      "git_blob": "78935467996913fdfd07852061d0faae0c7e9d1d"
+    },
+    {
+      "path": "compare_failures.py",
+      "git_blob": "7622e86bfbef11b7c6bb98edbbab55be1c5a07d6"
+    },
+    {
+      "path": "dataset.py",
+      "git_blob": "9f141a07f1d51c1a0b1948f3aef73f8d1c2f3106"
+    },
+    {
+      "path": "modules.py",
+      "git_blob": "b5e1430a49109edae9e969b9bdea87b1bc72ce59"
+    },
+    {
+      "path": "plot_training.py",
+      "git_blob": "8f1035dc52e374135e4019fa67a5294abbdcd89c"
+    },
+    {
+      "path": "predict.py",
+      "git_blob": "876f03c590e3c8c1d28252f95888fd4ff1d5beb2"
+    },
+    {
+      "path": "requirements.txt",
+      "git_blob": "a3cc99d595fe2b4b9787e281f310cffe6a63ccae"
+    },
+    {
+      "path": "train.py",
+      "git_blob": "bf21f2cea821f47afe73177a30d4d3547a8062ae"
+    }
+  ]
+}

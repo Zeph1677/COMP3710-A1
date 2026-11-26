@@ -1,5 +1,30 @@
 # 3D Improved UNet Image Segmentation - Prostate Case Study
 
+[Original course submission and reviews](https://github.com/shakes76/PatternAnalysis-2026/pull/68) · [Final marking: 33/40, subject to approval](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515) · [Exact submitted project](docs/original-pr68/README.md)
+
+## Project showcase and assessment
+
+Developed by Haoyun (Zephyr) Jiang for COMP3710 at The University of Queensland, 2026. This personal repository preserves the working code, tests and additional experiments alongside an exact snapshot of the original course PR. Later experiments and portfolio updates do not change the assessed submission.
+
+| Result or record | Value | Evidence |
+| --- | --- | --- |
+| Baseline patient-mean prostate Dice | 0.811548 | [Original experiment report](docs/original-pr68/README.md) |
+| Improved patient-mean prostate Dice | 0.813587 | [Original experiment report](docs/original-pr68/README.md) |
+| Final marking comment | 33/40 (82.5%), subject to approval from Shakes | [Final Marking, 23 November 2026 Brisbane time](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-7087681515) |
+| Earlier implementation reviews | 18/20 and 20/20; preliminary | [First review](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-6906766567), [second review](https://github.com/shakes76/PatternAnalysis-2026/pull/68#issuecomment-6914820929) |
+| Original development history | 22 commits recorded in the course PR | [PR commit history](https://github.com/shakes76/PatternAnalysis-2026/pull/68/commits) |
+
+The final marking comment reports 33 marks and 7 marks deducted (40 available); it explicitly remains subject to approval. This is the assignment mark recorded in that comment, not the overall course grade or a claim of a confirmed LMS result. The earlier implementation subtotals are not the final assignment mark. Assessment links were checked on 26 November 2026.
+
+The original experiment uses five held-out patients (19 scans), one seed and a resized 128³ evaluation grid. The small difference between models does not establish a reliable improvement. The report below also contains later analyses; consult the snapshot to see exactly what was submitted in PR #68.
+
+![Original segmentation demonstration](docs/original-pr68/assets/improved_h007_week0.gif)
+
+- [Current source code](src/), [automated tests](tests/), and [experimental evidence](evidence/).
+- [Original 19-file PR snapshot](docs/original-pr68/) and [file-by-file Git blob manifest](evidence/pr68-manifest.json).
+- [Snapshot provenance and assessment notes](docs/PR68_PROVENANCE.md).
+
+
 COMP3710 Pattern Recognition and Analysis · s4910970 · Hard difficulty
 
 This project compares a Baseline 3D U-Net with a residual, deep-supervised Improved 3D U-Net for six-class pelvic MRI segmentation: Background, Body, Bones, Bladder, Rectum and Prostate. The dataset is CSIRO's [Labelled weekly MR images of the male pelvis](https://data.csiro.au/collection/csiro%3A51392), referred to as **HipMRI** in this project. The intended use is research on contour drafting with human review, not autonomous treatment planning.
@@ -13,7 +38,7 @@ This project compares a Baseline 3D U-Net with a residual, deep-supervised Impro
 3. Extract the download beneath `data/HipMRI_Study_open` so the two full-volume directories appear exactly as follows:
 
 ```text
-HipMRI_3D_UNet_s4910970/
+COMP3710-A1/
 └── data/
     └── HipMRI_Study_open/
         ├── semantic_MRs/
@@ -39,7 +64,7 @@ The submission compares two models. `BaselineUNet3D` uses ordinary double-convol
 
 MRI intensities are z-score normalized. Images are resized with trilinear interpolation and masks with nearest-neighbour interpolation. Training uses 96×96×96 crops with a 0.5 probability of choosing a prostate-containing crop. Validation and test use deterministic full resized volumes. Raw logits enter cross entropy; softmax is applied within soft Dice.
 
-![Baseline and Improved architecture](assets/model_architecture.png)
+![Baseline and Improved architecture](src/assets/model_architecture.png)
 
 ### UNet Comparison
 
@@ -56,7 +81,7 @@ The implementation is a compact residual, deep-supervised adaptation of 3D U-Net
 
 ### Modules
 
-The implementation in [modules.py](modules.py) separates feature extraction, reconstruction and supervision:
+The implementation in [modules.py](src/modules.py) separates feature extraction, reconstruction and supervision:
 
 - **Convolution block (`ConvBlock3D`).** Two padded 3×3×3 convolutions each use instance normalization and LeakyReLU. This block is shared by the plain model and the residual block's main branch.
 - **Residual block (`ResidualBlock3D`).** The main branch is added to an identity shortcut, or a 1×1×1 projection when channel counts differ, followed by LeakyReLU.
@@ -80,8 +105,8 @@ The decoder reconstructs resolutions of 24³, 48³ and 96³. Argmax over the six
 
 | Identifier | Definition in this submission | Evidence and loading behaviour |
 | ---------- | ----------------------------- | ------------------------------ |
-| `baseline_v1` | Plain `BaselineUNet3D`, without residual blocks or auxiliary heads | [train.py](train.py), `model_configuration()`, writes this identifier for new Baseline runs; [modules.py](modules.py), `build_model()`, accepts it or an absent historical field. The Baseline class itself does not declare an `architecture_version` attribute. |
-| `improved_v1` | `ImprovedUNet3D`, with residual blocks and training-only deep supervision | Declared on the class in [modules.py](modules.py). `build_model()` routes this identifier, the former compatibility identifier, or an absent version in an earlier Improved config to that class. |
+| `baseline_v1` | Plain `BaselineUNet3D`, without residual blocks or auxiliary heads | [train.py](src/train.py), `model_configuration()`, writes this identifier for new Baseline runs; [modules.py](src/modules.py), `build_model()`, accepts it or an absent historical field. The Baseline class itself does not declare an `architecture_version` attribute. |
+| `improved_v1` | `ImprovedUNet3D`, with residual blocks and training-only deep supervision | Declared on the class in [modules.py](src/modules.py). `build_model()` routes this identifier, the former compatibility identifier, or an absent version in an earlier Improved config to that class. |
 
 The primary experiment used code revision `4232e0d91d8aa6cf8c1de38883b213c07cc62d10` (Baseline job `683675`, Improved job `683676`). At that revision, `ImprovedUNet3D` had no version identifier. The maintained class preserves its parameterized layers and forward computation; current input-size validation additionally rejects dimensions below 16. Thus `improved_v1` is the maintained name for that architecture, not a claim that the original run stored that string or a third model name.
 
@@ -91,7 +116,7 @@ In the original project checkout, the historical definition can be inspected wit
 git show 4232e0d91d8aa6cf8c1de38883b213c07cc62d10:src/modules.py
 ```
 
-That command needs the original Git history and is not a prerequisite for running an exported course folder. The local evidence index is `docs/results_summary.json` in the original project root; it records the two jobs, source artifact paths, hashes, selected epochs and patient scores. Prediction uses `build_model()` and `load_state_dict(..., strict=True)` in [predict.py](predict.py). Version routing and strict loading guard architecture compatibility; the identifier alone does not establish a result's provenance.
+That command needs the original Git history and is not a prerequisite for running an exported course folder. The local evidence index is `docs/results_summary.json` in the original project root; it records the two jobs, source artifact paths, hashes, selected epochs and patient scores. Prediction uses `build_model()` and `load_state_dict(..., strict=True)` in [predict.py](src/predict.py). Version routing and strict loading guard architecture compatibility; the identifier alone does not establish a result's provenance.
 
 The training objective is weighted cross entropy plus weighted soft Dice. In the main experiment, prostate has weight 4 in both terms and the remaining classes have weight 1. Each Improved auxiliary head adds 0.25 times the same objective, with nearest-neighbour downsampled labels. The later Context-v2 model introduces Dropout3D, interpolation-convolution upsampling and inference-time logit fusion; these features must not be attributed to the historical model's test results.
 
@@ -123,7 +148,7 @@ No W&B account is required.
 Generate the manifest from the downloaded data:
 
 ```bash
-python audit.py data/HipMRI_Study_open --output artifacts/dataset_manifest.json --seed 42
+python src/audit.py data/HipMRI_Study_open --output artifacts/dataset_manifest.json --seed 42
 ```
 
 The audit checks image-mask pairing and spatial metadata before recording patients and cases. For the same dataset release and directory contents, compare the generated manifest's SHA-256 with the reported value above. A mismatch requires inspection before claiming exact reproduction of the historical split. Use the same generated manifest for both model arms.
@@ -133,7 +158,7 @@ The audit checks image-mask pairing and spatial metadata before recording patien
 The command below reproduces the declared Baseline configuration through the maintained interface:
 
 ```bash
-python train.py \
+python src/train.py \
   --manifest artifacts/dataset_manifest.json \
   --data-root data/HipMRI_Study_open \
   --output-dir artifacts/reproduced_baseline \
@@ -172,7 +197,7 @@ These commands reproduce the stored configuration through the current code. They
 Evaluate a validation-selected checkpoint once with overlap-averaged full-volume inference:
 
 ```bash
-python predict.py \
+python src/predict.py \
   --checkpoint artifacts/reproduced_baseline/best.pt \
   --manifest artifacts/dataset_manifest.json \
   --data-root data/HipMRI_Study_open \
@@ -192,7 +217,7 @@ The sliding-window implementation averages overlapping logits and verifies compl
 
 Main training used Adam, batch size 1, a constant learning rate of 0.001, 20 epochs and seed 42. Checkpoints were selected by the highest validation mean Dice: epoch 20 for Baseline and epoch 18 for Improved. This historical selection metric includes background; the later prostate-specific selection option represents a different protocol.
 
-![Main experiment training loss and validation Dice](assets/training_curves.png)
+![Main experiment training loss and validation Dice](src/assets/training_curves.png)
 
 Improved's objective includes auxiliary losses, so loss magnitudes are not directly equivalent between arms. Similar training and validation curves alone do not prove the absence of overfitting.
 
@@ -202,15 +227,15 @@ The animations below show the same fixed validation case (`G021_Week0`) at epoch
 
 **Epoch 1**
 
-![Context-v2 B validation case at epoch 1](assets/validation_B_epoch_01.gif)
+![Context-v2 B validation case at epoch 1](src/assets/validation_B_epoch_01.gif)
 
 **Epoch 5**
 
-![Context-v2 B validation case at epoch 5](assets/validation_B_epoch_05.gif)
+![Context-v2 B validation case at epoch 5](src/assets/validation_B_epoch_05.gif)
 
 **Epoch 19 (validation-selected checkpoint)**
 
-![Context-v2 B validation case at epoch 19](assets/validation_B_epoch_19.gif)
+![Context-v2 B validation case at epoch 19](src/assets/validation_B_epoch_19.gif)
 
 ### Testing
 
@@ -266,7 +291,7 @@ Context-v2 B failed the declared upgrade rule: it did not exceed Baseline by `0.
 
 ### Failure Case Autopsy
 
-Five cases were selected to cover all five held-out patients. Scans were ranked by the mean whole-volume prostate FP+FN across both arms, and only the highest-ranked scan from each patient was retained. Each panel compares the same MRI, GT and slice for Baseline and Improved; the displayed slice maximizes paired error within the GT prostate extent. Patient ID and case ID resolve ties. The resulting [selection manifest](assets/failure_selection.json) records the rule, repository base revision, indices and counts. White indicates prostate FP and red indicates prostate FN.
+Five cases were selected to cover all five held-out patients. Scans were ranked by the mean whole-volume prostate FP+FN across both arms, and only the highest-ranked scan from each patient was retained. Each panel compares the same MRI, GT and slice for Baseline and Improved; the displayed slice maximizes paired error within the GT prostate extent. Patient ID and case ID resolve ties. The resulting [selection manifest](src/assets/failure_selection.json) records the rule, repository base revision, indices and counts. White indicates prostate FP and red indicates prostate FN.
 
 | Case       | Baseline FP / FN | Improved FP / FN | Failure conclusion                                                                                                                                               |
 | ---------- | ---------------: | ---------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -276,15 +301,15 @@ Five cases were selected to cover all five held-out patients. Scans were ranked 
 | M013 Week0 |         581 / 85 |        407 / 171 | Improved reduces FP by 174 voxels but increases FN by 86. Total error falls, while reference-tissue coverage becomes less complete.                               |
 | H007 Week0 |        432 / 155 |        121 / 245 | Improved reduces FP by 311 voxels but increases FN by 90. The substantial reduction in excess contour is accompanied by lower prostate recall.                    |
 
-![B037 Week0 paired failure](assets/failure_case_b037_week0.png)
+![B037 Week0 paired failure](src/assets/failure_case_b037_week0.png)
 
-![L011 Week2 paired failure](assets/failure_case_l011_week2.png)
+![L011 Week2 paired failure](src/assets/failure_case_l011_week2.png)
 
-![K042 Week0 paired failure](assets/failure_case_k042_week0.png)
+![K042 Week0 paired failure](src/assets/failure_case_k042_week0.png)
 
-![M013 Week0 paired failure](assets/failure_case_m013_week0.png)
+![M013 Week0 paired failure](src/assets/failure_case_m013_week0.png)
 
-![H007 Week0 paired failure](assets/failure_case_h007_week0.png)
+![H007 Week0 paired failure](src/assets/failure_case_h007_week0.png)
 
 Across one independently selected scan from every held-out patient, Improved decreases false-positive voxels and increases false-negative voxels in all five cases. The repeated direction across B037, H007, K042, L011 and M013 indicates a systematic shift toward more conservative prostate contours rather than an effect confined to repeated scans of one patient. B037 Week0 is the clearest regression: its 227-voxel FP reduction is accompanied by 628 additional missed prostate voxels. H007 Week0 and M013 Week0 reduce total FP+FN, but both still lose reference-tissue coverage. These findings support Baseline as the conservative operational reference and limit Improved to human-reviewed contour drafting.
 
@@ -302,7 +327,7 @@ Four panels depict interior slices and H007 Week0 depicts the superior endpoint 
 
 ### Boundary Bands, Organ Leakage and Disconnected Predictions
 
-A post-hoc audit on 26 October 2026 inspected all **19 retained paired test predictions** from the primary experiment, without rerunning either network or selecting a new model. [The analysis record](assets/boundary_analysis.json) contains source prediction SHA-256 hashes, per-case counts and the selection method. Source NIfTI affines identify increasing tensor depth as superior for all 19 cases.
+A post-hoc audit on 26 October 2026 inspected all **19 retained paired test predictions** from the primary experiment, without rerunning either network or selecting a new model. [The analysis record](src/assets/boundary_analysis.json) contains source prediction SHA-256 hashes, per-case counts and the selection method. Source NIfTI affines identify increasing tensor depth as superior for all 19 cases.
 
 For each reference prostate extent of `N` axial slices, the inferior and superior bands contain the first and last `ceil(0.20*N)` slices respectively. These are geometric end regions relevant to apex/base review, not clinician-annotated apex/base landmarks. Dice and FP/FN below are pooled **within each scan's specified band**, across the complete in-plane image; they are neither patient means nor native-resolution surface distances. The 20% definition was chosen for this retrospective diagnostic analysis and was not a predeclared model-selection rule.
 
@@ -317,11 +342,11 @@ For each reference prostate extent of `N` axial slices, the inferior and superio
 
 Each paired panel displays one inferior and one superior slice, chosen by the highest summed Baseline-plus-Improved FP+FN within that band; the larger slice index resolves ties. Green shows prostate, white FP and red FN. The tables aggregate entire bands, whereas images display selected slices.
 
-![B037 Week0 inferior and superior boundary errors](assets/boundary_b037_week0.png)
+![B037 Week0 inferior and superior boundary errors](src/assets/boundary_b037_week0.png)
 
-![L011 Week2 inferior and superior boundary errors](assets/boundary_l011_week2.png)
+![L011 Week2 inferior and superior boundary errors](src/assets/boundary_l011_week2.png)
 
-![K042 Week0 inferior and superior boundary errors](assets/boundary_k042_week0.png)
+![K042 Week0 inferior and superior boundary errors](src/assets/boundary_k042_week0.png)
 
 **Adjacent-organ confusion.** Across the 19 scans, Baseline assigns prostate to 272 reference-bladder voxels and 9 reference-rectum voxels; Improved assigns prostate to 13 and 9 respectively. These are counts on the resized annotation grid, not penetration distances or clinical injury estimates. The reduction in bladder-label confusion coexists with the B037 superior omission, so aggregate false-positive improvement does not resolve the coverage problem.
 
@@ -331,7 +356,7 @@ Each paired panel displays one inferior and one superior slice, chosen by the hi
 
 ## Feasibility Review
 
-[One-page review with supporting appendices](assets/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
+[One-page review with supporting appendices](src/assets/HipMRI_Feasibility_Review_v4.pdf). This section preserves the midpoint proposal's preliminary status and adds a dated resource plan; the update is not evidence that these numerical limits existed at the original consultation. Tutor check-off remains an external record.
 
 **User need and scope.** A radiotherapy contouring specialist needs reviewable prostate and organ-at-risk drafts. Compare a plain 3D U-Net against a residual, deep-supervised 3D Improved U-Net on downsampled HipMRI volumes (Hard option). Investigate whether added complexity improves boundary coverage enough to justify its memory and runtime cost. This comparison does not isolate 3D versus 2D.
 

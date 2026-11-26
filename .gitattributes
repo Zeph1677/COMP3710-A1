@@ -1,2 +1,5 @@
 *.slurm text eol=lf
 evidence/dataset_manifest.json text eol=lf
+
+# Preserve the original PR snapshot byte for byte.
+docs/original-pr68/** -text
